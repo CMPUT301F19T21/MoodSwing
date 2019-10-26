@@ -3,6 +3,7 @@ package com.example.moodswing;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                                 // check password
                                 if (userDoc.get("password").equals(password)){
                                     //loginSuccessful
-                                    loginOnSuccessful(userDoc);
+                                    loginOnSuccessful(username);
                                 }else{
                                     //loginCheckFail
                                 }
@@ -109,11 +110,14 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * This method will be called when login process success, it will return to MainActivity with
-     * @param userDoc
+     * @param username
      *      A shallow DocumentSnapshot object contains basic user info. will be used to construct profile page
      *      in main Activity
      */
-    private void loginOnSuccessful(DocumentSnapshot userDoc){
+    private void loginOnSuccessful(String username){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("username",username);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
