@@ -1,4 +1,4 @@
-package main.java.com.example.moodswing;
+package com.example.moodswing;
 
 public class Account {
     private String username;
