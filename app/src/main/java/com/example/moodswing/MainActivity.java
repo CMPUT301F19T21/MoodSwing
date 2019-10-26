@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
+
         startActivity(intentLoginActivity);
 
     }
