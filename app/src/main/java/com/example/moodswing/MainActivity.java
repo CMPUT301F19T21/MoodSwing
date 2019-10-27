@@ -6,40 +6,81 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.Toast;
 
+
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+
+import java.util.ArrayList;
+import java.util.Map;
+
 
 /**
  * MainActivity
  */
 public class MainActivity extends AppCompatActivity {
+    // general
+    private static final String TAG = "MainActivity";
     private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
-    DocumentReference userRef;
 
+    // UI elements
+    private ListView moodList;
+    private Button addButton;
+    private Button delButton;
+
+    // listView
+    private ArrayAdapter<MoodEvent> moodListAdapter;
+    private ArrayList<MoodEvent> moodDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.mainscreen);
 
 
         /* link all UI elements here */
+        addButton = (Button) findViewById(R.id.addMoodButton);
+        delButton = (Button) findViewById(R.id.delMoodButton);
+        moodList = findViewById(R.id.mood_list);
 
+
+        moodDataList = new ArrayList<>();
+        moodListAdapter = new MoodAdapter(this, moodDataList);
+        moodList.setAdapter(moodListAdapter);
+
+
+        /* ----------------------- IMPORTANT ---------------------*/
+        /* life cycle reminder
+         * this is the end of onCreate method
+         *
+         *
+         * for action that need to be performed after user loggin should be written in "onPostLogin()" method
+         * for action that need to be performed before user loggin should be written in "onCreate()" method BEFORE this msg
+         *
+         *
+         */
         /* login */
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
         startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
-        /* life cycle reminder
-         * the end of onCreate, all the object that should be init before user login should be
-         * written in onPostLogin
-         */
-
 
     }
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -52,13 +93,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
     private void onPostLogin(String username){
-        // init communicator
+        /* --------------- init communicator (this should be on top)----------- */
         communicator = new FirestoreUserDocCommunicator(username);
-        // other actions after login:
+        communicator.showListView(moodList); // init listView realtimeListener by communicator
+
+        /* --------------------------- OnclickListeners ------------------------ */
+        // adding
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // testing
+                communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
+                // can call some method here to switch activity.
+            }
+        });
+        // deletion
+
+
+        /* ---------------------------- Other Actions ----------------------- */
+
+
+
+
+        //
+
     }
 }

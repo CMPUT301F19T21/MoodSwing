@@ -21,6 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * Notes:
+ *      - working fine for now
+ *      - lacking error handling, if empty program will crash. but will deal error cases later
+ */
 public class RegisterActivity extends AppCompatActivity {
     //
     private static final String TAG = "RegisterActivity";

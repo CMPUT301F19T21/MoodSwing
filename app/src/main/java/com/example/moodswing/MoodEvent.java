@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
  * This Class is the blueprint for a moodEvent object
  */
 public class MoodEvent {
+    private String uniqueID; // this value is used to identify moodEvent
     // required fields
     private int moodType; // for this design im assuming each moodType has been assigned an unique int
     private DateJar date;
@@ -43,7 +44,7 @@ public class MoodEvent {
         return reason;
     }
 
-    public int getSocialSituation() {
+    public Integer getSocialSituation() {
         return socialSituation;
     }
 
@@ -63,5 +64,10 @@ public class MoodEvent {
         this.reason = reason;
         this.socialSituation = socialSituation;
 
+    }
+
+
+    public void setUniqueID(String id){
+        this.uniqueID = id;
     }
 }

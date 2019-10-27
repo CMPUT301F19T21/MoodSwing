@@ -12,12 +12,42 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="119dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/happymood"
+                android:id="@+id/happy_button"
+                android:background="@null" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/angrymood"
+                android:id="@+id/angry_button"
+                android:background="@null"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/emotionalmood"
+                android:id="@+id/emotional_button"
+                android:background="@null"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/sadmood"
+                android:background="@null"
+                android:id="@+id/sad_button"/>
+        </LinearLayout>
+
     </HorizontalScrollView>
 
     <Space
@@ -28,7 +58,7 @@
         android:id="@+id/whenText"
         android:layout_width="73dp"
         android:layout_height="34dp"
-        android:text="TextView" />
+        android:text="When:" />
 
     <EditText
         android:id="@+id/dateText"
