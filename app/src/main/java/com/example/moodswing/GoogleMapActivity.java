@@ -29,6 +29,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         LatLng UofA = new LatLng(53.524101, -113.524582);
         map.addMarker(new MarkerOptions().position(UofA).title("University of Alberta"));
         map.moveCamera(CameraUpdateFactory.newLatLng(UofA));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(UofA, 18), 5000, null);
 
     }
 }
