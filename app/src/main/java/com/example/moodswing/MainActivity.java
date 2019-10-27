@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * MainActivity
  */
 public class MainActivity extends AppCompatActivity {
-    private FirebaseFirestore db;
+    private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
     DocumentReference userRef;
 
@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = FirebaseFirestore.getInstance(); // init db
+
+        /* link all UI elements here */
 
         /* login */
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void onPostLogin(String username){
-        // initUserRef
-        DocumentReference userRef = db.collection("Accounts").document(username);
+        // init communicator
+        communicator = new FirestoreUserDocCommunicator(username);
         // other actions after login:
     }
 }

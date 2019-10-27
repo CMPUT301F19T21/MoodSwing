@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
          *      - check if username and password valid
          */
 
-        // key value pair - "username, password"
+        // key value pair
         final DocumentReference userRef = db.collection("Accounts").document(userName);
         Map<String, String> newUser = new HashMap<>();
         newUser.put("password", password);

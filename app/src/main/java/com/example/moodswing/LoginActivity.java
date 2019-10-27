@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
         /**
          * Possible error handling missing here, for now
-         *
+         *      - app will crash, if username is empty
          */
 
         final DocumentReference userRef = db.collection("Accounts").document(username);
