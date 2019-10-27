@@ -118,13 +118,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //DELETE THIS VVVVVVVV
-
-        Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
-
-        startActivity(i);
-
-        //TO HERE ----
+        
     }
 
 
