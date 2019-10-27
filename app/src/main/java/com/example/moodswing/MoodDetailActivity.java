@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class MoodDetailActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class MoodDetailActivity extends AppCompatActivity implements Serializable {
     MoodEvent moodEvent;
     private int moodType;
     private DateJar date;
@@ -25,11 +27,18 @@ public class MoodDetailActivity extends AppCompatActivity {
     ImageButton delButton;
     ImageButton editButton;
 
+    FirestoreUserDocCommunicator communicator;
+    String UID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_details);
-        Intent moodintent = getIntent();
+        Intent moodIntent = getIntent();
+        communicator = (FirestoreUserDocCommunicator) moodIntent.getSerializableExtra("communicator");
+        UID = moodIntent.getStringExtra("UID");
+
+        //moodEvent = communicator.grabMood(UID);
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
@@ -48,8 +57,9 @@ public class MoodDetailActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MoodDetailActivity.this, AddMoodActivity.class);
-
+                Intent intent = new Intent(MoodDetailActivity.this, EditMoodActivity.class);
+                intent.putExtra("communicator", (Serializable) communicator);
+                intent.putExtra("UID",UID);
                 startActivity(intent);
             }
         });
