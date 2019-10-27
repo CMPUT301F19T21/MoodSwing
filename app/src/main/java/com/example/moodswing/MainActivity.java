@@ -57,6 +57,18 @@ public class MainActivity extends AppCompatActivity {
 
         //startActivity(intentLoginActivity);
 
+        moodList = findViewById(R.id.mood_list);
+        moodList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        moodDataList = new ArrayList<>();
+        DateJar d = new DateJar(1997, 02, 24);
+        TimeJar t = new TimeJar(12, 30);
+        MoodEvent m = new MoodEvent(33, d, t);
+
+        moodDataList.add(m);
+        moodListAdapter = new CustomAdapter(this, moodDataList);
+        moodList.setAdapter(moodListAdapter);
+
 
         moodList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         selectedItems = new ArrayList<>();
@@ -113,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == USER_ID_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String username = data.getStringExtra("username");
-                onPostLogin(username);
+                //onPostLogin(username);
             }
         }
     }

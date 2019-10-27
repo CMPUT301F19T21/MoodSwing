@@ -5,7 +5,8 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.example.moodswing"
-        minSdkVersion 16 // changed from 15 to 16 because google cloud firestore auth only support 16+ - gengyuan
+        minSdkVersion 16
+        // changed from 15 to 16 because google cloud firestore auth only support 16+ - gengyuan
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -27,7 +28,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0' // SDK for google analytics
     implementation 'com.google.firebase:firebase-firestore:21.2.1' // Firebase Authentication
     implementation 'com.google.firebase:firebase-auth:19.1.0' // Cloud FireStore
-
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])

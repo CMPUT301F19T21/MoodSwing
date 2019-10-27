@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,7 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordEditText;
 
     TextView toRegister;
-    Button loginButton;
+    //Button loginButton;
+    ImageButton loginBtn;
     FirebaseFirestore db;
 
     @Override
@@ -46,8 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.userField);
         passwordEditText = findViewById(R.id.passField);
         toRegister = findViewById(R.id.switchToReg);
-        loginButton = findViewById(R.id.loginButton);
+        //loginButton = findViewById(R.id.loginButton);
         db = FirebaseFirestore.getInstance();
+        loginBtn = findViewById(R.id.confirmbtn);
 
         // set listeners
         toRegister.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginProcess();

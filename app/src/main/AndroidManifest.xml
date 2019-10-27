@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".NewMoodActivity"/>
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".RegisterView" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
@@ -19,6 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>
