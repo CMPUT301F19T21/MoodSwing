@@ -60,5 +60,9 @@ public class MainActivity extends AppCompatActivity {
         // init communicator
         communicator = new FirestoreUserDocCommunicator(username);
         // other actions after login:
+
+
+        // testing
+        communicator.addMoodEvent(new MoodEvent(1,new DateJar(1998,2,27),new TimeJar(12,20)));
     }
 }
