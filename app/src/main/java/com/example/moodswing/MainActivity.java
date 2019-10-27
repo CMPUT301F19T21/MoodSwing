@@ -38,6 +38,7 @@ import java.util.Map;
  */
 public class MainActivity extends AppCompatActivity {
     // general
+    private Button MapButton;
     private static final String TAG = "MainActivity";
     private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
@@ -87,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
         /* login */
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
         startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
+        MapButton = findViewById(R.id.mapViewButton);
+        MapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), GoogleMapActivity.class));
+            }
+        });
 
     }
 
