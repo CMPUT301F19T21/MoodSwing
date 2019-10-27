@@ -17,27 +17,37 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
  * MainActivity
  */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
     DocumentReference userRef;
 
+    // listview
+
     private ListView moodList;
+    private Button addButton;
+    private Button delButton;
+
     private ArrayAdapter<MoodEvent> moodListAdapter;
     private ArrayList<MoodEvent> moodDataList;
-    private ArrayList<MoodEvent> selectedItems;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         /* link all UI elements here */
+        addButton = (Button) findViewById(R.id.addMoodButton);
+        delButton = (Button) findViewById(R.id.delMoodButton);
+        moodList = findViewById(R.id.mood_list);
+
+
+        moodDataList = new ArrayList<>();
+        moodListAdapter = new MoodAdapter(this, moodDataList);
+        moodList.setAdapter(moodListAdapter);
+
 
         /* login */
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
@@ -55,69 +74,8 @@ public class MainActivity extends AppCompatActivity {
          * written in onPostLogin
          */
 
-        //startActivity(intentLoginActivity);
 
-        moodList = findViewById(R.id.mood_list);
-        moodList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-        moodDataList = new ArrayList<>();
-        DateJar d = new DateJar(1997, 02, 24);
-        TimeJar t = new TimeJar(12, 30);
-        MoodEvent m = new MoodEvent(33, d, t);
-
-        moodDataList.add(m);
-        moodListAdapter = new CustomAdapter(this, moodDataList);
-        moodList.setAdapter(moodListAdapter);
-
-
-        moodList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        selectedItems = new ArrayList<>();
-
-        moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CheckBox checkBox = findViewById(R.id.checkBox);
-                MoodEvent selection = moodDataList.get(i);
-                if (selectedItems.contains(selection)) {
-                    selectedItems.remove(selection);
-                    checkBox.setChecked(false);
-                }
-                else {
-                    selectedItems.add(selection);
-                    checkBox.setChecked(true);
-                }
-            }
-        });
-
-
-
-        Button addButton = (Button) findViewById(R.id.addMoodButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Only test code
-                moodDataList.add(new MoodEvent(35, new DateJar(2018, 03, 06), new TimeJar(14, 22)));
-                moodListAdapter.notifyDataSetChanged();
-
-            }
-        });
-
-        Button delButton = (Button) findViewById(R.id.delMoodButton);
-        delButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Only test code
-                if (!selectedItems.isEmpty()) {
-                    for (int i = 0; i < selectedItems.size(); i++) {
-                        moodDataList.remove(selectedItems.get(i));
-                    }
-                    moodListAdapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -125,22 +83,53 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == USER_ID_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String username = data.getStringExtra("username");
-                //onPostLogin(username);
+                onPostLogin(username);
             }
         }
     }
 
-
-
-
-
     private void onPostLogin(String username){
         // init communicator
         communicator = new FirestoreUserDocCommunicator(username);
+        communicator.showListView(moodList);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // testing
+                communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
+            }
+        });
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference events = db.collection("Accounts").document(username).collection("MoodEvents");
+        /*
+        events.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                moodList.clearMoodEvents();
+                for (QueryDocumentSnapshot eventsDoc : queryDocumentSnapshots) {
+                    Map<String, Object> data = eventsDoc.getData();
+                    Map<String, Integer> dateMap = (Map<String, Integer>) data.get("date");
+                    Map<String, Integer> timeMap = (Map<String, Integer>) data.get("time");
+
+                    DateJar dateJar = new DateJar(dateMap.get("year"),dateMap.get("month"),dateMap.get("day"));
+                    TimeJar timeJar = new TimeJar (timeMap.get("hr"),timeMap.get("min"));
+                    MoodEvent moodEvent = new MoodEvent((Integer) data.get("moodType"),dateJar,timeJar);
+                    ((MoodAdapter)listView.getAdapter()).addToMoods(moodEvent);
+                }
+
+            }
+        });
+
+         */
+        /* ------------------------------------------------ */
         // other actions after login:
 
 
-        // testing
-        communicator.addMoodEvent(new MoodEvent(1,new DateJar(1998,2,27),new TimeJar(12,20)));
+
+
+
+        //
+
     }
 }

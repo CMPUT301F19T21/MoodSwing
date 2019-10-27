@@ -1,17 +1,25 @@
 package com.example.moodswing;
 
 import android.util.Log;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -105,6 +113,30 @@ public class FirestoreUserDocCommunicator {
             }
         });
 
+    }
+
+    public void showListView(final ListView listView){
+        moodEventsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                ((MoodAdapter)listView.getAdapter()).clearMoodEvents();
+                for (QueryDocumentSnapshot eventsDoc : queryDocumentSnapshots) {
+                    Map<String, Object> data = eventsDoc.getData();
+                    Map<String, Integer> dateMap = (Map<String, Integer>) data.get("date");
+                    Map<String, Integer> timeMap = (Map<String, Integer>) data.get("time");
+                    int year = dateMap.get("year");
+                    int month = dateMap.get("month");
+                    int day = dateMap.get("day");
+                    int hr = timeMap.get("hr");
+                    int min = timeMap.get("min");
+                    int moodType = (int) data.get("moodType");
+
+                    MoodEvent moodEvent = new MoodEvent(moodType, new DateJar(year,month,day), new TimeJar(hr,min));
+                    ((MoodAdapter)listView.getAdapter()).addToMoods(moodEvent);
+                }
+                ((MoodAdapter) listView.getAdapter()).notifyDataSetChanged();
+            }
+        });
     }
 
     /* user management related methods */
