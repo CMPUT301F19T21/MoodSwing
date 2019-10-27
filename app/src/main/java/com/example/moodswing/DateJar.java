@@ -1,5 +1,7 @@
 package com.example.moodswing;
 
+import java.text.DateFormatSymbols;
+
 /**
  * This class creates an Date object
  *      int year
@@ -33,6 +35,14 @@ public class DateJar {
         this.year = year;
         this.month = month;
         this.day = day;
+    }
+
+    /**
+     * Get month name by input month number
+     * @return
+     */
+    public String getMonthName() {
+        return new DateFormatSymbols().getMonths()[month-1];
     }
 
 }

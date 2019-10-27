@@ -196,6 +196,11 @@ public class FirestoreUserDocCommunicator {
         MoodEvent mood;
         return mood;
     }*/
+
+    public void editMood(MoodEvent moodEvent){
+        //
+    }
+
     public void editUserPassword() {
         //
     }

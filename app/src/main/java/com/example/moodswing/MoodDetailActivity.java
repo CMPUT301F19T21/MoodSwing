@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     private int moodType;
     private DateJar date;
     private TimeJar time;
-    // optional fields
+
     private String reason;
     private Integer socialSituation;
 
@@ -53,6 +54,15 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         delButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
 
+        int Hr = time.getHr();
+        int Min = time.getMin();
+        timeText.setText(Hr+":"+Min);
+        String month = date.getMonthName();
+        int year = date.getYear();
+        int Day = date.getDay();
+        dateText.setText(month+" "+Day+", "+year);
+        moodText.setText(moodType);
+        descriptionText.setText(reason);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override

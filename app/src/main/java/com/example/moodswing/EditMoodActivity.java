@@ -16,6 +16,14 @@ public class EditMoodActivity extends AppCompatActivity {
     ImageButton locationButton;
     TextView loctionText;
 
+    MoodEvent moodEvent;
+    private int moodType;
+    private DateJar date;
+    private TimeJar time;
+
+    private String reason;
+    private Integer socialSituation;
+
     FirestoreUserDocCommunicator communicator;
     String UID;
     @Override
@@ -26,6 +34,8 @@ public class EditMoodActivity extends AppCompatActivity {
         Intent intent = getIntent();
         communicator = (FirestoreUserDocCommunicator) intent.getSerializableExtra("communicator");
         UID = intent.getStringExtra("UID");
+
+
 
     }
 }
