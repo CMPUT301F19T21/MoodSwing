@@ -192,10 +192,6 @@ public class FirestoreUserDocCommunicator {
 
     /* user management related methods */
 
-    /*public MoodEvent grabMood(String moodEventID){
-        MoodEvent mood;
-        return mood;
-    }*/
 
     public void editMood(MoodEvent moodEvent){
         //

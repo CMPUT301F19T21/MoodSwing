@@ -37,9 +37,13 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         setContentView(R.layout.mood_details);
         Intent moodIntent = getIntent();
         communicator = (FirestoreUserDocCommunicator) moodIntent.getSerializableExtra("communicator");
-        UID = moodIntent.getStringExtra("UID");
+        moodEvent = (MoodEvent) moodIntent.getSerializableExtra("MoodEvent");
 
-        //moodEvent = communicator.grabMood(UID);
+
+        //test case
+        //DateJar dateJar = new DateJar(2000,11,1);
+        //TimeJar timeJar = new TimeJar(11,11);
+       // moodEvent = new MoodEvent(1,dateJar,timeJar);
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
@@ -61,7 +65,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         int year = date.getYear();
         int Day = date.getDay();
         dateText.setText(month+" "+Day+", "+year);
-        moodText.setText(moodType);
+        //moodText.setText(moodType);
         descriptionText.setText(reason);
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +73,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
             public void onClick(View v) {
                 Intent intent = new Intent(MoodDetailActivity.this, EditMoodActivity.class);
                 intent.putExtra("communicator", (Serializable) communicator);
-                intent.putExtra("UID",UID);
+                intent.putExtra("MoodEvent", (Serializable) moodEvent);
                 startActivity(intent);
             }
         });
