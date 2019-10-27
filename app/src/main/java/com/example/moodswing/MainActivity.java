@@ -1,6 +1,7 @@
 package com.example.moodswing;
 
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +16,9 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
+import com.google.firebase.firestore.DocumentReference;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -25,7 +29,9 @@ import java.util.ArrayList;
  * MainActivity
  */
 public class MainActivity extends AppCompatActivity {
-    private FirebaseFirestore db;
+    private FirestoreUserDocCommunicator communicator;
+    private static final int USER_ID_REQUEST = 1;
+    DocumentReference userRef;
 
     private ListView moodList;
     private ArrayAdapter<MoodEvent> moodListAdapter;
@@ -38,22 +44,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainscreen);
 
-        db = FirebaseFirestore.getInstance();
+
+        /* link all UI elements here */
+
+        /* login */
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
+        startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
+        /* life cycle reminder
+         * the end of onCreate, all the object that should be init before user login should be
+         * written in onPostLogin
+         */
 
         //startActivity(intentLoginActivity);
-
-        moodList = findViewById(R.id.mood_list);
-        moodList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-        moodDataList = new ArrayList<>();
-        DateJar d = new DateJar(1997, 02, 24);
-        TimeJar t = new TimeJar(12, 30);
-        MoodEvent m = new MoodEvent(33, d, t);
-
-        moodDataList.add(m);
-        moodListAdapter = new CustomAdapter(this, moodDataList);
-        moodList.setAdapter(moodListAdapter);
 
 
         moodList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -103,4 +105,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == USER_ID_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String username = data.getStringExtra("username");
+                onPostLogin(username);
+            }
+        }
+    }
+
+
+
+
+
+    private void onPostLogin(String username){
+        // init communicator
+        communicator = new FirestoreUserDocCommunicator(username);
+        // other actions after login:
+
+
+        // testing
+        communicator.addMoodEvent(new MoodEvent(1,new DateJar(1998,2,27),new TimeJar(12,20)));
+    }
 }

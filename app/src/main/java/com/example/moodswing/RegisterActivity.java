@@ -55,6 +55,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registerNewUser();
+                /**
+                 * missing error handling, for now
+                 *      - what if register failed? dont close screen, do something
+                 */
             }
         });
 
@@ -63,25 +67,29 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerNewUser(){
         // error handling missing here, for now - gengyuan
-        final CollectionReference accountsPath = db.collection("Accounts");
-        String userName = usernameEditText.getText().toString();
+
+        final String userName = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        // error checking should be here
-        //
-        //
+        /**
+         * error checking here, some ideas:
+         *      - check if username already exists
+         *      - check if username and password valid
+         */
 
-        // key value pair - "username, password"
+        // key value pair
+        final DocumentReference userRef = db.collection("Accounts").document(userName);
         Map<String, String> newUser = new HashMap<>();
-        newUser.put(userName, password);
+        newUser.put("password", password);
 
         // add to database
-        accountsPath
-                .add(newUser)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        userRef
+                .set(newUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "User creation successful with ID: " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "User creation successful :" + userName);
+                        finish(); // return to signup.
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
