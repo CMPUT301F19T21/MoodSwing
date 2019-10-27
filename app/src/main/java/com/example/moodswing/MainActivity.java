@@ -35,17 +35,17 @@ import java.util.Map;
  * MainActivity
  */
 public class MainActivity extends AppCompatActivity {
+    // general
     private static final String TAG = "MainActivity";
     private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
-    DocumentReference userRef;
 
-    // listview
-
+    // UI elements
     private ListView moodList;
     private Button addButton;
     private Button delButton;
 
+    // listView
     private ArrayAdapter<MoodEvent> moodListAdapter;
     private ArrayList<MoodEvent> moodDataList;
 
@@ -66,14 +66,19 @@ public class MainActivity extends AppCompatActivity {
         moodList.setAdapter(moodListAdapter);
 
 
+        /* ----------------------- IMPORTANT ---------------------*/
+        /* life cycle reminder
+         * this is the end of onCreate method
+         *
+         *
+         * for action that need to be performed after user loggin should be written in "onPostLogin()" method
+         * for action that need to be performed before user loggin should be written in "onCreate()" method BEFORE this msg
+         *
+         *
+         */
         /* login */
         Intent intentLoginActivity = new Intent(this, LoginActivity.class);
         startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
-        /* life cycle reminder
-         * the end of onCreate, all the object that should be init before user login should be
-         * written in onPostLogin
-         */
-
 
     }
 
@@ -89,42 +94,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onPostLogin(String username){
-        // init communicator
+        /* --------------- init communicator (this should be on top)----------- */
         communicator = new FirestoreUserDocCommunicator(username);
-        communicator.showListView(moodList);
+        communicator.showListView(moodList); // init listView realtimeListener by communicator
+
+        /* --------------------------- OnclickListeners ------------------------ */
+        // adding
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // testing
                 communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
+                // can call some method here to switch activity.
             }
         });
+        // deletion
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference events = db.collection("Accounts").document(username).collection("MoodEvents");
-        /*
-        events.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                moodList.clearMoodEvents();
-                for (QueryDocumentSnapshot eventsDoc : queryDocumentSnapshots) {
-                    Map<String, Object> data = eventsDoc.getData();
-                    Map<String, Integer> dateMap = (Map<String, Integer>) data.get("date");
-                    Map<String, Integer> timeMap = (Map<String, Integer>) data.get("time");
 
-                    DateJar dateJar = new DateJar(dateMap.get("year"),dateMap.get("month"),dateMap.get("day"));
-                    TimeJar timeJar = new TimeJar (timeMap.get("hr"),timeMap.get("min"));
-                    MoodEvent moodEvent = new MoodEvent((Integer) data.get("moodType"),dateJar,timeJar);
-                    ((MoodAdapter)listView.getAdapter()).addToMoods(moodEvent);
-                }
-
-            }
-        });
-
-         */
-        /* ------------------------------------------------ */
-        // other actions after login:
-
+        /* ---------------------------- Other Actions ----------------------- */
 
 
 

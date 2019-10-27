@@ -26,6 +26,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
 
+
+/**
+ * Notes:
+ *      - working fine for now
+ *      - lacking error handling, if empty program will crash. but will deal error cases later
+ */
 public class LoginActivity extends AppCompatActivity {
     //
     private static final String TAG = "LoginActivity";
