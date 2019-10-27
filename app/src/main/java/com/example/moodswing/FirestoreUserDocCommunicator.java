@@ -13,22 +13,32 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class FirestoreUserDocCommunicator {
     private FirebaseFirestore db;
     private DocumentReference userDocRef;
-    private CollectionReference user
+    private CollectionReference moodEventsCollection;
 
     public FirestoreUserDocCommunicator(String username){
         // init db
         db = FirebaseFirestore.getInstance();
         userDocRef = db.collection("Accounts").document(username); // will always exist so no error checking
+        moodEventsCollection = userDocRef.collection("MoodEvents");
     }
 
-    // methods
+    /* moodEvent related methods*/
 
     public void addMoodEvent(MoodEvent moodEvent) {
         // lacking error returning code here
 
+    }
+    /* user management related methods */
 
+    public void editUserPassword() {
+        //
+    }
 
+    public void editUsername() {
+        //
+    }
 
-
+    public void deleteUser() {
+        //
     }
 }
