@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -161,11 +162,11 @@ public class FirestoreUserDocCommunicator {
 
     }
 
-    public void showListView(final ListView listView){
+    public void initMoodEventsList(final RecyclerView moodList){
         moodEventsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                ((MoodAdapter)listView.getAdapter()).clearMoodEvents();
+                ((MoodAdapter)moodList.getAdapter()).clearMoodEvents();
                 for (QueryDocumentSnapshot event : queryDocumentSnapshots) {
                     Integer year = ((Long)((Map<String, Object>) event.get("date")).get("year")).intValue();
                     Integer month = ((Long)((Map<String, Object>) event.get("date")).get("month")).intValue();
@@ -180,9 +181,9 @@ public class FirestoreUserDocCommunicator {
                     MoodEvent moodEvent = new MoodEvent(moodtype, new DateJar(year,month,day), new TimeJar(hr,min));
                     moodEvent.setUniqueID(refID);
 
-                    ((MoodAdapter)listView.getAdapter()).addToMoods(moodEvent);
+                    ((MoodAdapter)moodList.getAdapter()).addToMoods(moodEvent);
                 }
-                ((MoodAdapter) listView.getAdapter()).notifyDataSetChanged();
+                moodList.getAdapter().notifyDataSetChanged();
             }
         });
     }

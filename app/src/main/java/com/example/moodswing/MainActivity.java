@@ -3,6 +3,8 @@ package com.example.moodswing;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,13 +43,16 @@ public class MainActivity extends AppCompatActivity {
     private static final int USER_ID_REQUEST = 1;
 
     // UI elements
-    private ListView moodList;
+    private RecyclerView moodList;
     private Button addButton;
     private Button delButton;
 
-    // listView
-    private ArrayAdapter<MoodEvent> moodListAdapter;
+    // RecyclerView related
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private RecyclerView.Adapter moodListAdapter;
     private ArrayList<MoodEvent> moodDataList;
+            // note: can add an array here for item deletion.
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +65,13 @@ public class MainActivity extends AppCompatActivity {
         delButton = (Button) findViewById(R.id.delMoodButton);
         moodList = findViewById(R.id.mood_list);
 
-
+            // recyclerView related
+        recyclerViewLayoutManager = new LinearLayoutManager(this);
         moodDataList = new ArrayList<>();
-        moodListAdapter = new MoodAdapter(this, moodDataList);
+        moodListAdapter = new MoodAdapter(moodDataList);
+
         moodList.setAdapter(moodListAdapter);
+        moodList.setLayoutManager(recyclerViewLayoutManager);
 
 
         /* ----------------------- IMPORTANT ---------------------*/
@@ -96,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     private void onPostLogin(String username){
         /* --------------- init communicator (this should be on top)----------- */
         communicator = new FirestoreUserDocCommunicator(username);
-        communicator.showListView(moodList); // init listView realtimeListener by communicator
+        communicator.initMoodEventsList(moodList); // init listView realtimeListener by communicator
 
         /* --------------------------- OnclickListeners ------------------------ */
         // adding
