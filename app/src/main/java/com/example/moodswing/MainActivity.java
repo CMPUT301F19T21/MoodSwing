@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         Button addButton = (Button) findViewById(R.id.addMoodButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +117,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //DELETE THIS VVVVVVVV
+
+        Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
+
+        startActivity(i);
+
+        //TO HERE ----
     }
 
 

@@ -59,19 +59,17 @@
         android:layout_height="34dp"
         android:text="When:" />
 
-    <EditText
-        android:id="@+id/dateText"
+    <TextView
+        android:id="@+id/dateView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" />
+        android:layout_height="45dp"
+        android:text="Click the select date" />
 
-    <EditText
-        android:id="@+id/timeText"
+    <TextView
+        android:id="@+id/timeView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="time" />
+        android:layout_height="45dp"
+        android:text="time" />
 
 
     <Space
