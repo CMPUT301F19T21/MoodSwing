@@ -19,16 +19,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".EditMoodActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MoodDetailActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".NewMoodActivity"/>
@@ -37,10 +29,6 @@
         <activity android:name=".RegisterView" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".GoogleMapActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

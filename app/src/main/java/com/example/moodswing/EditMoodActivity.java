@@ -44,6 +44,9 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
         final Intent intent = getIntent();
         username = intent.getStringExtra("UserName");
         moodEvent = (MoodEvent) intent.getSerializableExtra("MoodEvent");
+
+        username = "1";
+
         communicator = new FirestoreUserDocCommunicator(username);
 
         dateText = findViewById(R.id.dateText);
