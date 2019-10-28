@@ -130,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // deletion
+        delButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i = 0; i < moodListAdapter.getItemCount(); i++){
+                    if (moodDataList.get(i).isSelected()) {
+                        communicator.removeMoodEvent(moodDataList.get(i).getUniqueID());
+                    }
+                }
+            }
+        });
 
 
         /* ---------------------------- Other Actions ----------------------- */
