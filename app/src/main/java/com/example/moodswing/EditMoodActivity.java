@@ -15,11 +15,9 @@ import java.io.Serializable;
 
 public class EditMoodActivity extends AppCompatActivity implements Serializable{
 
-    EditText dateText;
-    EditText timeText;
+    EditText minuteText;
+    EditText hourText;
     EditText reasonEditText;
-    ImageButton locationButton;
-    TextView locationText;
     ImageButton happyButton;
     ImageButton angryButton;
     ImageButton sadButton;
@@ -49,16 +47,14 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
 
         communicator = new FirestoreUserDocCommunicator(username);
 
-        dateText = findViewById(R.id.dateText);
-        timeText = findViewById(R.id.timeText);
+        hourText = findViewById(R.id.Hours);
+        minuteText = findViewById(R.id.Minutes);
         reasonEditText = findViewById(R.id.reasonEditText);
-        locationButton = findViewById(R.id.locationButton);
-        locationText = findViewById(R.id.locationText);
         happyButton = findViewById(R.id.happy_button);
         sadButton = findViewById(R.id.sad_button);
         angryButton = findViewById(R.id.angry_button);
         emotionalButton = findViewById(R.id.emotional_button);
-        confirmButton = findViewById(R.id.confirmButton);
+        confirmButton = findViewById(R.id.confirmNewMood);
 
 
 

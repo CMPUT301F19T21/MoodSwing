@@ -53,8 +53,8 @@ public class NewMoodActivity extends AppCompatActivity {
 
 
         dateView = (TextView) findViewById(R.id.dateView);
-        hoursEditText = (EditText) findViewById(R.id.addHours);
-        minutesEditText = (EditText) findViewById(R.id.addMinutes);
+        hoursEditText = (EditText) findViewById(R.id.Hours);
+        minutesEditText = (EditText) findViewById(R.id.Minutes);
 
 
         //Initializing the date picker
