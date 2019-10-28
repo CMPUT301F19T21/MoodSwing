@@ -36,13 +36,14 @@ public class LoginActivity extends AppCompatActivity {
     //
     private static final String TAG = "LoginActivity";
 
-    EditText usernameEditText;
-    EditText passwordEditText;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
 
-    TextView toRegister;
+    private TextView toRegister;
     //Button loginButton;
-    ImageButton loginBtn;
-    FirebaseFirestore db;
+    private ImageButton loginBtn;
+    private FirebaseFirestore db;
+    private static boolean alreadyLoggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         returnIntent.putExtra("username",username);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+        alreadyLoggedIn = true;
     }
 
 }

@@ -20,14 +20,18 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     private String reason;
     private Integer socialSituation;
 
+
     TextView dateText;
     TextView timeText;
     TextView moodText;
     TextView descriptionText;
     TextView socialText;
 
-    ImageButton delButton;
-    ImageButton editButton;
+
+    private ImageButton delButton;
+    private ImageButton editButton;
+
+    private static boolean alreadyLoggedIn = true;
 
     String username;
 

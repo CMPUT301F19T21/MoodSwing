@@ -1,6 +1,9 @@
 package com.example.moodswing;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -12,7 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCallback {
-    GoogleMap map;
+    private GoogleMap map;
+    private Button backButton;
+    private static boolean alreadyLoggedIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -21,6 +26,14 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
+        alreadyLoggedIn = true;
     }
 
     @Override
@@ -30,6 +43,5 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         map.addMarker(new MarkerOptions().position(UofA).title("University of Alberta"));
         map.moveCamera(CameraUpdateFactory.newLatLng(UofA));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(UofA, 18), 5000, null);
-
     }
 }
