@@ -24,26 +24,28 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     TextView timeText;
     TextView moodText;
     TextView descriptionText;
+    TextView socialText;
 
     ImageButton delButton;
     ImageButton editButton;
 
-    FirestoreUserDocCommunicator communicator;
-    String UID;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_details);
         Intent moodIntent = getIntent();
-        communicator = (FirestoreUserDocCommunicator) moodIntent.getSerializableExtra("communicator");
+        //username = moodIntent.getStringExtras("UserName");
         moodEvent = (MoodEvent) moodIntent.getSerializableExtra("MoodEvent");
 
-
         //test case
-        //DateJar dateJar = new DateJar(2000,11,1);
-        //TimeJar timeJar = new TimeJar(11,11);
-       // moodEvent = new MoodEvent(1,dateJar,timeJar);
+        username = "1";
+        DateJar dateJar = new DateJar(2000,11,1);
+        TimeJar timeJar = new TimeJar(11,11);
+        if (moodEvent == null)
+            moodEvent = new MoodEvent(1,dateJar,timeJar);
+        final FirestoreUserDocCommunicator communicator = new FirestoreUserDocCommunicator(username);
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
@@ -51,6 +53,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         reason = moodEvent.getReason();
         socialSituation = moodEvent.getSocialSituation();
 
+        socialText = findViewById(R.id.socialTxt);
         dateText = findViewById(R.id.dateText);
         timeText = findViewById(R.id.timeText);
         moodText = findViewById(R.id.moodText);
@@ -66,15 +69,24 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         int Day = date.getDay();
         dateText.setText(month+" "+Day+", "+year);
         //moodText.setText(moodType);
+        //socialText.setText(socialSituation);
         descriptionText.setText(reason);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MoodDetailActivity.this, EditMoodActivity.class);
-                intent.putExtra("communicator", (Serializable) communicator);
-                intent.putExtra("MoodEvent", (Serializable) moodEvent);
+                intent.putExtra("UserName", username);
+                intent.putExtra("MoodEvent",(Serializable) moodEvent);
                 startActivity(intent);
+            }
+        });
+        delButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                communicator.removeMoodEvent(moodEvent.getUniqueID());
+                //Intent intent = new Intent(MoodDetailActivity.this,MoodHistoryActivity.class);
+                //startActivity(intent);
             }
         });
     }

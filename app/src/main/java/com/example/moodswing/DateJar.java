@@ -1,5 +1,6 @@
 package com.example.moodswing;
 
+import java.io.Serializable;
 import java.text.DateFormatSymbols;
 
 /**
@@ -8,7 +9,7 @@ import java.text.DateFormatSymbols;
  *      int month
  *      int day
  */
-public class DateJar {
+public class DateJar implements Serializable {
     private int year;
     private int month;
     private int day;

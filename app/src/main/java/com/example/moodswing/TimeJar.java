@@ -1,11 +1,13 @@
 package com.example.moodswing;
 
+import java.io.Serializable;
+
 /**
  * This class creates an Time object
  *      int hr
  *      int min
  */
-public class TimeJar {
+public class TimeJar implements Serializable {
     private int hr;
     private int min;
 
