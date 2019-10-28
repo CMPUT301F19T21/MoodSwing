@@ -20,13 +20,18 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     private String reason;
     private Integer socialSituation;
 
-
+<<<<<<< HEAD
     TextView dateText;
     TextView timeText;
     TextView moodText;
     TextView descriptionText;
     TextView socialText;
-
+=======
+    private TextView dateText;
+    private TextView timeText;
+    private TextView moodText;
+    private TextView descriptionText;
+>>>>>>> master
 
     private ImageButton delButton;
     private ImageButton editButton;

@@ -7,16 +7,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +62,7 @@ import java.util.Map;
  *          by using Intent/Bundle!!! :D
  *      - please add more/implement new stuff!
  */
-public class FirestoreUserDocCommunicator {
+public class FirestoreUserDocCommunicator implements Serializable {
     private static final String TAG = "FirestoreUserDocCommuni";
     private FirebaseFirestore db;
     private DocumentReference userDocRef;
@@ -189,6 +193,11 @@ public class FirestoreUserDocCommunicator {
     }
 
     /* user management related methods */
+
+
+    public void editMood(MoodEvent moodEvent){
+        //
+    }
 
     public void editUserPassword() {
         //
