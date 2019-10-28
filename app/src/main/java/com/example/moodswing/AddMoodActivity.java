@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 public class AddMoodActivity extends AppCompatActivity {
 
-    EditText dateText;
-    EditText timeText;
-    EditText reasonEditText;
-    ImageButton locationButton;
-    TextView loctionText;
+    private EditText dateText;
+    private EditText timeText;
+    private EditText reasonEditText;
+    private ImageButton locationButton;
+    private TextView loctionText;
+    private static boolean alreadyLoggedIn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

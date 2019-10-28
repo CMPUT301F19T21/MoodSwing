@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
+    private static boolean alreadyLoggedIn = false;
 
     // UI elements
     private RecyclerView moodList;
@@ -86,8 +87,12 @@ public class MainActivity extends AppCompatActivity {
          *
          */
         /* login */
-        Intent intentLoginActivity = new Intent(this, LoginActivity.class);
-        startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
+        if(alreadyLoggedIn == false) {
+            Intent intentLoginActivity = new Intent(this, LoginActivity.class);
+            startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
+            alreadyLoggedIn = true;
+        }
+
         MapButton = findViewById(R.id.mapViewButton);
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override

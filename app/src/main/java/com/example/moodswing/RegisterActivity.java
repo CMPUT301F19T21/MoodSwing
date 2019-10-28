@@ -30,12 +30,12 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
     //
     private static final String TAG = "RegisterActivity";
-    TextView toLogin;
-    Button registerButton;
-    EditText usernameEditText;
-    EditText passwordEditText;
-    FirebaseFirestore db;
-
+    private TextView toLogin;
+    private Button registerButton;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private FirebaseFirestore db;
+    private static boolean alreadyLoggedIn = false;
 
 
     @Override

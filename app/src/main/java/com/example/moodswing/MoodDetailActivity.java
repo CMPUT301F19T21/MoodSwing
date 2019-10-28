@@ -17,13 +17,15 @@ public class MoodDetailActivity extends AppCompatActivity {
     private String reason;
     private Integer socialSituation;
 
-    TextView dateText;
-    TextView timeText;
-    TextView moodText;
-    TextView descriptionText;
+    private TextView dateText;
+    private TextView timeText;
+    private TextView moodText;
+    private TextView descriptionText;
 
-    ImageButton delButton;
-    ImageButton editButton;
+    private ImageButton delButton;
+    private ImageButton editButton;
+
+    private static boolean alreadyLoggedIn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
