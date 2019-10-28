@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.internal.FallbackServiceBroker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,24 +63,86 @@ import java.util.Map;
  *          by using Intent/Bundle!!! :D
  *      - please add more/implement new stuff!
  */
-public class FirestoreUserDocCommunicator implements Serializable {
+public class FirestoreUserDocCommunicator{
+
     private static final String TAG = "FirestoreUserDocCommuni";
     private FirebaseFirestore db;
-    private DocumentReference userDocRef;
-    private CollectionReference moodEventsCollection;
     private String userID;
 
-    public FirestoreUserDocCommunicator(String username){
-        // init db
-        db = FirebaseFirestore.getInstance();
-        userDocRef = db.collection("Accounts").document(username); // will always exist so no error checking
-        moodEventsCollection = userDocRef.collection("MoodEvents");
-
-        this.userID = username;
+    // reference
+    private static class FireStoreUserDocCommunicatorHolder {
+        private static final FirestoreUserDocCommunicator instance = new FirestoreUserDocCommunicator();
     }
 
-    public String getUsername(){
-        return this.userID;
+    private class LoginCallBackChecker {
+        private boolean isDone = false;
+        private int loginResultCode;
+        private void done(int loginResultCode){
+            this.isDone = true;
+            this.loginResultCode = loginResultCode;
+        }
+    }
+
+    private FirestoreUserDocCommunicator(){
+        // init db
+        this.db = FirebaseFirestore.getInstance();
+        this.userID = null;
+
+    }
+    private boolean ifLogin(){
+        if (userID == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    /**
+     * return 0 if login successful
+     * return 1 if wrong password
+     * return -1 if user not exist
+     * @param username
+     * @param password
+     * @return
+     */
+    public int userLogin(String username, String password) {
+        LoginCallBackChecker callBackChecker = new LoginCallBackChecker();
+        db.collection("Accounts").document("username")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot userDoc = task.getResult();
+                            if (userDoc.exists()){
+
+                                if (userDoc.get("password").equals(password)){
+                                    // login successful
+                                    callBackChecker.done(0);
+                                }else{
+                                    // wrong password
+                                    callBackChecker.done(1);
+                                }
+                            }else{
+                                // user not exist
+                                callBackChecker.done(-1);
+                            }
+                        }else{
+                            Log.d(TAG, "login fail, query not successful"); // for debugging
+                            callBackChecker.done(-2);
+                        }
+                    }
+                });
+        // await loop
+        while (!(callBackChecker.isDone)){}
+        if (callBackChecker.loginResultCode == 0){
+            userID = username;
+        }
+        return callBackChecker.loginResultCode;
+    }
+
+    public static FirestoreUserDocCommunicator getInstance() {
+        return FireStoreUserDocCommunicatorHolder.instance;
     }
 
     /* moodEvent related methods*/
@@ -94,8 +157,12 @@ public class FirestoreUserDocCommunicator implements Serializable {
         //
         // required fields. no handling here, moodEvent class should handle it
 
-        DocumentReference newMoodRef = moodEventsCollection.document();
-        String refID = newMoodRef.getId();
+        DocumentReference newMoodEventRef = db
+                .collection("Accounts")
+                .document(userID)
+                .collection("MoodEvents")
+                .document();
+        String refID = newMoodEventRef.getId();
 
         // time info
         TimeJar time = moodEvent.getTime();
@@ -130,7 +197,7 @@ public class FirestoreUserDocCommunicator implements Serializable {
         }
 
         // putMoodEvent in place! yeeeaaaaaaa!
-        newMoodRef
+        newMoodEventRef
                 .set(moodEventInConstruct)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -145,29 +212,39 @@ public class FirestoreUserDocCommunicator implements Serializable {
                     }
                 });
 
-        return newMoodRef.getId();
+        return refID;
     }
 
     public void removeMoodEvent(String moodEventID){
         // error code need to be created
-        DocumentReference moodEvent = moodEventsCollection.document(moodEventID);
+        DocumentReference moodEvent = db
+                .collection("Accounts")
+                .document(userID)
+                .collection("MoodEvents")
+                .document(moodEventID);
 
         moodEvent.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Delete successful");
+                Log.d(TAG, "moodEvent delete successful");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Delete fail");
+                Log.d(TAG, "moodEvent delete fail");
             }
         });
 
     }
 
     public void initMoodEventsList(final RecyclerView moodList){
-        moodEventsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+        CollectionReference moodEventCol = db
+                .collection("Accounts")
+                .document(userID)
+                .collection("MoodEvents");
+
+        moodEventCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 ((MoodAdapter)moodList.getAdapter()).clearMoodEvents();

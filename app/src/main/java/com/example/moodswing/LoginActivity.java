@@ -33,6 +33,9 @@ import org.w3c.dom.Document;
  *      - lacking error handling, if empty program will crash. but will deal error cases later
  */
 public class LoginActivity extends AppCompatActivity {
+    private static final int RETURN_CODE_TO_REG = 1;
+    private static final int RETURN_CODE_TO_MOOD = 2;
+
     //
     private static final String TAG = "LoginActivity";
 
@@ -40,10 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEditText;
 
     private TextView toRegister;
-    //Button loginButton;
     private ImageButton loginBtn;
-    private FirebaseFirestore db;
-    private static boolean alreadyLoggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,85 +51,36 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.loginview);
 
         // init all elements
-
         usernameEditText = findViewById(R.id.userField);
         passwordEditText = findViewById(R.id.passField);
         toRegister = findViewById(R.id.switchToReg);
-        //loginButton = findViewById(R.id.loginButton);
-        db = FirebaseFirestore.getInstance();
         loginBtn = findViewById(R.id.confirmbtn);
 
         // set listeners
         toRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("return_mode",RETURN_CODE_TO_REG);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
             }
         });
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginProcess();
+                final String username = usernameEditText.getText().toString();
+                final String password = passwordEditText.getText().toString();
+
+                FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
+                if (communicator.userLogin(username, password)== 0){
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("return_mode",RETURN_CODE_TO_MOOD);
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                }
             }
         });
 
     }
-
-    /**
-     * This method is used for login username and password checking
-     */
-    private void loginProcess() {
-
-
-        final String username = usernameEditText.getText().toString();
-        final String password = passwordEditText.getText().toString();
-
-        /**
-         * Possible error handling missing here, for now
-         *      - app will crash, if username is empty
-         */
-
-        final DocumentReference userRef = db.collection("Accounts").document(username);
-        userRef.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot userDoc = task.getResult();
-                            if (userDoc.exists()) {
-                                Log.d(TAG,"userDoc exist");
-                                // check password
-                                if (userDoc.get("password").equals(password)){
-                                    //loginSuccessful
-                                    loginOnSuccessful(username);
-                                }else{
-                                    //loginCheckFail
-                                }
-                            }else{
-                                Log.d(TAG, "userDoc not exist");
-                                // print something
-                            }
-                        }else{
-                            Log.d(TAG, "Error finding user doc");
-                            // print something
-                        }
-                    }
-                });
-
-    }
-
-    /**
-     * This method will be called when login process success, it will return to MainActivity with
-     * @param username
-     *      A shallow DocumentSnapshot object contains basic user info. will be used to construct profile page
-     *      in main Activity
-     */
-    private void loginOnSuccessful(String username){
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("username",username);
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
-        alreadyLoggedIn = true;
-    }
-
 }

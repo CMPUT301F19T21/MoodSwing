@@ -3,6 +3,7 @@ package com.example.moodswing;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.util.Map;
  *      - lacking error handling, if empty program will crash. but will deal error cases later
  */
 public class RegisterActivity extends AppCompatActivity {
+    private static final int RETURN_CODE_TO_LOGIN = 1;
     //
     private static final String TAG = "RegisterActivity";
     private TextView toLogin;
@@ -54,6 +56,9 @@ public class RegisterActivity extends AppCompatActivity {
         toLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("return_mode",RETURN_CODE_TO_LOGIN);
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
         });
