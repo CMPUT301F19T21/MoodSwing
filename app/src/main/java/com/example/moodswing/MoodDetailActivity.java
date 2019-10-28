@@ -40,7 +40,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_details);
         Intent moodIntent = getIntent();
-        //username = moodIntent.getStringExtras("UserName");
+        username = moodIntent.getStringExtra("UserName");
         moodEvent = (MoodEvent) moodIntent.getSerializableExtra("MoodEvent");
 
         //test case
