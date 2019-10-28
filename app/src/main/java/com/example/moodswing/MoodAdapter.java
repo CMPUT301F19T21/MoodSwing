@@ -15,6 +15,15 @@ import java.util.ArrayList;
 public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> {
 
     private ArrayList<MoodEvent> moods;
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void OnItemiClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView moodType;
@@ -22,12 +31,24 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView timeText;
         CheckBox checkBox;
 
-        public MyViewHolder(View view){
+        public MyViewHolder(View view, OnItemClickListener listener){
             super(view);
             this.moodType = view.findViewById(R.id.moodText);
             this.dateText = view.findViewById(R.id.dateText);
             this.timeText = view.findViewById(R.id.timeText);
             this.checkBox = view.findViewById(R.id.checkbox);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION);{
+                            listener.OnItemiClick(position);
+                        }
+                    }
+                }
+            });
         }
 
 
@@ -43,7 +64,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.mood_list_content, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(view);
+        MyViewHolder myViewHolder = new MyViewHolder(view, mListener);
         return myViewHolder;
     }
 

@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     // RecyclerView related
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
-    private RecyclerView.Adapter moodListAdapter;
+    private MoodAdapter moodListAdapter;
     private ArrayList<MoodEvent> moodDataList;
             // note: can add an array here for item deletion.
 
@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         moodList.setAdapter(moodListAdapter);
         moodList.setLayoutManager(recyclerViewLayoutManager);
+
+
 
 
         /* ----------------------- IMPORTANT ---------------------*/
@@ -120,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
                 communicator.addMoodEvent(moodToAdd);
             }
         }
+        if (requestCode == 9) {
+            if (resultCode == RESULT_OK) {
+                String UID = data.getStringExtra("UID");
+                if (UID != null)
+                    communicator.removeMoodEvent(UID);
+            }
+        }
+
     }
 
     private void onPostLogin(String username){
@@ -156,8 +166,15 @@ public class MainActivity extends AppCompatActivity {
         /* ---------------------------- Other Actions ----------------------- */
 
 
-
-
+        moodListAdapter.setOnItemClickListener(new MoodAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemiClick(int position) {
+                MoodEvent moodEvent = moodDataList.get(position);
+                Intent intent = new Intent(MainActivity.this,MoodDetailActivity.class);
+                intent.putExtra("MoodEvent",moodEvent);
+                startActivityForResult(intent,9);
+            }
+        });
         //
 
     }
