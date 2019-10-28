@@ -90,11 +90,13 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
         MapButton = findViewById(R.id.mapViewButton);
         MapButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), GoogleMapActivity.class));
             }
         });
+
 
     }
 

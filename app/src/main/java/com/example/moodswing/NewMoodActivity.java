@@ -4,18 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
+
+
 
 import java.util.Calendar;
 
 public class NewMoodActivity extends AppCompatActivity {
+
 
     private EditText hoursEditText;
     private EditText minutesEditText;
@@ -36,10 +38,12 @@ public class NewMoodActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_mood);
+
 
 
         dateView = (TextView) findViewById(R.id.dateView);
