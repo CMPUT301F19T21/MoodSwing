@@ -107,6 +107,11 @@ public class MainActivity extends AppCompatActivity {
                 onPostLogin(username);
             }
         }
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
     }
 
     private void onPostLogin(String username){
@@ -119,8 +124,11 @@ public class MainActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
+                startActivityForResult(i, 2);
                 // testing
-                communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
+                //communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
                 // can call some method here to switch activity.
             }
         });
