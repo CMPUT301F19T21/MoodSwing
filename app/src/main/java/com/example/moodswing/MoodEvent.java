@@ -21,6 +21,7 @@ public class MoodEvent implements Serializable {
     // ignore other fields for now
     // photograph
     // location
+    private boolean isSelected;
 
     public void setMoodType(int moodType) {
         this.moodType = moodType;
@@ -72,6 +73,14 @@ public class MoodEvent implements Serializable {
 
     public String getUniqueID() {
         return uniqueID;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public void setMoodRequired(int moodType, @NonNull DateJar date, @NonNull TimeJar time) {
