@@ -111,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
-
+                MoodEvent moodToAdd = (MoodEvent) data.getSerializableExtra("result");
+                communicator.addMoodEvent(moodToAdd);
             }
         }
     }

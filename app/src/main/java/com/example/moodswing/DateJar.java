@@ -1,12 +1,14 @@
 package com.example.moodswing;
 
+import java.io.Serializable;
+
 /**
  * This class creates an Date object
  *      int year
  *      int month
  *      int day
  */
-public class DateJar {
+public class DateJar implements Serializable {
     private int year;
     private int month;
     private int day;

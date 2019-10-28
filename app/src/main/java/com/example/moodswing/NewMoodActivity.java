@@ -2,7 +2,9 @@ package com.example.moodswing;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -35,6 +37,10 @@ public class NewMoodActivity extends AppCompatActivity {
     private ImageButton sadMood;
     private ImageButton emotionalMood;
     private ImageButton angryMood;
+
+    private MoodEvent moodObj;
+
+    private Intent returnIntent;
 
 
 
@@ -82,6 +88,8 @@ public class NewMoodActivity extends AppCompatActivity {
         emotionalMood = (ImageButton) findViewById(R.id.emotional_button);
         sadMood = (ImageButton) findViewById(R.id.sad_button);
 
+
+
         happyMood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +134,12 @@ public class NewMoodActivity extends AppCompatActivity {
                     time = new TimeJar(hours, minutes);
                     if (date != null && moodState != 0) {
                         Log.v("SOMETHING", moodState + "");
+
+                        moodObj = new MoodEvent(moodState,date,time);
+                        Log.v("SOMETHING", moodObj.getDate().toString());
+                        returnIntent = new Intent();
+                        returnIntent.putExtra("result",moodObj);
+                        setResult(Activity.RESULT_OK, returnIntent);
                         finish();
                     }
                 }

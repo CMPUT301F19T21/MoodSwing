@@ -3,10 +3,12 @@ package com.example.moodswing;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * This Class is the blueprint for a moodEvent object
  */
-public class MoodEvent {
+public class MoodEvent implements Serializable {
     private String uniqueID; // this value is used to identify moodEvent
     // required fields
     private int moodType; // for this design im assuming each moodType has been assigned an unique int
