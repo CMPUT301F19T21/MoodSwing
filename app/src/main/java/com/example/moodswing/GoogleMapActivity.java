@@ -28,9 +28,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                onBackPressed();
             }
         });
         alreadyLoggedIn = true;
