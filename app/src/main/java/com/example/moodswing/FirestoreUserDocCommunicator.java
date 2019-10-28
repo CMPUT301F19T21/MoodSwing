@@ -106,19 +106,26 @@ public class FirestoreUserDocCommunicator{
      * @return
      */
     public int userLogin(String username, String password) {
+
+        Log.d("findbug","1");
+
         LoginCallBackChecker callBackChecker = new LoginCallBackChecker();
-        db.collection("Accounts").document("username")
+        Log.d("findbug","2");
+
+        this.db.collection("Accounts").document("username")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
+                            Log.d("this is really unique", "unique af");
                             DocumentSnapshot userDoc = task.getResult();
                             if (userDoc.exists()){
 
                                 if (userDoc.get("password").equals(password)){
                                     // login successful
                                     callBackChecker.done(0);
+                                    Log.v("SOMETHING","SUCCESS");
                                 }else{
                                     // wrong password
                                     callBackChecker.done(1);
@@ -128,7 +135,7 @@ public class FirestoreUserDocCommunicator{
                                 callBackChecker.done(-1);
                             }
                         }else{
-                            Log.d(TAG, "login fail, query not successful"); // for debugging
+                            Log.d("unique", "login fail, query not successful"); // for debugging
                             callBackChecker.done(-2);
                         }
                     }

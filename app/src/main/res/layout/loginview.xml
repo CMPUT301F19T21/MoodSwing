@@ -73,7 +73,6 @@
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passField"
-        android:background="@null"
         app:srcCompat="@drawable/confirmbutton" />
 
 

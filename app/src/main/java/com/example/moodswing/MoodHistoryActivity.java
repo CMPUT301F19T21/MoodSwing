@@ -17,12 +17,14 @@ import java.util.ArrayList;
  * MainActivity
  */
 public class MoodHistoryActivity extends AppCompatActivity {
+    // communicator
+    private FirestoreUserDocCommunicator communicator;
+
     // general
     private Button MapButton;
     private static final String TAG = "MainActivity";
-    private FirestoreUserDocCommunicator communicator;
     private static final int USER_ID_REQUEST = 1;
-    private static boolean alreadyLoggedIn = false;
+
 
     // UI elements
     private RecyclerView moodList;
@@ -40,69 +42,38 @@ public class MoodHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_history_screen);
+        communicator = FirestoreUserDocCommunicator.getInstance();
 
 
         /* link all UI elements here */
         addButton = (Button) findViewById(R.id.addMoodButton);
         delButton = (Button) findViewById(R.id.delMoodButton);
         moodList = findViewById(R.id.mood_list);
+        MapButton = findViewById(R.id.mapViewButton);
 
-            // recyclerView related
+    // recyclerView related
         recyclerViewLayoutManager = new LinearLayoutManager(this);
         moodDataList = new ArrayList<>();
         moodListAdapter = new MoodAdapter(moodDataList);
 
         moodList.setAdapter(moodListAdapter);
         moodList.setLayoutManager(recyclerViewLayoutManager);
-
-
-        /* ----------------------- IMPORTANT ---------------------*/
-        /* life cycle reminder
-         * this is the end of onCreate method
-         *
-         *
-         * for action that need to be performed after user loggin should be written in "onPostLogin()" method
-         * for action that need to be performed before user loggin should be written in "onCreate()" method BEFORE this msg
-         *
-         *
-         */
-        /* login */
-        if(alreadyLoggedIn == false) {
-            Intent intentLoginActivity = new Intent(this, LoginActivity.class);
-            startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
-            alreadyLoggedIn = true;
-        }
-
-        MapButton = findViewById(R.id.mapViewButton);
+        // set realtime listener
+        communicator.initMoodEventsList(moodList);
+        // listeners
         MapButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), GoogleMapActivity.class));
             }
         });
-
-
-    }
-
-
-
-    private void onPostLogin(String username){
-        /* --------------- init communicator (this should be on top)----------- */
-        communicator = new FirestoreUserDocCommunicator(username);
-        communicator.initMoodEventsList(moodList); // init listView realtimeListener by communicator
-
-        /* --------------------------- OnclickListeners ------------------------ */
-        // adding
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
+                //startActivityForResult(i, 2);
 
-                Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
-                startActivityForResult(i, 2);
-                // testing
-                //communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
-                // can call some method here to switch activity.
+                communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
             }
         });
         // deletion
@@ -116,14 +87,5 @@ public class MoodHistoryActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        /* ---------------------------- Other Actions ----------------------- */
-
-
-
-
-        //
-
     }
 }

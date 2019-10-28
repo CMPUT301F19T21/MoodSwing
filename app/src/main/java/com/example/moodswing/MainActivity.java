@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.welcome_screen);
 
         /* login */
-    }
+        toLogin();
+}
 
     private void toLogin(){
         Intent intent = new Intent(this, LoginActivity.class);
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toReg(){
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivityForResult(intent, REG_ACTIVITY_REQUEST_CODE);
     }
 

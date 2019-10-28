@@ -56,20 +56,13 @@ public class RegisterActivity extends AppCompatActivity {
         toLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("return_mode",RETURN_CODE_TO_LOGIN);
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                toLogin();
             }
         });
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerNewUser();
-                /**
-                 * missing error handling, for now
-                 *      - what if register failed? dont close screen, do something
-                 */
             }
         });
 
@@ -100,6 +93,8 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "User creation successful :" + userName);
+                        //
+                        toLogin();
                         finish(); // return to signup.
                     }
                 })
@@ -109,5 +104,12 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.d(TAG, "Error adding user", e);
                     }
                 });
+    }
+
+    private void toLogin(){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("return_mode",RETURN_CODE_TO_LOGIN);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 }

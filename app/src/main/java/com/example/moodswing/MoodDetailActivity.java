@@ -49,7 +49,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         TimeJar timeJar = new TimeJar(11,11);
         if (moodEvent == null)
             moodEvent = new MoodEvent(1,dateJar,timeJar);
-        final FirestoreUserDocCommunicator communicator = new FirestoreUserDocCommunicator(username);
+        final FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
