@@ -49,7 +49,7 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
 
         hourText = findViewById(R.id.Hours);
         minuteText = findViewById(R.id.Minutes);
-        reasonEditText = findViewById(R.id.reasonEditText);
+        //reasonEditText = findViewById(R.id.reasonEditText);
         happyButton = findViewById(R.id.happy_button);
         sadButton = findViewById(R.id.sad_button);
         angryButton = findViewById(R.id.angry_button);
@@ -61,16 +61,18 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!dateText.getText().toString().equals("")){
+                /*if (!dateText.getText().toString().equals("")){
                     String[] datetemp = dateText.getText().toString().split("-");
                     DateJar dateJar = new DateJar(Integer.parseInt(datetemp[0]),Integer.parseInt(datetemp[1]),Integer.parseInt(datetemp[2]));
-                    moodEvent.setDate(dateJar);}
-                if (!timeText.getText().toString().equals("") ){
-                    String[] time = timeText.getText().toString().split(":");
-                    TimeJar timeJar = new TimeJar(Integer.parseInt(time[0]),Integer.parseInt(time[1]));
+                    moodEvent.setDate(dateJar);}*/
+                String minutes = minuteText.getText().toString();
+                String hours = hourText.getText().toString();
+                if (!minutes.equals("") && !hours.equals("")){
+
+                    TimeJar timeJar = new TimeJar(Integer.parseInt(minutes),Integer.parseInt(hours));
                     moodEvent.setTime(timeJar);}
-                reason = reasonEditText.getText().toString();
-                moodEvent.setReason(reason);
+                //reason = reasonEditText.getText().toString();
+                //moodEvent.setReason(reason);
                 communicator.editMood(moodEvent);
                 Intent backIntent = new Intent(EditMoodActivity.this,MoodDetailActivity.class);
                 backIntent.putExtra("UserName", username);
