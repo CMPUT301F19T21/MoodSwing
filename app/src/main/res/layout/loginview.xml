@@ -15,7 +15,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginEnd="111dp"
         android:layout_marginRight="111dp"
-        app:layout_constraintBottom_toTopOf="@+id/userField"
+        app:layout_constraintBottom_toTopOf="@+id/userEmailField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
         app:srcCompat="@drawable/loginlogo" />
 
     <EditText
-        android:id="@+id/userField"
+        android:id="@+id/userEmailField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="99dp"
@@ -31,7 +31,7 @@
         android:layout_marginEnd="99dp"
         android:layout_marginRight="99dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="Email"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userField"
+        app:layout_constraintTop_toBottomOf="@+id/userEmailField"
         android:hint="Password"/>
 
     <TextView
@@ -73,7 +73,6 @@
         android:layout_marginTop="64dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passField"
-        android:background="@null"
         app:srcCompat="@drawable/confirmbutton" />
 
 

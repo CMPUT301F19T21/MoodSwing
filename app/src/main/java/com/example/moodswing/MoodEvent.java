@@ -3,10 +3,12 @@ package com.example.moodswing;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
+
 /**
  * This Class is the blueprint for a moodEvent object
  */
-public class MoodEvent {
+public class MoodEvent implements Serializable {
     private String uniqueID; // this value is used to identify moodEvent
     // required fields
     private int moodType; // for this design im assuming each moodType has been assigned an unique int
@@ -19,6 +21,27 @@ public class MoodEvent {
     // ignore other fields for now
     // photograph
     // location
+    private boolean isSelected;
+
+    public void setMoodType(int moodType) {
+        this.moodType = moodType;
+    }
+
+    public void setDate(DateJar date) {
+        this.date = date;
+    }
+
+    public void setTime(TimeJar time) {
+        this.time = time;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public void setSocialSituation(Integer socialSituation) {
+        this.socialSituation = socialSituation;
+    }
 
     public MoodEvent(int moodType, @NonNull DateJar date, @NonNull TimeJar time){
         setMoodRequired(moodType, date, time);
@@ -46,6 +69,18 @@ public class MoodEvent {
 
     public Integer getSocialSituation() {
         return socialSituation;
+    }
+
+    public String getUniqueID() {
+        return uniqueID;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public void setMoodRequired(int moodType, @NonNull DateJar date, @NonNull TimeJar time) {

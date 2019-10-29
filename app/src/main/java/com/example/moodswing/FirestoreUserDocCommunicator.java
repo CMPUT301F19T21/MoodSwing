@@ -7,16 +7,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.internal.FallbackServiceBroker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,58 +31,51 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ------------ PLEASE READ --------------:
- * (dont worry these are just notes, it is here just in case the usage of this class confuses you)
- * (these notes will be deleted in final product)
+ * ------------ PLEASE READ --------------
+ *  missing check ifLogin.
  *
- *
- *      - this class manages all the transaction between app and firestore, it makes managing cloud user data easier
- *          for example: edit user profile info, edit mood, add a moodEvent to firestore
- *
- *      - you can create as many instance as you want (in same/different activities) :D
- *
- *      - it is important to understand the structure of how our app store data on firestore before modifying/adding methods to this class
- *          basically, we have a root level collection called "Accounts"
- *              In "Accounts", we have documents of users(each document in Accounts represent one user profile) and Document ID is the username
- *                  Each user document has one sub collection of "MoodEvents"
- *                      In "MoodEvents", we have documents of one single moodEvent, each document in MoodEvents represent one moodEvent object
- *
- *                      Structure:
- *                      Collection - "Accounts"
- *                              Document - "Users"
- *                                      SubCollection - "MoodEvents"
- *                                              Document - "MoodEvenets"
- *
- *      - listview's real time update is also maintained in a communicator objects
- *      - when one user logged in, a communicator object is created.
- *
- * ------------- not so important ideas for this class --------------:
- *      - following/follower management features should be added
- *      - user management feature should be added
- *      - but dont make this class too big.
- *
- *      - can be used between fragments/activities, ill try to make this class implements Serializable, So it will be very easy to pass this object
- *          by using Intent/Bundle!!! :D
- *      - please add more/implement new stuff!
  */
-public class FirestoreUserDocCommunicator {
+public class FirestoreUserDocCommunicator{
+
     private static final String TAG = "FirestoreUserDocCommuni";
     private FirebaseFirestore db;
-    private DocumentReference userDocRef;
-    private CollectionReference moodEventsCollection;
-    private String userID;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
-    public FirestoreUserDocCommunicator(String username){
+    private static FirestoreUserDocCommunicator instance = null;
+
+    // reference
+
+    protected FirestoreUserDocCommunicator(){
         // init db
-        db = FirebaseFirestore.getInstance();
-        userDocRef = db.collection("Accounts").document(username); // will always exist so no error checking
-        moodEventsCollection = userDocRef.collection("MoodEvents");
+        this.db = FirebaseFirestore.getInstance();
+        this.mAuth = FirebaseAuth.getInstance();
+        this.user = mAuth.getCurrentUser();
 
-        this.userID = username;
+    }
+    private boolean ifLogin(){
+        if (user == null) {
+            return false;
+        }else{
+            return true;
+        }
     }
 
-    public String getUsername(){
-        return this.userID;
+    private void userSignOut(){
+        mAuth.signOut();
+        user = null;
+    }
+
+    public static FirestoreUserDocCommunicator getInstance() {
+        if (instance == null) {
+            instance = new FirestoreUserDocCommunicator();
+        }
+        return instance;
+    }
+
+    public static void destroy(){
+        instance.userSignOut();
+        instance = null;
     }
 
     /* moodEvent related methods*/
@@ -90,8 +90,12 @@ public class FirestoreUserDocCommunicator {
         //
         // required fields. no handling here, moodEvent class should handle it
 
-        DocumentReference newMoodRef = moodEventsCollection.document();
-        String refID = newMoodRef.getId();
+        DocumentReference newMoodEventRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document();
+        String refID = newMoodEventRef.getId();
 
         // time info
         TimeJar time = moodEvent.getTime();
@@ -126,7 +130,7 @@ public class FirestoreUserDocCommunicator {
         }
 
         // putMoodEvent in place! yeeeaaaaaaa!
-        newMoodRef
+        newMoodEventRef
                 .set(moodEventInConstruct)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -141,29 +145,39 @@ public class FirestoreUserDocCommunicator {
                     }
                 });
 
-        return newMoodRef.getId();
+        return refID;
     }
 
     public void removeMoodEvent(String moodEventID){
         // error code need to be created
-        DocumentReference moodEvent = moodEventsCollection.document(moodEventID);
+        DocumentReference moodEvent = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(moodEventID);
 
         moodEvent.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Delete successful");
+                Log.d(TAG, "moodEvent delete successful");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Delete fail");
+                Log.d(TAG, "moodEvent delete fail");
             }
         });
 
     }
 
     public void initMoodEventsList(final RecyclerView moodList){
-        moodEventsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+        CollectionReference moodEventCol = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents");
+
+        moodEventCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 ((MoodAdapter)moodList.getAdapter()).clearMoodEvents();
@@ -184,11 +198,16 @@ public class FirestoreUserDocCommunicator {
                     ((MoodAdapter)moodList.getAdapter()).addToMoods(moodEvent);
                 }
                 moodList.getAdapter().notifyDataSetChanged();
-            }
+        }
         });
     }
 
     /* user management related methods */
+
+
+    public void editMood(MoodEvent moodEvent){
+        //
+    }
 
     public void editUserPassword() {
         //

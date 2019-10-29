@@ -1,12 +1,16 @@
 package com.example.moodswing;
 
+import java.io.Serializable;
+import java.text.DateFormatSymbols;
+
+
 /**
  * This class creates an Date object
  *      int year
  *      int month
  *      int day
  */
-public class DateJar {
+public class DateJar implements Serializable {
     private int year;
     private int month;
     private int day;
@@ -33,6 +37,14 @@ public class DateJar {
         this.year = year;
         this.month = month;
         this.day = day;
+    }
+
+    /**
+     * Get month name by input month number
+     * @return
+     */
+    public String getMonthName() {
+        return new DateFormatSymbols().getMonths()[month-1];
     }
 
 }

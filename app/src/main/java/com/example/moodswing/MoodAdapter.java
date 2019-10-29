@@ -3,6 +3,8 @@ package com.example.moodswing;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,12 +20,14 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView moodType;
         TextView dateText;
         TextView timeText;
+        CheckBox checkBox;
 
         public MyViewHolder(View view){
             super(view);
             this.moodType = view.findViewById(R.id.moodText);
             this.dateText = view.findViewById(R.id.dateText);
             this.timeText = view.findViewById(R.id.timeText);
+            this.checkBox = view.findViewById(R.id.checkbox);
         }
 
 
@@ -48,8 +52,9 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView moodType = holder.moodType;
         TextView dateText = holder.dateText;
         TextView timeText = holder.timeText;
+        CheckBox checkBox = holder.checkBox;
 
-        MoodEvent moodEvent = moods.get(position);
+        final MoodEvent moodEvent = moods.get(position);
         DateJar date = moodEvent.getDate();
         String dateStr = String.format("%04d-%02d-%02d",date.getYear(),date.getMonth(),date.getDay());
         dateText.setText(dateStr);
@@ -60,6 +65,20 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
 
         Integer moodTypeInt = moodEvent.getMoodType();
         moodType.setText(moodTypeInt.toString());
+
+        checkBox.setOnCheckedChangeListener(null);
+        checkBox.setSelected(moodEvent.isSelected());
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    moodEvent.setSelected(true);
+                }else {
+                    moodEvent.setSelected(false);
+                }
+            }
+        });
+        checkBox.setChecked(moodEvent.isSelected());
     }
 
     @Override
