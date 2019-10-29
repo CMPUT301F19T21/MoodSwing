@@ -66,7 +66,7 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars[2]" />
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <ImageView
         android:id="@+id/socialImg"
@@ -118,14 +118,15 @@
 
     <ImageButton
         android:id="@+id/someButton"
-        android:layout_width="53dp"
-        android:layout_height="51dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="28dp"
         android:layout_marginRight="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars[0]" />
+        android:background="@null"
+        app:srcCompat="@drawable/confirmbutton" />
 
     <ImageButton
         android:id="@+id/deleteButton"
@@ -136,7 +137,8 @@
         android:layout_marginRight="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/someButton"
-        tools:srcCompat="@tools:sample/avatars[15]" />
+        android:background="@null"
+        app:srcCompat="@drawable/deletebutton" />
 
     <ImageButton
         android:id="@+id/editButton"
@@ -147,5 +149,6 @@
         android:layout_marginRight="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deleteButton"
-        tools:srcCompat="@tools:sample/avatars[14]" />
+        android:background="@null"
+        app:srcCompat="@drawable/editbutton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
