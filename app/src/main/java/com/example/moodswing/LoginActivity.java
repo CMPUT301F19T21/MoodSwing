@@ -82,11 +82,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // check if user is signed in (non-null) and update UI accordingly.
         if (mAuth.getCurrentUser()!=null){
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("return_mode",RETURN_CODE_TO_MOOD);
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
+            loginPost();
         }
+    }
+
+    private void loginPost() {
+        FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("return_mode",RETURN_CODE_TO_MOOD);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     private void loginProcess(){
@@ -100,12 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // to mood
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("return_mode",RETURN_CODE_TO_MOOD);
-                            setResult(Activity.RESULT_OK, returnIntent);
-                            finish();
+                            loginPost();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

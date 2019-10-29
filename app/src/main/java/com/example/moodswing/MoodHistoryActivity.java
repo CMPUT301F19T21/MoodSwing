@@ -31,6 +31,9 @@ public class MoodHistoryActivity extends AppCompatActivity {
     private Button addButton;
     private Button delButton;
 
+    // delete latter, here for convince
+    private Button logoutBtn;
+
     // RecyclerView related
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private RecyclerView.Adapter moodListAdapter;
@@ -50,6 +53,9 @@ public class MoodHistoryActivity extends AppCompatActivity {
         delButton = (Button) findViewById(R.id.delMoodButton);
         moodList = findViewById(R.id.mood_list);
         MapButton = findViewById(R.id.mapViewButton);
+
+        //
+        logoutBtn = findViewById(R.id.buttonTempLogout);
 
     // recyclerView related
         recyclerViewLayoutManager = new LinearLayoutManager(this);
@@ -85,6 +91,14 @@ public class MoodHistoryActivity extends AppCompatActivity {
                         communicator.removeMoodEvent(moodDataList.get(i).getUniqueID());
                     }
                 }
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                communicator.userSignOut();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
             }
         });
     }

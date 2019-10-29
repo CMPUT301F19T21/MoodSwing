@@ -12,6 +12,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,123 +31,40 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ------------ PLEASE READ --------------:
- * (dont worry these are just notes, it is here just in case the usage of this class confuses you)
- * (these notes will be deleted in final product)
+ * ------------ PLEASE READ --------------
+ *  missing check ifLogin.
  *
- *
- *      - this class manages all the transaction between app and firestore, it makes managing cloud user data easier
- *          for example: edit user profile info, edit mood, add a moodEvent to firestore
- *
- *      - you can create as many instance as you want (in same/different activities) :D
- *
- *      - it is important to understand the structure of how our app store data on firestore before modifying/adding methods to this class
- *          basically, we have a root level collection called "Accounts"
- *              In "Accounts", we have documents of users(each document in Accounts represent one user profile) and Document ID is the username
- *                  Each user document has one sub collection of "MoodEvents"
- *                      In "MoodEvents", we have documents of one single moodEvent, each document in MoodEvents represent one moodEvent object
- *
- *                      Structure:
- *                      Collection - "Accounts"
- *                              Document - "Users"
- *                                      SubCollection - "MoodEvents"
- *                                              Document - "MoodEvenets"
- *
- *      - listview's real time update is also maintained in a communicator objects
- *      - when one user logged in, a communicator object is created.
- *
- * ------------- not so important ideas for this class --------------:
- *      - following/follower management features should be added
- *      - user management feature should be added
- *      - but dont make this class too big.
- *
- *      - can be used between fragments/activities, ill try to make this class implements Serializable, So it will be very easy to pass this object
- *          by using Intent/Bundle!!! :D
- *      - please add more/implement new stuff!
  */
 public class FirestoreUserDocCommunicator{
 
     private static final String TAG = "FirestoreUserDocCommuni";
     private FirebaseFirestore db;
-    private String userID;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     // reference
     private static class FireStoreUserDocCommunicatorHolder {
         private static final FirestoreUserDocCommunicator instance = new FirestoreUserDocCommunicator();
     }
 
-    private class LoginCallBackChecker {
-        private boolean isDone = false;
-        private int loginResultCode;
-        private void done(int loginResultCode){
-            this.isDone = true;
-            this.loginResultCode = loginResultCode;
-        }
-    }
-
     private FirestoreUserDocCommunicator(){
         // init db
         this.db = FirebaseFirestore.getInstance();
-        this.userID = null;
+        this.mAuth = FirebaseAuth.getInstance();
+        this.user = mAuth.getCurrentUser();
 
     }
     private boolean ifLogin(){
-        if (userID == null) {
+        if (user == null) {
             return false;
         }else{
             return true;
         }
     }
 
-    /**
-     * return 0 if login successful
-     * return 1 if wrong password
-     * return -1 if user not exist
-     * @param username
-     * @param password
-     * @return
-     */
-    public int userLogin(String username, String password) {
-
-        Log.d("findbug","1");
-
-        LoginCallBackChecker callBackChecker = new LoginCallBackChecker();
-        Log.d("findbug","2");
-
-        this.db.collection("Accounts").document("username")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("this is really unique", "unique af");
-                            DocumentSnapshot userDoc = task.getResult();
-                            if (userDoc.exists()){
-
-                                if (userDoc.get("password").equals(password)){
-                                    // login successful
-                                    callBackChecker.done(0);
-                                    Log.v("SOMETHING","SUCCESS");
-                                }else{
-                                    // wrong password
-                                    callBackChecker.done(1);
-                                }
-                            }else{
-                                // user not exist
-                                callBackChecker.done(-1);
-                            }
-                        }else{
-                            Log.d("unique", "login fail, query not successful"); // for debugging
-                            callBackChecker.done(-2);
-                        }
-                    }
-                });
-        // await loop
-        while (!(callBackChecker.isDone)){}
-        if (callBackChecker.loginResultCode == 0){
-            userID = username;
-        }
-        return callBackChecker.loginResultCode;
+    public void userSignOut(){
+        mAuth.signOut();
+        user = null;
     }
 
     public static FirestoreUserDocCommunicator getInstance() {
@@ -166,7 +85,7 @@ public class FirestoreUserDocCommunicator{
 
         DocumentReference newMoodEventRef = db
                 .collection("Accounts")
-                .document(userID)
+                .document(user.getUid())
                 .collection("MoodEvents")
                 .document();
         String refID = newMoodEventRef.getId();
@@ -226,7 +145,7 @@ public class FirestoreUserDocCommunicator{
         // error code need to be created
         DocumentReference moodEvent = db
                 .collection("Accounts")
-                .document(userID)
+                .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEventID);
 
@@ -248,7 +167,7 @@ public class FirestoreUserDocCommunicator{
 
         CollectionReference moodEventCol = db
                 .collection("Accounts")
-                .document(userID)
+                .document(user.getUid())
                 .collection("MoodEvents");
 
         moodEventCol.addSnapshotListener(new EventListener<QuerySnapshot>() {

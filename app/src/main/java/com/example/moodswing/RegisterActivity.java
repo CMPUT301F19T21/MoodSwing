@@ -103,8 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Map<String, Object> newUser = new HashMap<>();
                             newUser.put("username",usernameEditText);
                             db.collection("Users").document(user.getUid())
-                                    .set();
-
+                                    .set(newUser);
                             toLogin();
                         } else {
                             // If sign in fails, display a message to the user.
