@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -115,5 +116,15 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            startActivity(homeIntent);
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
     }
 }

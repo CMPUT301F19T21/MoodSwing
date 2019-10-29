@@ -124,6 +124,8 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    //manually makes back button go to login screen
+
     public boolean onKeyDown(int keyCode, KeyEvent event){
         if (keyCode == KeyEvent.KEYCODE_BACK){
             toLogin();
