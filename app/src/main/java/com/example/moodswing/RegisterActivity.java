@@ -118,19 +118,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void toLogin(){
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("return_mode",RETURN_CODE_TO_LOGIN);
-        setResult(Activity.RESULT_OK, returnIntent);
         finish();
-    }
-
-    //manually makes back button go to login screen
-
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            toLogin();
-            return true;
-        }
-        return super.onKeyDown(keyCode,event);
     }
 }

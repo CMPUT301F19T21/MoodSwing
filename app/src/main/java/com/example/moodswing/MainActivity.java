@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void toLogin(){
         Intent intent = new Intent(this, LoginActivity.class);
+        finishAffinity();
         startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
     }
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void toMood(){
         Intent intent = new Intent (this, MoodHistoryActivity.class);
+        finishAffinity();
         startActivity(intent);
     }
 

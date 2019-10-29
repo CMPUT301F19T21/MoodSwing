@@ -97,7 +97,8 @@ public class MoodHistoryActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                communicator.userSignOut();
+                FirestoreUserDocCommunicator.destroy();
+                finishAffinity();
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
             }
         });
