@@ -63,17 +63,13 @@ public class LoginActivity extends AppCompatActivity {
         toRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("return_mode",RETURN_CODE_TO_REG);
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                startActivity(new Intent(getApplicationContext(),RegisterActivity.class));
             }
         });
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginProcess();
-
             }
         });
     }
@@ -89,10 +85,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginPost() {
         FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("return_mode",RETURN_CODE_TO_MOOD);
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        //Intent returnIntent = new Intent();
+        //returnIntent.putExtra("return_mode",RETURN_CODE_TO_MOOD);
+        //setResult(Activity.RESULT_OK, returnIntent);
+        // finish(); ------- notes --------
+        // now MainActivity Screen is kinda useless, but may be useful if we want make login fragment
+        Intent intent = new Intent (this, MoodHistoryActivity.class);
+        finishAffinity();
+        startActivity(intent);
     }
 
     private void loginProcess(){
@@ -116,15 +116,5 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory(Intent.CATEGORY_HOME);
-        homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            startActivity(homeIntent);
-            return true;
-        }
-        return super.onKeyDown(keyCode,event);
     }
 }

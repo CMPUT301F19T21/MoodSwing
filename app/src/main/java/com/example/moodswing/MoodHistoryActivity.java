@@ -98,6 +98,7 @@ public class MoodHistoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 communicator.userSignOut();
+                finishAffinity();
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
             }
         });
