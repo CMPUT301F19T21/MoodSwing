@@ -42,12 +42,11 @@ public class FirestoreUserDocCommunicator{
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
-    // reference
-    private static class FireStoreUserDocCommunicatorHolder {
-        private static final FirestoreUserDocCommunicator instance = new FirestoreUserDocCommunicator();
-    }
+    private static FirestoreUserDocCommunicator instance = null;
 
-    private FirestoreUserDocCommunicator(){
+    // reference
+
+    protected FirestoreUserDocCommunicator(){
         // init db
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
@@ -62,13 +61,21 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
-    public void userSignOut(){
+    private void userSignOut(){
         mAuth.signOut();
         user = null;
     }
 
     public static FirestoreUserDocCommunicator getInstance() {
-        return FireStoreUserDocCommunicatorHolder.instance;
+        if (instance == null) {
+            instance = new FirestoreUserDocCommunicator();
+        }
+        return instance;
+    }
+
+    public static void destroy(){
+        instance.userSignOut();
+        instance = null;
     }
 
     /* moodEvent related methods*/
