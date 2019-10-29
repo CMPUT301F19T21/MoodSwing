@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -121,5 +122,13 @@ public class RegisterActivity extends AppCompatActivity {
         returnIntent.putExtra("return_mode",RETURN_CODE_TO_LOGIN);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            toLogin();
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
     }
 }
