@@ -102,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             Map<String, Object> newUser = new HashMap<>();
                             newUser.put("username",username);
-                            db.collection("Users").document(user.getUid())
+                            db.collection("users").document(user.getUid())
                                     .set(newUser);
                             toLogin();
                         } else {
