@@ -84,7 +84,7 @@ public class FirestoreUserDocCommunicator{
         // required fields. no handling here, moodEvent class should handle it
 
         DocumentReference newMoodEventRef = db
-                .collection("Accounts")
+                .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document();
@@ -144,7 +144,7 @@ public class FirestoreUserDocCommunicator{
     public void removeMoodEvent(String moodEventID){
         // error code need to be created
         DocumentReference moodEvent = db
-                .collection("Accounts")
+                .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEventID);
@@ -166,7 +166,7 @@ public class FirestoreUserDocCommunicator{
     public void initMoodEventsList(final RecyclerView moodList){
 
         CollectionReference moodEventCol = db
-                .collection("Accounts")
+                .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents");
 
@@ -191,7 +191,7 @@ public class FirestoreUserDocCommunicator{
                     ((MoodAdapter)moodList.getAdapter()).addToMoods(moodEvent);
                 }
                 moodList.getAdapter().notifyDataSetChanged();
-            }
+        }
         });
     }
 
