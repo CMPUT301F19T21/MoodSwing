@@ -101,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             Map<String, Object> newUser = new HashMap<>();
-                            newUser.put("username",usernameEditText);
+                            newUser.put("username",username);
                             db.collection("Users").document(user.getUid())
                                     .set(newUser);
                             toLogin();
