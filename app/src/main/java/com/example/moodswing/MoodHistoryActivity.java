@@ -76,10 +76,10 @@ public class MoodHistoryActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
-                //startActivityForResult(i, 2);
+                Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
+                startActivityForResult(i, 2);
 
-                communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
+                //communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
             }
         });
         // deletion

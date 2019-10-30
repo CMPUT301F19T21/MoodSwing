@@ -1,10 +1,13 @@
 package com.example.moodswing;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -13,12 +16,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-
+import java.util.ArrayList;
 import java.util.Calendar;
 
-public class NewMoodActivity extends AppCompatActivity {
+public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener{
 
 
     private EditText hoursEditText;
@@ -42,7 +46,16 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private Intent returnIntent;
 
+    private AddMoodAdapter adapter;
 
+    private Integer selectedMood;
+
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+        selectedMood = position;
+    }
 
 
     @Override
@@ -50,6 +63,25 @@ public class NewMoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_mood);
 
+        ArrayList<Integer> viewColors = new ArrayList<>();
+        viewColors.add(1);
+        viewColors.add(2);
+        viewColors.add(3);
+        viewColors.add(4);
+
+        ArrayList<String> animalNames = new ArrayList<>();
+        animalNames.add("Happy");
+        animalNames.add("Angry");
+        animalNames.add("Emotional");
+        animalNames.add("Sad");
+
+
+        RecyclerView recyclerView = findViewById(R.id.addRecyclerView);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(NewMoodActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(horizontalLayoutManager);
+        adapter = new AddMoodAdapter(this, viewColors, animalNames);
+        adapter.setClickListener(NewMoodActivity.this);
+        recyclerView.setAdapter(adapter);
 
 
         dateView = (TextView) findViewById(R.id.dateView);
@@ -58,7 +90,6 @@ public class NewMoodActivity extends AppCompatActivity {
 
 
         //Initializing the date picker
-
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,7 +98,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
 
-                DatePickerDialog datepick = new DatePickerDialog( NewMoodActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth,dateListener,year,month,day);
+                DatePickerDialog datepick = new DatePickerDialog(NewMoodActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateListener, year, month, day);
                 datepick.show();
             }
         });
@@ -75,50 +106,10 @@ public class NewMoodActivity extends AppCompatActivity {
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                date = new DateJar(year,month,day);
+                date = new DateJar(year, month, day);
                 Log.v("SOMETHING", year + "");
             }
         };
-
-
-        //Setting the mood buttons to a listener, 1=happy,2=angry,3=emotional,4=sad
-
-        happyMood = (ImageButton) findViewById(R.id.happy_button);
-        angryMood = (ImageButton) findViewById(R.id.angry_button);
-        emotionalMood = (ImageButton) findViewById(R.id.emotional_button);
-        sadMood = (ImageButton) findViewById(R.id.sad_button);
-
-
-
-        happyMood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moodState = 1;
-            }
-        });
-
-        angryMood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moodState = 2;
-            }
-        });
-
-        emotionalMood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moodState = 3;
-            }
-        });
-
-        sadMood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moodState = 4;
-            }
-        });
-
-
 
 
         confirmButton = (ImageButton) findViewById(R.id.confirmNewMood);
@@ -135,34 +126,15 @@ public class NewMoodActivity extends AppCompatActivity {
                     if (date != null && moodState != 0) {
                         Log.v("SOMETHING", moodState + "");
 
-                        moodObj = new MoodEvent(moodState,date,time);
+                        moodObj = new MoodEvent(moodState, date, time);
                         Log.v("SOMETHING", moodObj.getDate().toString());
                         returnIntent = new Intent();
-                        returnIntent.putExtra("result",moodObj);
+                        returnIntent.putExtra("result", moodObj);
                         setResult(Activity.RESULT_OK, returnIntent);
                         finish();
                     }
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

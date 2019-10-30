@@ -9,53 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <Space
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/addRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="157dp" />
+
+        <Space
         android:layout_width="1dp"
         android:layout_height="30dp"/>
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="?android:selectableItemBackground">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/happymood"
-                android:id="@+id/happy_button"
-                android:background="@null"
-                />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/angrymood"
-                android:id="@+id/angry_button"
-                android:background="@null"
-                />
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/emotionalmood"
-                android:id="@+id/emotional_button"
-                android:background="@null"
-                />
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/sadmood"
-                android:background="@null"
-                android:id="@+id/sad_button"/>
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <Space
+        <Space
         android:layout_width="1dp"
         android:layout_height="30dp"/>
 

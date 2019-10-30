@@ -50,10 +50,10 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
         hourText = findViewById(R.id.Hours);
         minuteText = findViewById(R.id.Minutes);
         //reasonEditText = findViewById(R.id.reasonEditText);
-        happyButton = findViewById(R.id.happy_button);
-        sadButton = findViewById(R.id.sad_button);
-        angryButton = findViewById(R.id.angry_button);
-        emotionalButton = findViewById(R.id.emotional_button);
+        //happyButton = findViewById(R.id.happy_button);
+        //sadButton = findViewById(R.id.sad_button);
+        //angryButton = findViewById(R.id.angry_button);
+        //emotionalButton = findViewById(R.id.emotional_button);
         confirmButton = findViewById(R.id.confirmNewMood);
 
 
