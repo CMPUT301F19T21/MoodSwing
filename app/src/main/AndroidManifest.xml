@@ -14,12 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".EditMoodActivity">
-
-        </activity>
-        <activity android:name=".MoodDetailActivity">
-        </activity>
-
 
         <activity android:name=".MoodHistoryActivity"></activity>
         <activity android:name=".EditMoodActivity"></activity>
