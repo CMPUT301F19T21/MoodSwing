@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-40dp"
-        tools:layout="@layout/activity_google_map" />
+        tools:layout_editor_absoluteX="-40dp" />
 
     <Button
         android:id="@+id/backButton"

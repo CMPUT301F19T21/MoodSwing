@@ -8,17 +8,46 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.Toast;
+
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
+/**
+ * MainActivity
+ */
 public class MainActivity extends AppCompatActivity {
-    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
-    private static final int REG_ACTIVITY_REQUEST_CODE = 2;
+    // general
+    private Button MapButton;
+    private static final String TAG = "MainActivity";
+    private FirestoreUserDocCommunicator communicator;
+    private static final int USER_ID_REQUEST = 1;
+    private static boolean alreadyLoggedIn = false;
 
+    // UI elements
+    private RecyclerView moodList;
+    private Button addButton;
+    private Button delButton;
 
     // RecyclerView related
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -27,12 +56,21 @@ public class MainActivity extends AppCompatActivity {
             // note: can add an array here for item deletion.
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome_screen);
+        setContentView(R.layout.mainscreen);
 
+
+        /* link all UI elements here */
+        addButton = (Button) findViewById(R.id.addMoodButton);
+        delButton = (Button) findViewById(R.id.delMoodButton);
+        moodList = findViewById(R.id.mood_list);
+
+            // recyclerView related
+        recyclerViewLayoutManager = new LinearLayoutManager(this);
+        moodDataList = new ArrayList<>();
+        moodListAdapter = new MoodAdapter(moodDataList);
 
         moodList.setAdapter(moodListAdapter);
         moodList.setLayoutManager(recyclerViewLayoutManager);
@@ -50,54 +88,38 @@ public class MainActivity extends AppCompatActivity {
          *
          *
          */
-
         /* login */
-        toLogin();
-}
+        if(alreadyLoggedIn == false) {
+            Intent intentLoginActivity = new Intent(this, LoginActivity.class);
+            startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
+            alreadyLoggedIn = true;
+        }
 
-    private void toLogin(){
-        Intent intent = new Intent(this, LoginActivity.class);
-        finishAffinity();
-        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
-    }
+        MapButton = findViewById(R.id.mapViewButton);
+        MapButton.setOnClickListener(new View.OnClickListener() {
 
-    private void toReg(){
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivityForResult(intent, REG_ACTIVITY_REQUEST_CODE);
-    }
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), GoogleMapActivity.class));
+            }
+        });
 
-    private void toMood(){
-        Intent intent = new Intent (this, MoodHistoryActivity.class);
-        finishAffinity();
-        startActivity(intent);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == USER_ID_REQUEST) {
             if (resultCode == RESULT_OK) {
-                switch(data.getIntExtra("return_mode",0)){
-                    case 1:
-                        toReg();
-                        break;
-                    case 2:
-                        toMood();
-                        break;
-                    case 0:
-                        // should never happen
-                }
+                String username = data.getStringExtra("username");
+                onPostLogin(username);
             }
         }
-        if (requestCode == REG_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
-                switch(data.getIntExtra("return_mode",0)){
-                    case 1:
-                        toLogin();
-                        break;
-                    case 0:
-                        // should never happen
-                }
+                MoodEvent moodToAdd = (MoodEvent) data.getSerializableExtra("result");
+                communicator.addMoodEvent(moodToAdd);
             }
         }
         if (requestCode == 9) {
@@ -109,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
     private void onPostLogin(String username){
         /* --------------- init communicator (this should be on top)----------- */
