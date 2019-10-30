@@ -81,7 +81,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         MarkerOptions markerOptions = new MarkerOptions().position(latLng)
                 .title("I Am Here");
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
         googleMap.addMarker(markerOptions);
 
 //        map = googleMap;
