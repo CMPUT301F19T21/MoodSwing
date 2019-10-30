@@ -48,7 +48,7 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
 
         username = "1";
 
-        communicator = new FirestoreUserDocCommunicator(username);
+        communicator = FirestoreUserDocCommunicator.getInstance();
 
         hourText = findViewById(R.id.Hours);
         minuteText = findViewById(R.id.Minutes);
