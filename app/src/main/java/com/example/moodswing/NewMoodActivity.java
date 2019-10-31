@@ -54,7 +54,7 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
-        selectedMood = position;
+        moodState = position;
     }
 
 
