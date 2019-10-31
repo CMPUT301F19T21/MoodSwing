@@ -1,31 +1,80 @@
 package com.example.moodswing;
 
-import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
+    private static final int REG_ACTIVITY_REQUEST_CODE = 2;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_following)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        setContentView(R.layout.welcome_screen);
+
+        /* login */
+        toLogin();
+}
+
+    private void toLogin(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        finishAffinity();
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+    }
+
+    private void toReg(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivityForResult(intent, REG_ACTIVITY_REQUEST_CODE);
+    }
+
+    private void toMood(){
+        Intent intent = new Intent (this, MoodHistoryActivity.class);
+        finishAffinity();
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                switch(data.getIntExtra("return_mode",0)){
+                    case 1:
+                        toReg();
+                        break;
+                    case 2:
+                        toMood();
+                        break;
+                    case 0:
+                        // should never happen
+                }
+            }
+        }
+        if (requestCode == REG_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                switch(data.getIntExtra("return_mode",0)){
+                    case 1:
+                        toLogin();
+                        break;
+                    case 0:
+                        // should never happen
+                }
+            }
+        }
     }
 
 }
-

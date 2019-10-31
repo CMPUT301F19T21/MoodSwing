@@ -3,16 +3,12 @@ package com.example.moodswing;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -104,22 +100,6 @@ public class MoodHistoryActivity extends AppCompatActivity {
                 FirestoreUserDocCommunicator.destroy();
                 finishAffinity();
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
-            }
-        });
-
-        BottomNavigationView navigation = findViewById(R.id.nav_view);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_home:
-                        break;
-                    case R.id.navigation_following:
-                        Intent intent = new Intent(getApplicationContext(),FollowingActivity.class);
-                        startActivity(intent);
-                        break;
-                }
-                return false;
             }
         });
     }
