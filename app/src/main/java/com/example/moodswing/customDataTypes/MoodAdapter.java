@@ -1,4 +1,4 @@
-package com.example.moodswing;
+package com.example.moodswing.customDataTypes;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.moodswing.R;
 
 import java.util.ArrayList;
 
@@ -66,19 +68,20 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         Integer moodTypeInt = moodEvent.getMoodType();
         moodType.setText(moodTypeInt.toString());
 
-        checkBox.setOnCheckedChangeListener(null);
-        checkBox.setSelected(moodEvent.isSelected());
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    moodEvent.setSelected(true);
-                }else {
-                    moodEvent.setSelected(false);
-                }
-            }
-        });
-        checkBox.setChecked(moodEvent.isSelected());
+
+//        checkBox.setOnCheckedChangeListener(null);
+//        checkBox.setSelected(moodEvent.isSelected());
+//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(isChecked){
+//                    moodEvent.setSelected(true);
+//                }else {
+//                    moodEvent.setSelected(false);
+//                }
+//            }
+//        });
+//        checkBox.setChecked(moodEvent.isSelected());
     }
 
     @Override

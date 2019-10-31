@@ -19,6 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.moodswing.customDataTypes.AddMoodAdapter;
+import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.TimeJar;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -79,9 +84,9 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
         RecyclerView recyclerView = findViewById(R.id.addRecyclerView);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(NewMoodActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
-        adapter = new AddMoodAdapter(this, viewColors, animalNames);
-        adapter.setClickListener(NewMoodActivity.this);
-        recyclerView.setAdapter(adapter);
+//        adapter = new AddMoodAdapter(this, viewColors, animalNames);
+//        adapter.setClickListener(NewMoodActivity.this);
+//        recyclerView.setAdapter(adapter);
 
 
         dateView = (TextView) findViewById(R.id.dateView);
@@ -126,12 +131,13 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
                     if (date != null && moodState != 0) {
                         Log.v("SOMETHING", moodState + "");
 
-                        moodObj = new MoodEvent(moodState, date, time);
-                        Log.v("SOMETHING", moodObj.getDate().toString());
-                        returnIntent = new Intent();
-                        returnIntent.putExtra("result", moodObj);
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
+
+//                        moodObj = new MoodEvent(moodState, date, time);
+//                        Log.v("SOMETHING", moodObj.getDate().toString());
+//                        returnIntent = new Intent();
+//                        returnIntent.putExtra("result", moodObj);
+//                        setResult(Activity.RESULT_OK, returnIntent);
+//                        finish();
                     }
                 }
             }
