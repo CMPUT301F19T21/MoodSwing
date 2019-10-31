@@ -1,9 +1,7 @@
 package com.example.moodswing;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -32,7 +30,6 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
 
     private ImageButton delButton;
     private ImageButton editButton;
-    private ImageButton someButton;
 
     private static boolean alreadyLoggedIn = true;
 
@@ -52,50 +49,8 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         TimeJar timeJar = new TimeJar(11,11);
         if (moodEvent == null)
             moodEvent = new MoodEvent(1,dateJar,timeJar);
-        final FirestoreUserDocCommunicator communicator = new FirestoreUserDocCommunicator(username);
+        final FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
 
-        initial();
-
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EditMoodActivity.class);
-                intent.putExtra("UserName", username);
-                intent.putExtra("MoodEvent",(Serializable) moodEvent);
-                startActivityForResult(intent,1);
-            }
-        });
-        delButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                String ID = moodEvent.getUniqueID();
-                intent.putExtra("UID",ID);
-                setResult(Activity.RESULT_OK,intent);
-                finish();
-            }
-        });
-        someButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                setResult(Activity.RESULT_CANCELED,intent);
-                finish();
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            if (resultCode == RESULT_OK){
-                moodEvent = (MoodEvent) data.getSerializableExtra("MoodEvent");
-                initial();
-            }
-        }
-    }
-    private void initial(){
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
         time = moodEvent.getTime();
@@ -109,7 +64,6 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         descriptionText = findViewById(R.id.descriptionText);
         delButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
-        someButton = findViewById(R.id.someButton);
 
         int Hr = time.getHr();
         int Min = time.getMin();
@@ -121,5 +75,23 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         //moodText.setText(moodType);
         //socialText.setText(socialSituation);
         descriptionText.setText(reason);
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MoodDetailActivity.this, EditMoodActivity.class);
+                intent.putExtra("UserName", username);
+                intent.putExtra("MoodEvent",(Serializable) moodEvent);
+                startActivity(intent);
+            }
+        });
+        delButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                communicator.removeMoodEvent(moodEvent.getUniqueID());
+                //Intent intent = new Intent(MoodDetailActivity.this,MoodHistoryActivity.class);
+                //startActivity(intent);
+            }
+        });
     }
 }

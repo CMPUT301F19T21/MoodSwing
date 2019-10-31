@@ -8,174 +8,73 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.Toast;
-
-
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
-/**
- * MainActivity
- */
 public class MainActivity extends AppCompatActivity {
-    // general
-    private Button MapButton;
-    private static final String TAG = "MainActivity";
-    private FirestoreUserDocCommunicator communicator;
-    private static final int USER_ID_REQUEST = 1;
-    private static boolean alreadyLoggedIn = false;
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
+    private static final int REG_ACTIVITY_REQUEST_CODE = 2;
 
-    // UI elements
-    private RecyclerView moodList;
-    private Button addButton;
-    private Button delButton;
-
-    // RecyclerView related
-    private RecyclerView.LayoutManager recyclerViewLayoutManager;
-    private MoodAdapter moodListAdapter;
-    private ArrayList<MoodEvent> moodDataList;
-            // note: can add an array here for item deletion.
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainscreen);
+        setContentView(R.layout.welcome_screen);
 
-
-        /* link all UI elements here */
-        addButton = (Button) findViewById(R.id.addMoodButton);
-        delButton = (Button) findViewById(R.id.delMoodButton);
-        moodList = findViewById(R.id.mood_list);
-
-            // recyclerView related
-        recyclerViewLayoutManager = new LinearLayoutManager(this);
-        moodDataList = new ArrayList<>();
-        moodListAdapter = new MoodAdapter(moodDataList);
-
-        moodList.setAdapter(moodListAdapter);
-        moodList.setLayoutManager(recyclerViewLayoutManager);
-
-
-
-
-        /* ----------------------- IMPORTANT ---------------------*/
-        /* life cycle reminder
-         * this is the end of onCreate method
-         *
-         *
-         * for action that need to be performed after user loggin should be written in "onPostLogin()" method
-         * for action that need to be performed before user loggin should be written in "onCreate()" method BEFORE this msg
-         *
-         *
-         */
         /* login */
-        if(alreadyLoggedIn == false) {
-            Intent intentLoginActivity = new Intent(this, LoginActivity.class);
-            startActivityForResult(intentLoginActivity, USER_ID_REQUEST);
-            alreadyLoggedIn = true;
-        }
+        toLogin();
+}
 
-        MapButton = findViewById(R.id.mapViewButton);
-        MapButton.setOnClickListener(new View.OnClickListener() {
+    private void toLogin(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        finishAffinity();
+        startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+    }
 
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), GoogleMapActivity.class));
-            }
-        });
+    private void toReg(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivityForResult(intent, REG_ACTIVITY_REQUEST_CODE);
+    }
 
-
+    private void toMood(){
+        Intent intent = new Intent (this, MoodHistoryActivity.class);
+        finishAffinity();
+        startActivity(intent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == USER_ID_REQUEST) {
+        if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                String username = data.getStringExtra("username");
-                onPostLogin(username);
-            }
-        }
-        if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
-                MoodEvent moodToAdd = (MoodEvent) data.getSerializableExtra("result");
-                communicator.addMoodEvent(moodToAdd);
-            }
-        }
-        if (requestCode == 9) {
-            if (resultCode == RESULT_OK) {
-                String UID = data.getStringExtra("UID");
-                if (UID != null)
-                    communicator.removeMoodEvent(UID);
-            }
-        }
-
-    }
-
-    private void onPostLogin(String username){
-        /* --------------- init communicator (this should be on top)----------- */
-        communicator = new FirestoreUserDocCommunicator(username);
-        communicator.initMoodEventsList(moodList); // init listView realtimeListener by communicator
-
-        /* --------------------------- OnclickListeners ------------------------ */
-        // adding
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent i = new Intent(getApplicationContext(), NewMoodActivity.class);
-                startActivityForResult(i, 2);
-                // testing
-                //communicator.addMoodEvent(new MoodEvent(1, new DateJar(1998,2,27), new TimeJar(12,30)));
-                // can call some method here to switch activity.
-            }
-        });
-        // deletion
-        delButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(int i = 0; i < moodListAdapter.getItemCount(); i++){
-                    if (moodDataList.get(i).isSelected()) {
-                        communicator.removeMoodEvent(moodDataList.get(i).getUniqueID());
-                    }
+                switch(data.getIntExtra("return_mode",0)){
+                    case 1:
+                        toReg();
+                        break;
+                    case 2:
+                        toMood();
+                        break;
+                    case 0:
+                        // should never happen
                 }
             }
-        });
-
-
-        /* ---------------------------- Other Actions ----------------------- */
-
-
-        moodListAdapter.setOnItemClickListener(new MoodAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemiClick(int position) {
-                MoodEvent moodEvent = moodDataList.get(position);
-                Intent intent = new Intent(MainActivity.this,MoodDetailActivity.class);
-                intent.putExtra("MoodEvent",moodEvent);
-                startActivityForResult(intent,9);
+        }
+        if (requestCode == REG_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                switch(data.getIntExtra("return_mode",0)){
+                    case 1:
+                        toLogin();
+                        break;
+                    case 0:
+                        // should never happen
+                }
             }
-        });
-        //
-
+        }
     }
+
 }
