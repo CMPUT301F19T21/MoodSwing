@@ -1,6 +1,7 @@
 package com.example.moodswing.customDataTypes;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class AddMoodAdapter extends RecyclerView.Adapter<AddMoodAdapter.ViewHold
     private List<String> moodText;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Integer selectedPosition = -1;
 
     // data is passed into the constructor
     AddMoodAdapter(Context context, List<Integer> moodID_, List<String> moodText_) {
@@ -40,6 +42,16 @@ public class AddMoodAdapter extends RecyclerView.Adapter<AddMoodAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int id = moodID.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedPosition = position;
+                notifyDataSetChanged();
+
+            }
+        });
+
         String moodName = moodText.get(position);
         if (id == 1) {
             holder.myImageView.setImageResource(R.drawable.happymood);
@@ -54,6 +66,17 @@ public class AddMoodAdapter extends RecyclerView.Adapter<AddMoodAdapter.ViewHold
             holder.myImageView.setImageResource(R.drawable.sadmood);
         }
         holder.myTextView.setText(moodName);
+
+
+        if(selectedPosition==position) {
+            holder.itemView.setBackgroundColor(Color.LTGRAY);
+        }
+        else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
+
+
+
     }
 
     // total number of rows
