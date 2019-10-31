@@ -1,4 +1,4 @@
-package com.example.moodswing.ui.home;
+package com.example.moodswing.navigationFragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,23 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moodswing.FirestoreUserDocCommunicator;
 import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.MainActivity;
-import com.example.moodswing.MoodAdapter;
-import com.example.moodswing.MoodEvent;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
+import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodAdapter;
+import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.TimeJar;
 
 import java.util.ArrayList;
 
@@ -80,19 +78,20 @@ public class HomeFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), NewMoodActivity.class));
+//                startActivity(new Intent(getActivity(), NewMoodActivity.class));
+                communicator.addMoodEvent(new MoodEvent(communicator.generateMoodID(),1, new DateJar(1998,2,27), new TimeJar(12,45)));
             }
         });
-        delButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(int i = 0; i < moodListAdapter.getItemCount(); i++){
-                    if (moodDataList.get(i).isSelected()) {
-                        communicator.removeMoodEvent(moodDataList.get(i).getUniqueID());
-                    }
-                }
-            }
-        });
+//        delButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                for(int i = 0; i < moodListAdapter.getItemCount(); i++){
+//                    if (moodDataList.get(i).isSelected()) {
+//                        communicator.removeMoodEvent(moodDataList.get(i).getUniqueID());
+//                    }
+//                }
+//            }
+//        });
         lgoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

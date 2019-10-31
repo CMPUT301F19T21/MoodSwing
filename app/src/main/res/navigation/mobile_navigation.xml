@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.moodswing.ui.home.HomeFragment"
+        android:name="com.example.moodswing.navigationFragments.HomeFragment"
         android:label="home"
         tools:layout="@layout/mood_history_screen" />
 
     <fragment
         android:id="@+id/navigation_following"
-        android:name="com.example.moodswing.ui.following.FollowingFragment"
+        android:name="com.example.moodswing.navigationFragments.FollowingFragment"
         android:label="following"
         tools:layout="@layout/activity_following" />
 </navigation>
