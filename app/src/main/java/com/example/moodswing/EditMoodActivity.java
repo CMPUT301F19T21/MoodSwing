@@ -61,10 +61,7 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (!dateText.getText().toString().equals("")){
-                    String[] datetemp = dateText.getText().toString().split("-");
-                    DateJar dateJar = new DateJar(Integer.parseInt(datetemp[0]),Integer.parseInt(datetemp[1]),Integer.parseInt(datetemp[2]));
-                    moodEvent.setDate(dateJar);}*/
+
                 String minutes = minuteText.getText().toString();
                 String hours = hourText.getText().toString();
                 if (!minutes.equals("") && !hours.equals("")){

@@ -18,6 +18,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -206,7 +207,37 @@ public class FirestoreUserDocCommunicator{
 
 
     public void editMood(MoodEvent moodEvent){
-        //
+        DateJar dateJar = moodEvent.getDate();
+        TimeJar timeJar = moodEvent.getTime();
+        DocumentReference UpdateMood = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(moodEvent.getUniqueID());
+        UpdateMood.update(
+                "Data.day", dateJar.getDay(),
+                "Date.month", dateJar.getMonth(),
+                "Date.year", dateJar.getYear(),
+                "MoodType", moodEvent.getMoodType(),
+                "reason", moodEvent.getReason(),
+                "socialSituation", moodEvent.getSocialSituation(),
+                "time.hr", timeJar.getHr(),
+                "time.min", timeJar.getMin()
+        );
+        /*
+        //delete later
+        Map<String, Object> moodUpdates = new HashMap<>();
+        moodUpdates.put("/Date/day", dateJar.getDay());
+        moodUpdates.put("/Date/month", dateJar.getMonth());
+        moodUpdates.put("/Date/year", dateJar.getYear());
+        moodUpdates.put("/MoodType", moodEvent.getMoodType());
+        moodUpdates.put("/reason", moodEvent.getReason());
+        moodUpdates.put("/socialSituation", moodEvent.getSocialSituation());
+        moodUpdates.put("/time/hr", timeJar.getHr());
+        moodUpdates.put("/time/min", timeJar.getMin());
+        UpdateMood.update(moodUpdates);
+
+         */
     }
 
     public void editUserPassword() {
