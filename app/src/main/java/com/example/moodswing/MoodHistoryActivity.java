@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * MainActivity
  */
-public class MoodHistoryActivity extends AppCompatActivity {
+public class MoodHistoryActivity extends MainActivity {
     // communicator
     private FirestoreUserDocCommunicator communicator;
 
