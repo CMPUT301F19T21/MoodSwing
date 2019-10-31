@@ -9,6 +9,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.protobuf.Empty;
 
 import java.io.Serializable;
@@ -50,10 +54,10 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
         hourText = findViewById(R.id.Hours);
         minuteText = findViewById(R.id.Minutes);
         //reasonEditText = findViewById(R.id.reasonEditText);
-        happyButton = findViewById(R.id.happy_button);
-        sadButton = findViewById(R.id.sad_button);
-        angryButton = findViewById(R.id.angry_button);
-        emotionalButton = findViewById(R.id.emotional_button);
+        //happyButton = findViewById(R.id.happy_button);
+        //sadButton = findViewById(R.id.sad_button);
+        //angryButton = findViewById(R.id.angry_button);
+        //emotionalButton = findViewById(R.id.emotional_button);
         confirmButton = findViewById(R.id.confirmNewMood);
 
 
@@ -75,8 +79,6 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
                 //moodEvent.setReason(reason);
                 communicator.editMood(moodEvent);
                 Intent backIntent = new Intent(EditMoodActivity.this,MoodDetailActivity.class);
-                backIntent.putExtra("UserName", username);
-                backIntent.putExtra("MoodEvent",  moodEvent);
                 startActivity(backIntent);
             }
         });

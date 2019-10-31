@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         //setResult(Activity.RESULT_OK, returnIntent);
         // finish(); ------- notes --------
         // now MainActivity Screen is kinda useless, but may be useful if we want make login fragment
-        Intent intent = new Intent (this, MoodHistoryActivity.class);
+        Intent intent = new Intent (this, MainActivity.class);
         finishAffinity();
         startActivity(intent);
     }
