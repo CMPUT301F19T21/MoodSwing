@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         //setResult(Activity.RESULT_OK, returnIntent);
         // finish(); ------- notes --------
         // now MainActivity Screen is kinda useless, but may be useful if we want make login fragment
-        Intent intent = new Intent (this, MoodHistoryActivity.class);
+        Intent intent = new Intent (this, MainActivity.class);
         finishAffinity();
         startActivity(intent);
     }

@@ -14,12 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".FollowingActivity"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="MainActivity" />
         <activity android:name=".MoodHistoryActivity" />
         <activity android:name=".EditMoodActivity" />
         <activity android:name=".MoodDetailActivity" />
         <activity android:name=".NewMoodActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".GoogleMapActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
