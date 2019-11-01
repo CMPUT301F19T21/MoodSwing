@@ -5,6 +5,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditMoodActivity">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -71,7 +74,30 @@
             android:layout_height="match_parent"
             android:inputType="number"
             android:hint="MM" />
+
     </LinearLayout>
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="40dp"/>
+
+        <EditText
+            android:id="@+id/reasonText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:maxLength="20"
+            android:hint="reason" />
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="30dp"/>
+
+        <Spinner
+            android:id="@+id/SituationSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -88,4 +114,5 @@
 
 
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

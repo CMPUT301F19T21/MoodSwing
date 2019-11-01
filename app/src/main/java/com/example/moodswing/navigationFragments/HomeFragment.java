@@ -78,8 +78,8 @@ public class HomeFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startActivity(new Intent(getActivity(), NewMoodActivity.class));
-                communicator.addMoodEvent(new MoodEvent(communicator.generateMoodID(),1, new DateJar(1998,2,27), new TimeJar(12,45)));
+                startActivity(new Intent(getActivity(), NewMoodActivity.class));
+//                communicator.addMoodEvent(new MoodEvent(communicator.generateMoodID(),1, new DateJar(1998,2,27), new TimeJar(12,45)));
             }
         });
 //        delButton.setOnClickListener(new View.OnClickListener() {
