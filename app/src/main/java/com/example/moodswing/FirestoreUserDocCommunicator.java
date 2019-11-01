@@ -199,7 +199,7 @@ public class FirestoreUserDocCommunicator{
                     ((MoodAdapter)moodList.getAdapter()).addToMoods(moodEvent);
                 }
                 moodList.getAdapter().notifyDataSetChanged();
-        }
+            }
         });
     }
 
