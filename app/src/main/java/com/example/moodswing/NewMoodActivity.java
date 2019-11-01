@@ -61,6 +61,8 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
     private Integer selectedMood;
 
     private Spinner socialSituationSpinner;
+    private String reason;
+    private String socialSitToAdd;
 
 
 
@@ -149,7 +151,14 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.d("dateCheck", adapterView.getItemAtPosition(i).toString());
+        if (!adapterView.getItemAtPosition(i).toString().equals("Select Social Situation")) {
+
+            socialSitToAdd = adapterView.getItemAtPosition(i).toString();
+        }
+        else {
+            socialSitToAdd = "";
+        }
+        Log.v("dateCheck", socialSitToAdd);
 
     }
 
