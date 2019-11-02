@@ -7,57 +7,69 @@
     android:background="#C6C6C6">
 
 
-    <Button
-        android:id="@+id/addMoodButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/mapViewButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Map"
-        app:layout_constraintEnd_toEndOf="@+id/filterMoodButton"
-        app:layout_constraintTop_toBottomOf="@+id/filterMoodButton" />
-
-    <Button
-        android:id="@+id/filterMoodButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter"
-        app:layout_constraintEnd_toEndOf="@+id/delMoodButton"
-        app:layout_constraintTop_toBottomOf="@+id/delMoodButton" />
-
-    <Button
-        android:id="@+id/delMoodButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        app:layout_constraintEnd_toEndOf="@+id/addMoodButton"
-        app:layout_constraintTop_toBottomOf="@+id/addMoodButton" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mood_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/mapViewButton"
+        app:layout_constraintEnd_toStartOf="@+id/home_filterBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonTempLogout"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log out"
-        app:layout_constraintEnd_toEndOf="@+id/mapViewButton"
-        app:layout_constraintTop_toBottomOf="@+id/mapViewButton" />
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:clickable="true"
+        app:backgroundTint="@color/color_button_lightGrey"
+        app:fabCustomSize="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_delete"
+        app:srcCompat="@drawable/ic_add_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:clickable="true"
+        app:backgroundTint="@color/color_button_lightGrey"
+        app:fabCustomSize="45dp"
+        app:layout_constraintStart_toStartOf="@+id/home_filterBtn"
+        app:layout_constraintTop_toBottomOf="@+id/home_filterBtn"
+        app:srcCompat="@drawable/ic_delete_sweep_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:clickable="true"
+        app:backgroundTint="@color/color_button_lightGrey"
+        app:fabCustomSize="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_map_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home_filterBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:clickable="true"
+        app:backgroundTint="@color/color_button_lightGrey"
+        app:fabCustomSize="45dp"
+        app:layout_constraintStart_toStartOf="@+id/home_map"
+        app:layout_constraintTop_toBottomOf="@+id/home_map"
+        app:srcCompat="@drawable/ic_filter_list_black_24dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,7 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -29,12 +30,10 @@ public class HomeFragment extends Fragment {
     private FirestoreUserDocCommunicator communicator;
 
     // UI elements
-    private Button MapButton;
-    private Button addButton;
-    private Button delButton;
-
-    // temp button
-    private Button lgoButton;
+    private FloatingActionButton MapButton;
+    private FloatingActionButton addButton;
+    private FloatingActionButton delButton;
+    private FloatingActionButton filterButton;
 
     // recyclerView related
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -50,13 +49,12 @@ public class HomeFragment extends Fragment {
 
         // init
         communicator = FirestoreUserDocCommunicator.getInstance();
-        addButton = root.findViewById(R.id.addMoodButton);
-        delButton = root.findViewById(R.id.delMoodButton);
-        MapButton = root.findViewById(R.id.mapViewButton);
-        moodList = root.findViewById(R.id.mood_list);
+        addButton = root.findViewById(R.id.home_add);
+        delButton = root.findViewById(R.id.home_delete);
+        MapButton = root.findViewById(R.id.home_map);
+        filterButton = root.findViewById(R.id.home_filterBtn);
 
-        // temp Button
-        lgoButton = root.findViewById(R.id.buttonTempLogout);
+        moodList = root.findViewById(R.id.mood_list);
 
         // construct recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
@@ -92,12 +90,6 @@ public class HomeFragment extends Fragment {
 //                }
 //            }
 //        });
-        lgoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) getActivity()).openProfileFragment();
-            }
-        });
 
         return root;
     }
