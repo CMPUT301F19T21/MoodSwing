@@ -22,6 +22,7 @@ public class FollowingFragment extends Fragment {
 
         communicator = FirestoreUserDocCommunicator.getInstance();
 
+
         return root;
     }
 }

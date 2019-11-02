@@ -23,12 +23,37 @@ public class profileFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         communicator = FirestoreUserDocCommunicator.getInstance();
+
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        // link elements
+        username = view.findViewById(R.id.profile_username);
+        logoutBtn = view.findViewById(R.id.profile_LogOut);
+        backBtn = view.findViewById(R.id.profile_back);
+
+        // listeners
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).signOut();
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        // other
+        username.setText(communicator.getUsername());
+
         return view;
     }
 }
