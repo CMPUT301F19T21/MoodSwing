@@ -41,6 +41,7 @@ public class FirestoreUserDocCommunicator{
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private DocumentSnapshot userDocSnapshot;
 
     private static FirestoreUserDocCommunicator instance = null;
 
@@ -51,8 +52,10 @@ public class FirestoreUserDocCommunicator{
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
         this.user = mAuth.getCurrentUser();
-
+        this.userDocSnapshot = null;
+        this.getUserSnapShot();
     }
+
     private boolean ifLogin(){
         if (user == null) {
             return false;
@@ -61,9 +64,34 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
+    private void getUserSnapShot(){
+        // throw exception here if not login
+        db.collection("users")
+                .document(user.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    userDocSnapshot = task.getResult();
+                    Log.d(TAG, "get userDocSnap success");
+                }else{
+                    Log.d(TAG, "get userDocSnap failed with", task.getException());
+                }
+            }
+        });
+    }
+
     private void userSignOut(){
         mAuth.signOut();
         user = null;
+    }
+
+    public String getUsername(){
+        if (userDocSnapshot != null) {
+            return (String) userDocSnapshot.get("username");
+        }else{
+            return null; // something wrong, possible not enough time to finish query
+        }
     }
 
     public static FirestoreUserDocCommunicator getInstance() {

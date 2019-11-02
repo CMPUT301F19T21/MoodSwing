@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     //
     private static final String TAG = "RegisterActivity";
     private TextView toLogin;
-    private Button registerButton;
+    private FloatingActionButton registerButton;
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText usernameEditText;
@@ -56,8 +57,8 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // link all elements
-        toLogin = findViewById(R.id.switchToLogin);
-        registerButton = findViewById(R.id.registerButton);
+        toLogin = findViewById(R.id.switchToLog);
+        registerButton = findViewById(R.id.regButton);
         emailEditText = findViewById(R.id.regEmail);
         usernameEditText = findViewById(R.id.regUsername);
         passwordEditText = findViewById(R.id.regPassword);

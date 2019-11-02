@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEditText;
 
     private TextView toRegister;
-    private ImageButton loginBtn;
+    private FloatingActionButton loginBtn;
 
 
     private FirebaseAuth mAuth;
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.userEmailField);
         passwordEditText = findViewById(R.id.passField);
         toRegister = findViewById(R.id.switchToReg);
-        loginBtn = findViewById(R.id.confirmbtn);
+        loginBtn = findViewById(R.id.loginComfirmBtn);
 
         // set listeners
         toRegister.setOnClickListener(new View.OnClickListener() {
