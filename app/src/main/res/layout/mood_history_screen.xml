@@ -26,6 +26,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:clickable="true"
+        android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
         app:fabCustomSize="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,11 +40,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:clickable="true"
+        android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
         app:fabCustomSize="45dp"
         app:layout_constraintStart_toStartOf="@+id/home_filterBtn"
         app:layout_constraintTop_toBottomOf="@+id/home_filterBtn"
-        app:srcCompat="@drawable/ic_delete_sweep_black_24dp" />
+        app:srcCompat="@drawable/ic_delete_black_24dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/home_map"
@@ -53,6 +55,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:clickable="true"
+        android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
         app:fabCustomSize="45dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:clickable="true"
+        android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
         app:fabCustomSize="45dp"
         app:layout_constraintStart_toStartOf="@+id/home_map"
