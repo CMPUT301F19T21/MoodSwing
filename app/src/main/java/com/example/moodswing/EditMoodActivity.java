@@ -46,7 +46,7 @@ public class EditMoodActivity extends AppCompatActivity implements AddMoodAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_mood);
+        setContentView(R.layout.edit_mood);
 
         final Intent intent = getIntent();
         username = intent.getStringExtra("UserName");
