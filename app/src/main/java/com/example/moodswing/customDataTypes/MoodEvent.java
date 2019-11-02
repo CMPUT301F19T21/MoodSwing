@@ -17,6 +17,7 @@ public class MoodEvent {
 
     // optional fields
     private String reason;
+    private String socialSituation;
 
     public MoodEvent() {
     }
@@ -29,6 +30,7 @@ public class MoodEvent {
 
         // init optional field to null
         this.reason = null;
+        this.socialSituation = null;
     }
 
     public String getUniqueID() {
@@ -69,5 +71,11 @@ public class MoodEvent {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public void setSocialSituation(String socialSituation) {this.socialSituation = socialSituation;}
+
+    public String getSocialSituation() {
+        return socialSituation;
     }
 }
