@@ -11,10 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class profileFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
     private TextView username;
+    private FloatingActionButton logoutBtn;
+    private FloatingActionButton backBtn;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
