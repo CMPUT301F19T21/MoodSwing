@@ -3,6 +3,7 @@ package com.example.moodswing;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,22 +30,21 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-
-
-//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//                if (menuItem.getItemId() == R.id.navigation_profile){
-//                    // create the profile fragment.
-//                }
-//                return false;
-//            }
-//        });
     }
 
-    private void openProfileFrag(){
-        // pass
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.navigation_profile) {
+            new profileFragment().show(getSupportFragmentManager(), "profile");
+            return true;
+        }else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void openProfileFragment(){
+        new profileFragment().show(getSupportFragmentManager(), "profile");
     }
 
     public void signOut() {
