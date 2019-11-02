@@ -35,14 +35,9 @@ import java.util.Calendar;
 public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener, AdapterView.OnItemSelectedListener {
 
 
-    private EditText hoursEditText;
-    private EditText minutesEditText;
     private ImageButton confirmButton;
-    private int hours;
-    private int minutes;
 
-    private TextView dateView;
-    private DatePickerDialog.OnDateSetListener dateListener;
+
     private DateJar date;
     private TimeJar time;
 
@@ -61,9 +56,10 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
     private Integer selectedMood;
 
     private Spinner socialSituationSpinner;
-    private String reason;
     private String socialSitToAdd;
 
+    private TextView reasonTextView;
+    private String reason;
 
 
     @Override
@@ -99,25 +95,21 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
 //        recyclerView.setAdapter(adapter);
 
 
-
+        //Setting the date
         //month indexed 1 month behind for some reason
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
         int year = Calendar.getInstance().get(Calendar.YEAR);
-
         Log.v("dateCheck", "year:" + year + " day:" + day + " month:" + month);
         date = new DateJar(year, month, day);
 
 
-
+        //creating the social situation. onitemselected and onnothingselected methods below handles functionality. Will switch to adapter later
         socialSituationSpinner = findViewById(R.id.SituationSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.socialSit, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.socialSit, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         socialSituationSpinner.setAdapter(adapter);
         socialSituationSpinner.setOnItemSelectedListener(this);
-
-
-
 
 
         confirmButton = (ImageButton) findViewById(R.id.confirmNewMood);
@@ -127,43 +119,46 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
 
                 int hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 int minutes = Calendar.getInstance().get(Calendar.MINUTE);
-
-
                 time = new TimeJar(hours, minutes);
                 Log.v("SOMETHING", moodState + "");
                 Log.v("dateCheck", "hours: " + hours + "minutes:" + minutes);
 
 
-                if (date != null && moodState != 0) {
+                reasonTextView = findViewById(R.id.reasonText);
+                reason = reasonTextView.getText().toString();
+                Log.v("dateCheck", reason);
 
-
-//                        moodObj = new MoodEvent(moodState, date, time);
-//                        Log.v("SOMETHING", moodObj.getDate().toString());
-//                        returnIntent = new Intent();
-//                        returnIntent.putExtra("result", moodObj);
-//                        setResult(Activity.RESULT_OK, returnIntent);
-//                        finish();
-
+                String[] temparray = reason.split(" ");
+                if (temparray.length <= 3) {
+//
+//
+////                        moodObj = new MoodEvent(moodState, date, time);
+////                        Log.v("SOMETHING", moodObj.getDate().toString());
+////                        returnIntent = new Intent();
+////                        returnIntent.putExtra("result", moodObj);
+////                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+//
                 }
+                }
+            });
+        }
+
+        @Override
+        public void onItemSelected (AdapterView < ? > adapterView, View view,int i, long l){
+            if (!adapterView.getItemAtPosition(i).toString().equals("Select Social Situation")) {
+
+                socialSitToAdd = adapterView.getItemAtPosition(i).toString();
+            } else {
+                socialSitToAdd = "";
+
             }
-        });
-    }
+            Log.v("dateCheck", socialSitToAdd);
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (!adapterView.getItemAtPosition(i).toString().equals("Select Social Situation")) {
-
-            socialSitToAdd = adapterView.getItemAtPosition(i).toString();
         }
-        else {
-            socialSitToAdd = "";
+
+        @Override
+        public void onNothingSelected (AdapterView < ? > adapterView){
+
         }
-        Log.v("dateCheck", socialSitToAdd);
-
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-}
