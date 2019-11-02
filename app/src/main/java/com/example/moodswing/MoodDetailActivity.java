@@ -9,6 +9,11 @@ import android.view.ViewDebug;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.TimeJar;
+
 import java.io.Serializable;
 
 public class MoodDetailActivity extends AppCompatActivity implements Serializable {
@@ -47,15 +52,12 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         username = "1";
         DateJar dateJar = new DateJar(2000,11,1);
         TimeJar timeJar = new TimeJar(11,11);
-        if (moodEvent == null)
-            moodEvent = new MoodEvent(1,dateJar,timeJar);
         final FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
         time = moodEvent.getTime();
         reason = moodEvent.getReason();
-        socialSituation = moodEvent.getSocialSituation();
 
         socialText = findViewById(R.id.socialTxt);
         dateText = findViewById(R.id.dateText);
@@ -68,10 +70,8 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         int Hr = time.getHr();
         int Min = time.getMin();
         timeText.setText(Hr+":"+Min);
-        String month = date.getMonthName();
         int year = date.getYear();
         int Day = date.getDay();
-        dateText.setText(month+" "+Day+", "+year);
         //moodText.setText(moodType);
         //socialText.setText(socialSituation);
         descriptionText.setText(reason);
@@ -88,9 +88,9 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                communicator.removeMoodEvent(moodEvent.getUniqueID());
-                //Intent intent = new Intent(MoodDetailActivity.this,MoodHistoryActivity.class);
-                //startActivity(intent);
+//                communicator.removeMoodEvent(moodEvent.getUniqueID());
+//                //Intent intent = new Intent(MoodDetailActivity.this,MoodHistoryActivity.class);
+//                //startActivity(intent);
             }
         });
     }

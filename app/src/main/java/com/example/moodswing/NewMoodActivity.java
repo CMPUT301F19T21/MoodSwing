@@ -12,27 +12,34 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.moodswing.customDataTypes.AddMoodAdapter;
+import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.SocialSituationItem;
+import com.example.moodswing.customDataTypes.SpinnerAdapter;
+import com.example.moodswing.customDataTypes.TimeJar;
+
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener{
+public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener {
 
 
-    private EditText hoursEditText;
-    private EditText minutesEditText;
     private ImageButton confirmButton;
-    private int hours;
-    private int minutes;
 
-    private TextView dateView;
-    private DatePickerDialog.OnDateSetListener dateListener;
+
     private DateJar date;
     private TimeJar time;
 
@@ -43,7 +50,6 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
     private ImageButton angryMood;
 
     private MoodEvent moodObj;
-
     private Intent returnIntent;
 
     private AddMoodAdapter adapter;
@@ -51,10 +57,20 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
     private Integer selectedMood;
 
 
+
+    private TextView reasonTextView;
+    private String reason;
+
+    private ArrayList<SocialSituationItem> mSocialList;
+    private SpinnerAdapter spinnerAdapter;
+    private Spinner socialSituationSpinner;
+    private String socialSitToAdd;
+
+
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
-        selectedMood = position;
+        moodState = position;
     }
 
 
@@ -79,37 +95,48 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
         RecyclerView recyclerView = findViewById(R.id.addRecyclerView);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(NewMoodActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
-        adapter = new AddMoodAdapter(this, viewColors, animalNames);
-        adapter.setClickListener(NewMoodActivity.this);
-        recyclerView.setAdapter(adapter);
+//        adapter = new AddMoodAdapter(this, viewColors, animalNames);
+//        adapter.setClickListener(NewMoodActivity.this);
+//        recyclerView.setAdapter(adapter);
 
 
-        dateView = (TextView) findViewById(R.id.dateView);
-        hoursEditText = (EditText) findViewById(R.id.Hours);
-        minutesEditText = (EditText) findViewById(R.id.Minutes);
+        //Setting the date
+        //month indexed 1 month behind for some reason
+        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        Log.v("dateCheck", "year:" + year + " day:" + day + " month:" + month);
+        date = new DateJar(year, month, day);
 
 
-        //Initializing the date picker
-        dateView.setOnClickListener(new View.OnClickListener() {
+
+
+        mSocialList = new ArrayList<>();
+        mSocialList.add(new SocialSituationItem("Select Social Situation", 0));
+        mSocialList.add(new SocialSituationItem("Alone", R.drawable.aloneicon));
+        mSocialList.add(new SocialSituationItem("With One Person", R.drawable.onepersonicon));
+        mSocialList.add(new SocialSituationItem("With 2-7 People", R.drawable.twoplusicon));
+        mSocialList.add(new SocialSituationItem("With a Crowd", R.drawable.crowdicon));
+
+        socialSituationSpinner = findViewById(R.id.SituationSpinner);
+        spinnerAdapter = new SpinnerAdapter(this, mSocialList);
+        socialSituationSpinner.setAdapter(spinnerAdapter);
+
+        socialSituationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH);
-                int year = calendar.get(Calendar.YEAR);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                SocialSituationItem current = (SocialSituationItem) adapterView.getItemAtPosition(i);
+                socialSitToAdd = current.getSituation();
 
-                DatePickerDialog datepick = new DatePickerDialog(NewMoodActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateListener, year, month, day);
-                datepick.show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
-        dateListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                date = new DateJar(year, month, day);
-                Log.v("SOMETHING", year + "");
-            }
-        };
+
 
 
         confirmButton = (ImageButton) findViewById(R.id.confirmNewMood);
@@ -117,24 +144,33 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
             @Override
             public void onClick(View v) {
 
-                if (!hoursEditText.getText().toString().matches("") && !minutesEditText.getText().toString().matches("")) {
-                    hours = Integer.parseInt(hoursEditText.getText().toString());
-                    minutes = Integer.parseInt(minutesEditText.getText().toString());
-                    Log.v("SOMETHING", hours + "");
-                    Log.v("SOMETHING", minutes + "");
-                    time = new TimeJar(hours, minutes);
-                    if (date != null && moodState != 0) {
-                        Log.v("SOMETHING", moodState + "");
+                int hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+                time = new TimeJar(hours, minutes);
+                Log.v("SOMETHING", moodState + "");
+                Log.v("dateCheck", "hours: " + hours + "minutes:" + minutes);
 
-                        moodObj = new MoodEvent(moodState, date, time);
-                        Log.v("SOMETHING", moodObj.getDate().toString());
-                        returnIntent = new Intent();
-                        returnIntent.putExtra("result", moodObj);
-                        setResult(Activity.RESULT_OK, returnIntent);
+
+                reasonTextView = findViewById(R.id.reasonText);
+                reason = reasonTextView.getText().toString();
+                Log.v("dateCheck", reason);
+                Log.v("dateCheck", socialSitToAdd);
+
+                String[] temparray = reason.split(" ");
+                if (temparray.length <= 3) {
+//
+//
+////                        moodObj = new MoodEvent(moodState, date, time);
+////                        Log.v("SOMETHING", moodObj.getDate().toString());
+////                        returnIntent = new Intent();
+////                        returnIntent.putExtra("result", moodObj);
+////                        setResult(Activity.RESULT_OK, returnIntent);
                         finish();
-                    }
+//
                 }
-            }
-        });
+                }
+            });
+        }
+
+
     }
-}

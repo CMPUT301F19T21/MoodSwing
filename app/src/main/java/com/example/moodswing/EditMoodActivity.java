@@ -10,6 +10,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.protobuf.Empty;
 
 import java.io.Serializable;
@@ -81,8 +85,6 @@ public class EditMoodActivity extends AppCompatActivity implements AddMoodAdapte
                 //moodEvent.setReason(reason);
                 communicator.editMood(moodEvent);
                 Intent backIntent = new Intent(EditMoodActivity.this,MoodDetailActivity.class);
-                backIntent.putExtra("UserName", username);
-                backIntent.putExtra("MoodEvent",  moodEvent);
                 startActivity(backIntent);
             }
         });
