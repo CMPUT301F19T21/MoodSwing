@@ -8,12 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.protobuf.Empty;
 
 import java.io.Serializable;
 
-public class EditMoodActivity extends AppCompatActivity implements Serializable{
+public class EditMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener{
 
     EditText minuteText;
     EditText hourText;
@@ -31,9 +32,17 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
 
     private String reason;
     private Integer socialSituation;
+    private AddMoodAdapter adapter;
 
     FirestoreUserDocCommunicator communicator;
     String username;
+    //Mood onclick
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+        moodType = position;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +84,6 @@ public class EditMoodActivity extends AppCompatActivity implements Serializable{
                 backIntent.putExtra("UserName", username);
                 backIntent.putExtra("MoodEvent",  moodEvent);
                 startActivity(backIntent);
-            }
-        });
-        happyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moodType = 0;
             }
         });
     }
