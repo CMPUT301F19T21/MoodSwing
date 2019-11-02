@@ -31,6 +31,8 @@ public class profileFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
         // link elements
         username = view.findViewById(R.id.profile_username);
         logoutBtn = view.findViewById(R.id.profile_LogOut);

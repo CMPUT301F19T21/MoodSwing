@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 app:backgroundTint="#B87373"
-                app:fabCustomSize="40dp"
+                app:fabCustomSize="45dp"
                 app:layout_constraintBottom_toTopOf="@+id/switchToReg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.492"
