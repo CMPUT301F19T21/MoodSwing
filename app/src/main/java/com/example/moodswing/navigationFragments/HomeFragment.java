@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment {
                 if (deleteEnabled){
                     // turn off
                     deleteEnabled = false;
-                    delButton.setCompatElevation(6f);
+                    delButton.setCompatElevation(12f);
                     delButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
                     delButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_black_24dp));
                 }else{
