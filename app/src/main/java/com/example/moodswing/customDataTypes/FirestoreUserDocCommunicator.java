@@ -45,6 +45,7 @@ public class FirestoreUserDocCommunicator{
 
     private static FirestoreUserDocCommunicator instance = null;
 
+    private static MoodEvent moodEvent;
     // reference
 
     protected FirestoreUserDocCommunicator(){
@@ -170,8 +171,6 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
-    public void updateMoodEvent(MoodEvent moodEvent){}
-
     public void initMoodEventsList(final RecyclerView moodList){
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
@@ -196,8 +195,40 @@ public class FirestoreUserDocCommunicator{
     }
 
     /* user management related methods */
-    public void editMood(MoodEvent moodEvent){
-        //
+    public void updateMoodEvent(MoodEvent moodEvent){
+        DateJar dateJar = moodEvent.getDate();
+        TimeJar timeJar = moodEvent.getTime();
+        DocumentReference UpdateMood = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(moodEvent.getUniqueID());
+        UpdateMood.update(
+                "Data.day", dateJar.getDay(),
+                "Date.month", dateJar.getMonth(),
+                "Date.year", dateJar.getYear(),
+                "MoodType", moodEvent.getMoodType(),
+                "reason", moodEvent.getReason(),
+                "socialSituation", moodEvent.getSocialSituation(),
+                "time.hr", timeJar.getHr(),
+                "time.min", timeJar.getMin()
+        );
+    }
+    public MoodEvent grabMoodEvent(String UID){
+
+        DocumentReference MoodEventRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(UID);
+        MoodEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                moodEvent = documentSnapshot.toObject(MoodEvent.class);
+            }
+        });
+
+        return moodEvent;
     }
 
     public void editUserPassword() {

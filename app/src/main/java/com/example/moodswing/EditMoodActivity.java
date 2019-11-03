@@ -1,6 +1,8 @@
 package com.example.moodswing;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,85 +10,100 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.moodswing.customDataTypes.AddMoodAdapter;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MoodType;
+import com.example.moodswing.customDataTypes.MoodTypeAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.example.moodswing.navigationFragments.HomeFragment;
 import com.google.protobuf.Empty;
 
 import java.io.Serializable;
+import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 
-public class EditMoodActivity extends AppCompatActivity implements Serializable{
-
+public class EditMoodActivity extends AppCompatActivity {
+    TextView timeText;
     EditText minuteText;
     EditText hourText;
     EditText reasonEditText;
-    ImageButton happyButton;
-    ImageButton angryButton;
-    ImageButton sadButton;
-    ImageButton emotionalButton;
     ImageButton confirmButton;
 
     MoodEvent moodEvent;
     private int moodType;
     private DateJar date;
     private TimeJar time;
-
+    private String UID;
     private String reason;
     private Integer socialSituation;
+    private ArrayList<MoodType> moodTypes;
+
+    private RecyclerView moodView;
+    private RecyclerView.Adapter moodAdapter;
+    private RecyclerView.LayoutManager manager;
 
     FirestoreUserDocCommunicator communicator;
     String username;
+
+    //@Override
+    //public void onItemClick(View view, int position) {
+     //   Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+     //   moodType = position;
+    //}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_mood);
-
-        final Intent intent = getIntent();
-        username = intent.getStringExtra("UserName");
-        moodEvent = (MoodEvent) intent.getSerializableExtra("MoodEvent");
-
-        username = "1";
-
+        setContentView(R.layout.edit_mood);
         communicator = FirestoreUserDocCommunicator.getInstance();
-
-//        hourText = findViewById(R.id.Hours);
-//        minuteText = findViewById(R.id.Minutes);
-//        //reasonEditText = findViewById(R.id.reasonEditText);
-//        //happyButton = findViewById(R.id.happy_button);
-//        //sadButton = findViewById(R.id.sad_button);
-//        //angryButton = findViewById(R.id.angry_button);
-//        //emotionalButton = findViewById(R.id.emotional_button);
-//        confirmButton = findViewById(R.id.confirmNewMood);
+        Intent intent = getIntent();
+        UID = intent.getStringExtra("MoodUID");
+        moodEvent = communicator.grabMoodEvent(UID);
 
 
+        timeText = findViewById(R.id.timeText);
+        confirmButton = findViewById(R.id.confirmNewMood);
+
+
+        //moodTypes = initial();
+
+        date = moodEvent.getDate();
+        time = moodEvent.getTime();
+        int Hr = time.getHr();
+        int Min = time.getMin();
+        timeText.setText(Hr+":"+Min);
+        int year = date.getYear();
+        int Day = date.getDay();
+        int month = date.getMonth();
+        timeText.setText(getMonth(month)+","+Day+","+year);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (!dateText.getText().toString().equals("")){
-                    String[] datetemp = dateText.getText().toString().split("-");
-                    DateJar dateJar = new DateJar(Integer.parseInt(datetemp[0]),Integer.parseInt(datetemp[1]),Integer.parseInt(datetemp[2]));
-                    moodEvent.setDate(dateJar);}*/
-                String minutes = minuteText.getText().toString();
-                String hours = hourText.getText().toString();
-                if (!minutes.equals("") && !hours.equals("")){
 
-                    TimeJar timeJar = new TimeJar(Integer.parseInt(minutes),Integer.parseInt(hours));
-                    moodEvent.setTime(timeJar);}
-                //reason = reasonEditText.getText().toString();
-                //moodEvent.setReason(reason);
-                communicator.editMood(moodEvent);
-                Intent backIntent = new Intent(EditMoodActivity.this,MoodDetailActivity.class);
-                startActivity(backIntent);
+                communicator.updateMoodEvent(moodEvent);
+                finish();
             }
         });
-        happyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moodType = 0;
-            }
-        });
+    }
+    private String getMonth(int month) {
+        return new DateFormatSymbols().getMonths()[month-1];
+    }
+    public ArrayList<MoodType> initial(){
+        moodTypes = new ArrayList<>();
+        //moodTypes.add(new MoodType(R.drawable.happymood, "happy",1));
+        moodTypes.add(new MoodType(R.drawable.ic_add_black_24dp,"angry",2));
+
+        moodView = findViewById(R.id.mood_RecyclerView);
+        moodView.setHasFixedSize(true);
+        manager =  new LinearLayoutManager(this);
+        moodAdapter = new MoodTypeAdapter(moodTypes);
+        moodView.setLayoutManager(manager);
+        moodView.setAdapter(moodAdapter);
+        return moodTypes;
     }
 }

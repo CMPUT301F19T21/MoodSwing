@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.MainActivity;
+import com.example.moodswing.MoodDetailActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.DateJar;
@@ -102,6 +103,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Able to click to mood detail
+        moodListAdapter.setOnItemClickListener(new MoodAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), MoodDetailActivity.class);
+                intent.putExtra("MoodUID",moodDataList.get(position).getUniqueID());
+                startActivity(intent);
+            }
+        });
+
         ItemTouchHelper.SimpleCallback itemTouchHelper = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -123,4 +134,5 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
+
 }
