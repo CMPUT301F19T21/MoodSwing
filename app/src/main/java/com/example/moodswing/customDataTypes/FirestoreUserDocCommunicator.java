@@ -196,26 +196,27 @@ public class FirestoreUserDocCommunicator{
 
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        DateJar dateJar = moodEvent.getDate();
-        TimeJar timeJar = moodEvent.getTime();
         DocumentReference UpdateMood = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEvent.getUniqueID());
-        UpdateMood.update(
-                "Data.day", dateJar.getDay(),
-                "Date.month", dateJar.getMonth(),
-                "Date.year", dateJar.getYear(),
-                "MoodType", moodEvent.getMoodType(),
-                "reason", moodEvent.getReason(),
-                "socialSituation", moodEvent.getSocialSituation(),
-                "time.hr", timeJar.getHr(),
-                "time.min", timeJar.getMin()
-        );
+        UpdateMood.set(moodEvent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
     }
     public MoodEvent grabMoodEvent(String UID){
-
+        Log.d("UID",UID);
         DocumentReference MoodEventRef = db
                 .collection("users")
                 .document(user.getUid())
@@ -225,9 +226,9 @@ public class FirestoreUserDocCommunicator{
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 moodEvent = documentSnapshot.toObject(MoodEvent.class);
+                Log.d(TAG,"successe get mood");
             }
         });
-
         return moodEvent;
     }
 

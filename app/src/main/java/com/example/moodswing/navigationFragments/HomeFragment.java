@@ -3,6 +3,7 @@ package com.example.moodswing.navigationFragments;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,15 +104,17 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        // Able to click to mood detail
-//        moodListAdapter.setOnItemClickListener(new MoodAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int position) {
-//                Intent intent = new Intent(getActivity(), MoodDetailActivity.class);
-//                intent.putExtra("MoodUID",moodDataList.get(position).getUniqueID());
-//                startActivity(intent);
-//            }
-//        });
+       // Able to click to mood detail
+        moodListAdapter.setOnItemClickListener(new MoodAdapter.OnItemClickListener() {
+           @Override
+           public void onItemClick(int position) {
+               Intent intent = new Intent(getActivity(), MoodDetailActivity.class);
+               String uid = moodDataList.get(position).getUniqueID();
+               intent.putExtra("MoodUID",uid);
+               if (uid != null)
+                startActivity(intent);
+            }
+        });
 
         ItemTouchHelper.SimpleCallback itemTouchHelper = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
             @Override
