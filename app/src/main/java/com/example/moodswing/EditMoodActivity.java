@@ -105,6 +105,7 @@ public class EditMoodActivity extends AppCompatActivity {
                 finish();
             }
         });
+        
         //Social Situation
         ArrayAdapter<String> socialAdapter = new ArrayAdapter<String>(EditMoodActivity.this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.socialSit));
         socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
