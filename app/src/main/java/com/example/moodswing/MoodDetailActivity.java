@@ -3,7 +3,9 @@ package com.example.moodswing;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 import android.widget.ImageButton;
@@ -15,6 +17,7 @@ import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.TimeJar;
 
 import java.io.Serializable;
+import java.text.DateFormatSymbols;
 
 public class MoodDetailActivity extends AppCompatActivity implements Serializable {
     MoodEvent moodEvent;
@@ -25,7 +28,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     private String reason;
     private Integer socialSituation;
 
-
+    private FirestoreUserDocCommunicator communicator;
     TextView dateText;
     TextView timeText;
     TextView moodText;
@@ -37,22 +40,24 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     private ImageButton editButton;
 
     private static boolean alreadyLoggedIn = true;
-
+    String UID;
     String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_details);
+        communicator = FirestoreUserDocCommunicator.getInstance();
         Intent moodIntent = getIntent();
-        username = moodIntent.getStringExtra("UserName");
-        moodEvent = (MoodEvent) moodIntent.getSerializableExtra("MoodEvent");
+        UID = moodIntent.getStringExtra("MoodUID");
+        moodEvent = communicator.grabMoodEvent(UID);
 
         //test case
         username = "1";
         DateJar dateJar = new DateJar(2000,11,1);
-        TimeJar timeJar = new TimeJar(11,11);
-        final FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
+        TimeJar timeJar = new TimeJar(12,01);
+        if (moodEvent == null){
+            moodEvent = new MoodEvent("123",1,dateJar,timeJar);}
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
@@ -72,6 +77,8 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         timeText.setText(Hr+":"+Min);
         int year = date.getYear();
         int Day = date.getDay();
+        int month = date.getMonth();
+        dateText.setText(getMonth(month)+","+Day+","+year);
         //moodText.setText(moodType);
         //socialText.setText(socialSituation);
         descriptionText.setText(reason);
@@ -80,18 +87,19 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MoodDetailActivity.this, EditMoodActivity.class);
-                intent.putExtra("UserName", username);
-                intent.putExtra("MoodEvent",(Serializable) moodEvent);
+                intent.putExtra("MoodUID",UID);
                 startActivity(intent);
             }
         });
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                communicator.removeMoodEvent(moodEvent.getUniqueID());
-//                //Intent intent = new Intent(MoodDetailActivity.this,MoodHistoryActivity.class);
-//                //startActivity(intent);
+                communicator.removeMoodEvent(moodEvent);
+                finish();
             }
         });
+    }
+    private String getMonth(int month) {
+        return new DateFormatSymbols().getMonths()[month-1];
     }
 }
