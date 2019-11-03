@@ -64,8 +64,10 @@ public class EditMoodActivity extends AppCompatActivity {
         UID = intent.getStringExtra("MoodUID");
         moodEvent = communicator.grabMoodEvent(UID);
 
+
         timeText = findViewById(R.id.timeText);
         confirmButton = findViewById(R.id.confirmNewMood);
+
 
         //moodTypes = initial();
 

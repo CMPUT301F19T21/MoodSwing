@@ -4,74 +4,52 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.example.moodswing.customDataTypes.AddMoodAdapter;
-import com.example.moodswing.customDataTypes.DateJar;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.SelectMoodAdapter;
+import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.SocialSituationItem;
 import com.example.moodswing.customDataTypes.SpinnerAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 
-public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener {
+public class NewMoodActivity extends AppCompatActivity {
+////    private ArrayList<SocialSituationItem> mSocialList;
+////    private SpinnerAdapter spinnerAdapter;
+////    private Spinner socialSituationSpinner;
+////    private String socialSitToAdd;
 
+    private FloatingActionButton confirmButton;
+    private ImageView locationCheckButton;
+    private ImageView addNewImageButton;
+    private EditText reasonEditText;
+    private TextView dateTextView;
+    private TextView timeTextView;
 
-    private ImageButton confirmButton;
+    private RecyclerView moodSelectList;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private SelectMoodAdapter moodSelectAdapter;
 
-
-    private DateJar date;
-    private TimeJar time;
-
-    private int moodState;
-    private ImageButton happyMood;
-    private ImageButton sadMood;
-    private ImageButton emotionalMood;
-    private ImageButton angryMood;
-
-    private MoodEvent moodObj;
-    private Intent returnIntent;
-
-    private AddMoodAdapter adapter;
-
-    private Integer selectedMood;
-
-
-
-    private TextView reasonTextView;
-    private String reason;
-
-    private ArrayList<SocialSituationItem> mSocialList;
-    private SpinnerAdapter spinnerAdapter;
-    private Spinner socialSituationSpinner;
-    private String socialSitToAdd;
-
-
-    @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
-        moodState = position;
-    }
+    private FirestoreUserDocCommunicator communicator;
+    private MoodEvent moodEvent;
 
 
     @Override
@@ -79,98 +57,201 @@ public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_mood);
 
-        ArrayList<Integer> viewColors = new ArrayList<>();
-        viewColors.add(1);
-        viewColors.add(2);
-        viewColors.add(3);
-        viewColors.add(4);
-
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Happy");
-        animalNames.add("Angry");
-        animalNames.add("Emotional");
-        animalNames.add("Sad");
+        // find view
+        confirmButton = findViewById(R.id.add_confirm);
+        addNewImageButton = findViewById(R.id.add_newImage);
+        reasonEditText = findViewById(R.id.reason_EditView);
+        dateTextView = findViewById(R.id.add_date);
+        timeTextView = findViewById(R.id.add_time);
+        moodSelectList = findViewById(R.id.moodSelect_recycler);
 
 
-        RecyclerView recyclerView = findViewById(R.id.addRecyclerView);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(NewMoodActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(horizontalLayoutManager);
-//        adapter = new AddMoodAdapter(this, viewColors, animalNames);
-//        adapter.setClickListener(NewMoodActivity.this);
-//        recyclerView.setAdapter(adapter);
+        // recyclerView
+        recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        moodSelectAdapter = new SelectMoodAdapter();
+        moodSelectList.setLayoutManager(recyclerViewLayoutManager);
+        moodSelectList.setAdapter(moodSelectAdapter);
 
+        // init communicator
+        communicator = FirestoreUserDocCommunicator.getInstance();
+        moodEvent = new MoodEvent();
 
-        //Setting the date
-        //month indexed 1 month behind for some reason
-        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        Log.v("dateCheck", "year:" + year + " day:" + day + " month:" + month);
-        date = new DateJar(year, month, day);
+        // set up current date and time
+        Calendar calendar = Calendar.getInstance();
 
+            // set date and time
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int hr = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+        DateJar date = new DateJar(year,month,day);
+        TimeJar time = new TimeJar(hr,min);
 
+        moodEvent.setDate(date);
+        moodEvent.setTime(time);
+            // set date and time for display
+        dateTextView.setText(getDateStr(date));
+        timeTextView.setText(getTimeStr(time));
 
-
-        mSocialList = new ArrayList<>();
-        mSocialList.add(new SocialSituationItem("Select Social Situation", 0));
-        mSocialList.add(new SocialSituationItem("Alone", R.drawable.aloneicon));
-        mSocialList.add(new SocialSituationItem("With One Person", R.drawable.onepersonicon));
-        mSocialList.add(new SocialSituationItem("With 2-7 People", R.drawable.twoplusicon));
-        mSocialList.add(new SocialSituationItem("With a Crowd", R.drawable.crowdicon));
-
-        socialSituationSpinner = findViewById(R.id.SituationSpinner);
-        spinnerAdapter = new SpinnerAdapter(this, mSocialList);
-        socialSituationSpinner.setAdapter(spinnerAdapter);
-
-        socialSituationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SocialSituationItem current = (SocialSituationItem) adapterView.getItemAtPosition(i);
-                socialSitToAdd = current.getSituation();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-
-
-
-        confirmButton = (ImageButton) findViewById(R.id.confirmNewMood);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                int hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                int minutes = Calendar.getInstance().get(Calendar.MINUTE);
-                time = new TimeJar(hours, minutes);
-                Log.v("SOMETHING", moodState + "");
-                Log.v("dateCheck", "hours: " + hours + "minutes:" + minutes);
-
-
-                reasonTextView = findViewById(R.id.reasonText);
-                reason = reasonTextView.getText().toString();
-                Log.v("dateCheck", reason);
-                Log.v("dateCheck", socialSitToAdd);
-
-                String[] temparray = reason.split(" ");
-                if (temparray.length <= 3) {
-//
-//
-////                        moodObj = new MoodEvent(moodState, date, time);
-////                        Log.v("SOMETHING", moodObj.getDate().toString());
-////                        returnIntent = new Intent();
-////                        returnIntent.putExtra("result", moodObj);
-////                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
-//
+                if (moodSelectAdapter.getSelectedMoodType() != null) {
+                    // do upload
+                    moodEvent.setUniqueID(communicator.generateMoodID());
+                    moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+                    communicator.addMoodEvent(moodEvent);
+                    finish();
+                }else{
+                    // prompt user to select a mood
                 }
-                }
-            });
-        }
-
-
+            }
+        });
     }
+
+    private String getDateStr (DateJar date) {
+        String month = returnMonthStr(date.getMonth());
+        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
+    }
+
+    private String getTimeStr (TimeJar time) {
+        return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
+    }
+
+    private String returnMonthStr(int monthInt){
+        String monthStr = null;
+        switch (monthInt){
+            case 0:
+                monthStr = "January";
+                break;
+            case 1:
+                monthStr = "February";
+                break;
+            case 2:
+                monthStr = "March";
+                break;
+            case 3:
+                monthStr = "April";
+                break;
+            case 4:
+                monthStr = "May";
+                break;
+            case 5:
+                monthStr = "June";
+                break;
+            case 6:
+                monthStr = "July";
+                break;
+            case 7:
+                monthStr = "August";
+                break;
+            case 8:
+                monthStr = "September";
+                break;
+            case 9:
+                monthStr = "October";
+                break;
+            case 10:
+                monthStr = "November";
+                break;
+            case 11:
+                monthStr = "December";
+                break;
+        }
+        return monthStr;
+    }
+}
+
+////        ArrayList<Integer> viewColors = new ArrayList<>();
+////        viewColors.add(1);
+////        viewColors.add(2);
+////        viewColors.add(3);
+////        viewColors.add(4);
+////
+////        ArrayList<String> animalNames = new ArrayList<>();
+////        animalNames.add("Happy");
+////        animalNames.add("Angry");
+////        animalNames.add("Emotional");
+////        animalNames.add("Sad");
+//
+//
+//        RecyclerView recyclerView = findViewById(R.id.addRecyclerView);
+//        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(NewMoodActivity.this, LinearLayoutManager.HORIZONTAL, false);
+//        recyclerView.setLayoutManager(horizontalLayoutManager);
+////        adapter = new SelectMoodAdapter(this, viewColors, animalNames);
+////        adapter.setClickListener(NewMoodActivity.this);
+////        recyclerView.setAdapter(adapter);
+//
+//
+//        //Setting the date
+//        //month indexed 1 month behind for some reason
+//        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+//        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+//        int year = Calendar.getInstance().get(Calendar.YEAR);
+//        Log.v("dateCheck", "year:" + year + " day:" + day + " month:" + month);
+//        date = new DateJar(year, month, day);
+//
+//
+//
+//
+//        mSocialList = new ArrayList<>();
+//        mSocialList.add(new SocialSituationItem("Select Social Situation", 0));
+//        mSocialList.add(new SocialSituationItem("Alone", R.drawable.aloneicon));
+//        mSocialList.add(new SocialSituationItem("With One Person", R.drawable.onepersonicon));
+//        mSocialList.add(new SocialSituationItem("With 2-7 People", R.drawable.twoplusicon));
+//        mSocialList.add(new SocialSituationItem("With a Crowd", R.drawable.crowdicon));
+//
+//        socialSituationSpinner = findViewById(R.id.SituationSpinner);
+//        spinnerAdapter = new SpinnerAdapter(this, mSocialList);
+//        socialSituationSpinner.setAdapter(spinnerAdapter);
+//
+//        socialSituationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                SocialSituationItem current = (SocialSituationItem) adapterView.getItemAtPosition(i);
+//                socialSitToAdd = current.getSituation();
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
+//
+//
+//
+//
+//        confirmButton = (ImageButton) findViewById(R.id.confirmNewMood);
+//        confirmButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                int hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+//                int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+//                time = new TimeJar(hours, minutes);
+//                Log.v("SOMETHING", moodState + "");
+//                Log.v("dateCheck", "hours: " + hours + "minutes:" + minutes);
+//
+//
+//                reasonTextView = findViewById(R.id.reasonText);
+//                reason = reasonTextView.getText().toString();
+//                Log.v("dateCheck", reason);
+//                Log.v("dateCheck", socialSitToAdd);
+//
+//                String[] temparray = reason.split(" ");
+//                if (temparray.length <= 3) {
+////
+////
+//////                        moodObj = new MoodEvent(moodState, date, time);
+//////                        Log.v("SOMETHING", moodObj.getDate().toString());
+//////                        returnIntent = new Intent();
+//////                        returnIntent.putExtra("result", moodObj);
+//////                        setResult(Activity.RESULT_OK, returnIntent);
+//                        finish();
+////
+//                }
+//                }
+//            });
+//        }

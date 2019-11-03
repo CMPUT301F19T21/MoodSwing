@@ -13,11 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FollowingActivity"></activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="MainActivity" />
-        <activity android:name=".MoodHistoryActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".EditMoodActivity" />
         <activity android:name=".MoodDetailActivity" />
         <activity android:name=".NewMoodActivity" />

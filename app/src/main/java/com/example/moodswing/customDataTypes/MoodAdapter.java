@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,47 +15,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> {
 
     private ArrayList<MoodEvent> moods;
 
-    private OnItemClickListener mListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-    public void setOnItemClickListener(OnItemClickListener listener){
-        mListener = listener;
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView moodType;
         TextView dateText;
         TextView timeText;
-        CheckBox checkBox;
+        ImageView moodImage;
 
         public MyViewHolder(View view, OnItemClickListener listener){
             super(view);
             this.moodType = view.findViewById(R.id.moodText);
             this.dateText = view.findViewById(R.id.dateText);
             this.timeText = view.findViewById(R.id.timeText);
-            this.checkBox = view.findViewById(R.id.checkbox);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null){
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
-                            listener.onItemClick(position);
-                        }
-                    }
-                }
-            });
+            this.moodImage = view.findViewById(R.id.moodIcon_placeHolder);
         }
-
-
     }
 
     public MoodAdapter(ArrayList<MoodEvent> moods) {
@@ -66,8 +46,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.mood_list_content, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(view,mListener);
-        return myViewHolder;
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -75,35 +54,93 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView moodType = holder.moodType;
         TextView dateText = holder.dateText;
         TextView timeText = holder.timeText;
-        CheckBox checkBox = holder.checkBox;
+        ImageView moodImage = holder.moodImage;
 
-        final MoodEvent moodEvent = moods.get(position);
-        DateJar date = moodEvent.getDate();
-        String dateStr = String.format("%04d-%02d-%02d",date.getYear(),date.getMonth(),date.getDay());
-        dateText.setText(dateStr);
+        MoodEvent moodEvent = moods.get(position);
 
-        TimeJar time = moodEvent.getTime();
-        String timeStr = String.format("%02d : %02d",time.getHr(),time.getMin());
-        timeText.setText(timeStr);
-
-        Integer moodTypeInt = moodEvent.getMoodType();
-        moodType.setText(moodTypeInt.toString());
+        dateText.setText(getDateStr(moodEvent.getDate()));
+        timeText.setText(getTimeStr(moodEvent.getTime()));
+        printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
 
 
-//        checkBox.setOnCheckedChangeListener(null);
-//        checkBox.setSelected(moodEvent.isSelected());
-//        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked){
-//                    moodEvent.setSelected(true);
-//                }else {
-//                    moodEvent.setSelected(false);
-//                }
-//            }
-//        });
-//        checkBox.setChecked(moodEvent.isSelected());
     }
+
+    private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
+        switch(moodTypeInt){
+            case 1:
+                moodText.setText("HAPPY");
+                moodImage.setImageResource(R.drawable.mood1);
+                break;
+            case 2:
+                moodText.setText("SAD");
+                moodImage.setImageResource(R.drawable.mood2);
+                break;
+            case 3:
+                moodText.setText("ANGRY");
+                moodImage.setImageResource(R.drawable.mood3);
+                break;
+            case 4:
+                moodText.setText("EDMOTIONAL");
+                moodImage.setImageResource(R.drawable.mood4);
+                break;
+        }
+    }
+
+    private String getDateStr (DateJar date) {
+        String month = returnMonthStr(date.getMonth());
+        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
+    }
+
+    private String getTimeStr (TimeJar time) {
+        return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
+    }
+
+    private String returnMonthStr(int monthInt){
+        String monthStr = null;
+        switch (monthInt){
+            case 0:
+                monthStr = "January";
+                break;
+            case 1:
+                monthStr = "February";
+                break;
+            case 2:
+                monthStr = "March";
+                break;
+            case 3:
+                monthStr = "April";
+                break;
+            case 4:
+                monthStr = "May";
+                break;
+            case 5:
+                monthStr = "June";
+                break;
+            case 6:
+                monthStr = "July";
+                break;
+            case 7:
+                monthStr = "August";
+                break;
+            case 8:
+                monthStr = "September";
+                break;
+            case 9:
+                monthStr = "October";
+                break;
+            case 10:
+                monthStr = "November";
+                break;
+            case 11:
+                monthStr = "December";
+                break;
+        }
+        return monthStr;
+    }
+
+
+
+
 
     @Override
     public int getItemCount() {
