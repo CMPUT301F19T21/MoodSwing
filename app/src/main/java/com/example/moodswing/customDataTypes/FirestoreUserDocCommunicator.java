@@ -216,27 +216,12 @@ public class FirestoreUserDocCommunicator{
                 });
     }
     public MoodEvent grabMoodEvent(String UID){
-        Log.d(TAG,"successe get moodaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        Log.d("UID",UID);
         DocumentReference MoodEventRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(UID);
-        MoodEventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
         MoodEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -244,7 +229,6 @@ public class FirestoreUserDocCommunicator{
                 Log.d(TAG,"successe get mood");
             }
         });
-        Log.d(TAG,"successe get mood");
         return moodEvent;
     }
 

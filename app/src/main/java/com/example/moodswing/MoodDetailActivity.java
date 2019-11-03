@@ -53,7 +53,11 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         UID = moodIntent.getStringExtra("MoodUID");
 
         moodEvent = communicator.grabMoodEvent(UID);
-        finish();
+        if (moodEvent == null){
+            DateJar dateJar = new DateJar(1111,11,11);
+            TimeJar timeJar = new TimeJar(11,11);
+            moodEvent = new MoodEvent("123",1,dateJar,timeJar);
+        }
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
@@ -68,6 +72,8 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         delButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
         moodView = findViewById(R.id.moodImg);
+
+        MoodTypesetting(moodType);
 
         int Hr = time.getHr();
         int Min = time.getMin();

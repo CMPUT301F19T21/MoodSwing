@@ -104,7 +104,8 @@ public class EditMoodActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+                if (moodSelectAdapter.getSelectedMoodType() != null)
+                    moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                 moodEvent.setReason(reason);
                 communicator.updateMoodEvent(moodEvent);
                 finish();
