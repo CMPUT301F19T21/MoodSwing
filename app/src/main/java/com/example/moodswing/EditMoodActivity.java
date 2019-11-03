@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.moodswing.customDataTypes.AddMoodAdapter;
+// import com.example.moodswing.customDataTypes.AddMoodAdapter;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;

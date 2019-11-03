@@ -27,7 +27,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView timeText;
         ImageView moodImage;
 
-        public MyViewHolder(View view, OnItemClickListener listener){
+        public MyViewHolder(View view){
             super(view);
             this.moodType = view.findViewById(R.id.moodText);
             this.dateText = view.findViewById(R.id.dateText);
