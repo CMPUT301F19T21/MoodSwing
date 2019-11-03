@@ -9,8 +9,8 @@ import java.sql.Time;
  *      int min
  */
 public class TimeJar {
-    private int hr;
-    private int min;
+    private Integer hr;
+    private Integer min;
 
     public TimeJar(){}
 
@@ -20,7 +20,7 @@ public class TimeJar {
 
     }
 
-    public int getHr() {
+    public Integer getHr() {
         return hr;
     }
 
@@ -28,7 +28,7 @@ public class TimeJar {
         this.hr = hr;
     }
 
-    public int getMin() {
+    public Integer getMin() {
         return min;
     }
 

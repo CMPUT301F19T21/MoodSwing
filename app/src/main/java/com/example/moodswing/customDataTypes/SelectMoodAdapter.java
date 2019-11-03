@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.R;
@@ -16,6 +18,8 @@ import com.example.moodswing.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import io.opencensus.resource.Resource;
 
 public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.MyViewHolder> {
 
@@ -35,20 +39,23 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
 //        this.moodText = moodText_;
 //    }
     private ArrayList<Integer> moodTypes;
+    private Integer selectedPosition;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView moodTypeText;
         ImageView moodImage;
+        CardView card;
 
         public MyViewHolder(View view){
             super(view);
             this.moodTypeText = view.findViewById(R.id.moodType_Text);
             this.moodImage = view.findViewById(R.id.moodIcon);
+            this.card = view.findViewById(R.id.selectCard);
         }
-
     }
 
     public  SelectMoodAdapter() {
+        selectedPosition = null;
         moodTypes = new ArrayList<>();
         for (int i = 0; i < 4; i++){
             moodTypes.add(i);
@@ -89,6 +96,21 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                 break;
         }
 
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedPosition == null) {
+                    selectedPosition = holder.getLayoutPosition();
+                    holder.card.setElevation(2f);
+                    holder.card.setCardBackgroundColor(Color.parseColor("#F5F5F5"));
+                }else if (selectedPosition == holder.getLayoutPosition()){
+                    selectedPosition = null;
+                    holder.card.setElevation(12f);
+                    holder.card.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+                }
+            }
+        });
+
 
     }
 
@@ -97,86 +119,3 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         return moodTypes.size();
     }
 }
-
-
-
-    // binds the data to the view and textview in each row
-//    @Override
-//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        int id = moodID.get(position);
-//
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectedPosition = position;
-//                notifyDataSetChanged();
-//
-//            }
-//        });
-//
-//        String moodName = moodText.get(position);
-//        if (id == 1) {
-//            holder.myImageView.setImageResource(R.drawable.happymood);
-//        }
-//        else if (id == 2) {
-//            holder.myImageView.setImageResource(R.drawable.angrymood);
-//        }
-//        else if (id == 3) {
-//            holder.myImageView.setImageResource(R.drawable.emotionalmood);
-//        }
-//        else if (id == 4) {
-//            holder.myImageView.setImageResource(R.drawable.sadmood);
-//        }
-//        holder.myTextView.setText(moodName);
-//
-//
-//        if(selectedPosition==position) {
-//            holder.itemView.setBackgroundColor(Color.LTGRAY);
-//        }
-//        else {
-//            holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
-//        }
-//
-//
-//
-//    }
-//
-//    // total number of rows
-//    @Override
-//    public int getItemCount() {
-//        return moodText.size();
-//    }
-//
-//    // stores and recycles views as they are scrolled off screen
-//    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-//        ImageView myImageView;
-//        TextView myTextView;
-//
-//        ViewHolder(View itemView) {
-//            super(itemView);
-//            myImageView = itemView.findViewById(R.id.add_mood_icon);
-//            myTextView = itemView.findViewById(R.id.add_Mood_text);
-//            itemView.setOnClickListener(this);
-//        }
-//
-//        @Override
-//        public void onClick(View view) {
-//            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-//        }
-//    }
-//
-//    // convenience method for getting data at click position
-//    public String getItem(int id) {
-//        return moodText.get(id);
-//    }
-//
-//    // allows clicks events to be caught
-//    public void setClickListener(ItemClickListener itemClickListener) {
-//        this.mClickListener = itemClickListener;
-//    }
-//
-//    // parent activity will implement this method to respond to click events
-//    public interface ItemClickListener {
-//        void onItemClick(View view, int position);
-//    }
-//}

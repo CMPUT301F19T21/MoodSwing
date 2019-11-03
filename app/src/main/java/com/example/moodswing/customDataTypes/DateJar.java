@@ -14,9 +14,9 @@ import java.util.Date;
  *      int day
  */
 public class DateJar {
-    private int year;
-    private int month;
-    private int day;
+    private Integer year;
+    private Integer month;
+    private Integer day;
 
     public DateJar(){}
 
@@ -26,15 +26,15 @@ public class DateJar {
         this.setDay(day);
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public int getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public int getDay() {
+    public Integer getDay() {
         return day;
     }
 

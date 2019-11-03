@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.example.moodswing"
-        minSdkVersion 16
+        minSdkVersion 21
         // changed from 15 to 16 because google cloud firestore auth only support 16+ - gengyuan
         targetSdkVersion 29
         versionCode 1
