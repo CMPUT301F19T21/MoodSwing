@@ -1,6 +1,7 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class MoodDetailFragment extends Fragment{
     private TextView timeText;
     private TextView moodText;
     private TextView reasonText;
+    private TextView socialText;
 
     private FloatingActionButton delButton;
     private FloatingActionButton editButton;
@@ -67,6 +69,7 @@ public class MoodDetailFragment extends Fragment{
         editButton = root.findViewById(R.id.detailedView_edit);
         backButton = root.findViewById(R.id.detailedView_back);
         moodImage = root.findViewById(R.id.detailedView_moodImg);
+        socialText = root.findViewById(R.id.moodDetail_SocialText);
 
         initialElements();
 
@@ -111,6 +114,7 @@ public class MoodDetailFragment extends Fragment{
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
         setMoodImage(moodEvent.getMoodType());
         setReasonText();
+        setSocialText();
 
 
     }
@@ -120,6 +124,14 @@ public class MoodDetailFragment extends Fragment{
             this.reasonText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getReason())));
         }else{
             this.reasonText.setText("");
+        }
+    }
+
+    private void setSocialText(){
+        if (moodEvent.getSocialSituation() != null){
+            this.socialText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getSocialSituation())));
+        }else{
+            this.socialText.setText("");
         }
     }
 

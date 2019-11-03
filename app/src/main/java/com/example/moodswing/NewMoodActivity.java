@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -79,6 +80,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private Double latitude, longitude;
+    private String social;
 
     private boolean ifLocationEnabled;
 
@@ -155,6 +157,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     // do upload
                     moodEvent.setUniqueID(communicator.generateMoodID());
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+                    moodEvent.setSocialSituation(social);
 
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
@@ -177,7 +180,6 @@ public class NewMoodActivity extends AppCompatActivity {
                 }else{
                     // prompt user to select a mood
                 }
-                moodEvent.setSocialSituation(socialSpinner.getSelectedItem().toString());
             }
         });
 
@@ -185,6 +187,22 @@ public class NewMoodActivity extends AppCompatActivity {
         ArrayAdapter<String> socialAdapter = new ArrayAdapter<String>(NewMoodActivity.this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.socialSit));
         socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         socialSpinner.setAdapter(socialAdapter);
+        socialSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(adapterView.getItemAtPosition(i).equals("Select Social Situation")){
+                    //do nothing
+                }
+                else{
+                    social = adapterView.getItemAtPosition(i).toString();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private String getDateStr (DateJar date) {
@@ -231,6 +249,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }
 
 ////        ArrayList<Integer> viewColors = new ArrayList<>();
