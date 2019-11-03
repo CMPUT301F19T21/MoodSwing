@@ -32,29 +32,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class NewMoodActivity extends AppCompatActivity {
-//    private ImageButton confirmButton;
-////
-////    private DateJar date;
-////    private TimeJar time;
-////
-////    private int moodState;
-////    private ImageButton happyMood;
-////    private ImageButton sadMood;
-////    private ImageButton emotionalMood;
-////    private ImageButton angryMood;
-////
-////    private MoodEvent moodObj;
-////    private Intent returnIntent;
-////
-////    private SelectMoodAdapter adapter;
-////
-////    private Integer selectedMood;
-////
-////
-////
-////    private TextView reasonTextView;
-////    private String reason;
-////
 ////    private ArrayList<SocialSituationItem> mSocialList;
 ////    private SpinnerAdapter spinnerAdapter;
 ////    private Spinner socialSituationSpinner;
@@ -116,6 +93,21 @@ public class NewMoodActivity extends AppCompatActivity {
             // set date and time for display
         dateTextView.setText(getDateStr(date));
         timeTextView.setText(getTimeStr(time));
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (moodSelectAdapter.getSelectedMoodType() != null) {
+                    // do upload
+                    moodEvent.setUniqueID(communicator.generateMoodID());
+                    moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+                    communicator.addMoodEvent(moodEvent);
+                    finish();
+                }else{
+                    // prompt user to select a mood
+                }
+            }
+        });
     }
 
     private String getDateStr (DateJar date) {

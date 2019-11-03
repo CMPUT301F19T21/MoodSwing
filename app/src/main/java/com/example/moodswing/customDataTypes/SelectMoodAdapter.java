@@ -57,7 +57,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
     public  SelectMoodAdapter() {
         selectedPosition = null;
         moodTypes = new ArrayList<>();
-        for (int i = 0; i < 4; i++){
+        for (int i = 1; i < 5; i++){
             moodTypes.add(i);
         }
     }
@@ -91,7 +91,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                 moodImage.setImageResource(R.drawable.mood3);
                 break;
             case 4:
-                moodTypeText.setText("Test");
+                moodTypeText.setText("EDMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
         }
@@ -110,12 +110,18 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                 }
             }
         });
-
-
     }
 
     @Override
     public int getItemCount() {
         return moodTypes.size();
+    }
+
+    public Integer getSelectedMoodType(){
+        if (selectedPosition != null) {
+            return moodTypes.get(selectedPosition);
+        }else{
+            return null;
+        }
     }
 }

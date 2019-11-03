@@ -82,10 +82,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), NewMoodActivity.class));
-
-
-                communicator.addMoodEvent(new MoodEvent(communicator.generateMoodID(),4,new DateJar(1998,3,27),
-                        new TimeJar(11,11)));
             }
         });
         delButton.setOnClickListener(new View.OnClickListener() {
