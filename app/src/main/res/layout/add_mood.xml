@@ -136,10 +136,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="10dp"
                             android:fontFamily="sans-serif-light"
                             android:text="Select You Mood"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
