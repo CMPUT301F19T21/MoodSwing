@@ -35,10 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class NewMoodActivity extends AppCompatActivity implements AddMoodAdapter.ItemClickListener {
-
-
     private ImageButton confirmButton;
-
 
     private DateJar date;
     private TimeJar time;
