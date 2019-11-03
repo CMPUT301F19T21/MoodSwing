@@ -196,38 +196,55 @@ public class FirestoreUserDocCommunicator{
 
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        DateJar dateJar = moodEvent.getDate();
-        TimeJar timeJar = moodEvent.getTime();
         DocumentReference UpdateMood = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEvent.getUniqueID());
-        UpdateMood.update(
-                "Data.day", dateJar.getDay(),
-                "Date.month", dateJar.getMonth(),
-                "Date.year", dateJar.getYear(),
-                "MoodType", moodEvent.getMoodType(),
-                "reason", moodEvent.getReason(),
-                "socialSituation", moodEvent.getSocialSituation(),
-                "time.hr", timeJar.getHr(),
-                "time.min", timeJar.getMin()
-        );
+        UpdateMood.set(moodEvent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
     }
     public MoodEvent grabMoodEvent(String UID){
-
+        Log.d(TAG,"successe get moodaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         DocumentReference MoodEventRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(UID);
+        MoodEventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
         MoodEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 moodEvent = documentSnapshot.toObject(MoodEvent.class);
+                Log.d(TAG,"successe get mood");
             }
         });
-
+        Log.d(TAG,"successe get mood");
         return moodEvent;
     }
 
