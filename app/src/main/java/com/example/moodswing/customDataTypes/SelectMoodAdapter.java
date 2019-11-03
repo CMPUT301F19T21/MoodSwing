@@ -50,7 +50,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
 
     public  SelectMoodAdapter() {
         moodTypes = new ArrayList<>();
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 4; i++){
             moodTypes.add(i);
         }
     }
@@ -68,9 +68,27 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView moodTypeText= holder.moodTypeText;
         ImageView moodImage= holder.moodImage;
+        int moodType = moodTypes.get(position);
 
-        moodTypeText.setText("HAPPY");
-        moodImage.setImageResource(R.drawable.mood1);
+        switch (moodType){
+            case 1:
+                moodTypeText.setText("HAPPY");
+                moodImage.setImageResource(R.drawable.mood1);
+                break;
+            case 2:
+                moodTypeText.setText("SAD");
+                moodImage.setImageResource(R.drawable.mood2);
+                break;
+            case 3:
+                moodTypeText.setText("ANGRY");
+                moodImage.setImageResource(R.drawable.mood3);
+                break;
+            case 4:
+                moodTypeText.setText("Test");
+                moodImage.setImageResource(R.drawable.mood4);
+                break;
+        }
+
 
     }
 

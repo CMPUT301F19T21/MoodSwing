@@ -62,7 +62,6 @@ public class NewMoodActivity extends AppCompatActivity {
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
-    private TextView locationTextView;
 
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -77,12 +76,10 @@ public class NewMoodActivity extends AppCompatActivity {
         setContentView(R.layout.add_mood);
 
         confirmButton = findViewById(R.id.add_confirm);
-        locationCheckButton = findViewById(R.id.add_checkImage);
         addNewImageButton = findViewById(R.id.add_newImage);
         reasonEditText = findViewById(R.id.reason_EditView);
         dateTextView = findViewById(R.id.add_date);
         timeTextView = findViewById(R.id.add_time);
-        locationTextView = findViewById(R.id.add_geoLocation);
 
         moodSelectList = findViewById(R.id.moodSelect_recycler);
 
