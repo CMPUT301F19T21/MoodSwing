@@ -1,6 +1,5 @@
 package com.example.moodswing.customDataTypes;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moodswing.MoodDetailActivity;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import java.util.Locale;
 public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> {
 
     private ArrayList<MoodEvent> moods;
+
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -31,11 +31,16 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         mListener = listener;
     }
 
+//    private Integer selectedPosition; // note: use of this attribute MAY cause bug (not matching) because of realtime listner,
+//    // need to invest more later! - Scott (especially on following screen, where the card at position can be changed in realtime)
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView moodType;
         TextView dateText;
         TextView timeText;
         ImageView moodImage;
+        CardView moodHistoryCard;
 
         public MyViewHolder(View view,OnItemClickListener listener){
             super(view);
@@ -55,12 +60,16 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
                     }
                 }
             });
+
+            this.moodHistoryCard = view.findViewById(R.id.moodhistory_card);
+
         }
     }
 
     public MoodAdapter(ArrayList<MoodEvent> moods) {
         //Customize the list
         this.moods = moods;
+//        this.selectedPosition = null;
     }
 
     @NonNull
@@ -87,17 +96,15 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         holder.moodHistoryCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDetailedViewActivity(holder.getLayoutPosition(),v);
+                startDetailedViewActivity(holder.getLayoutPosition());
             }
         });
     }
 
 
-    private void startDetailedViewActivity (int cardPosition,View v){
+    private void startDetailedViewActivity (int cardPosition){
         // cardPosition will be passed to detailed view
-        Intent intent = new Intent(v.getContext(), MoodDetailActivity.class);
-        intent.putExtra("position",cardPosition);
-        v.getContext().startActivity(intent);
+
     }
 
     private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
