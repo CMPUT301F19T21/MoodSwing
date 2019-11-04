@@ -17,6 +17,7 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodType;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
@@ -41,6 +42,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
 
     private ImageButton delButton;
     private ImageButton editButton;
+    private FloatingActionButton confirmButton;
 
     private static boolean alreadyLoggedIn = true;
     int position;
@@ -63,6 +65,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         delButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
         moodImage = findViewById(R.id.moodImg);
+        confirmButton = findViewById(R.id.confirm_Button);
 
         initial();
 
@@ -75,6 +78,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
                 finish();
             }
         });
+
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +86,14 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
                 finish();
             }
         });
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
     private String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month-1];
