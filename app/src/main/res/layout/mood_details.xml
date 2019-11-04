@@ -127,39 +127,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/locationText" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="80dp"
-            app:cardBackgroundColor="#C6C6C6"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="6dp"
-            app:cardUseCompatPadding="true"
-            app:contentPadding="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+
+        <ImageView
+            android:id="@+id/locationPic"
+            android:layout_width="293dp"
+            android:layout_height="193dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:background="#F6F1E9"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.365"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/separator"
-            app:layout_constraintVertical_bias="0.0">
-
-            <ImageView
-                android:id="@+id/locationPic"
-                android:layout_width="293dp"
-                android:layout_height="193dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="10dp"
-                android:background="#F6F1E9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.029"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/ic_add_black_24dp" />
-        </androidx.cardview.widget.CardView>
+            tools:srcCompat="@drawable/ic_add_black_24dp" />
 
         <ImageButton
             android:id="@+id/location_Button"

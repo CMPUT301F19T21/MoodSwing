@@ -55,21 +55,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         Intent moodIntent = getIntent();
         position = moodIntent.getIntExtra("position",-1);
 
-        moodEvent = communicator.getMoodEvents().get(position);
-
-        //test case
-        username = "1";
-        DateJar dateJar = new DateJar(2000,11,1);
-        TimeJar timeJar = new TimeJar(12,01);
-        if (moodEvent == null){
-            moodEvent = new MoodEvent("123",1,dateJar,timeJar);}
-
-        moodType = moodEvent.getMoodType();
-        date = moodEvent.getDate();
-        time = moodEvent.getTime();
-        reason = moodEvent.getReason();
-
-        //socialText = findViewById(R.id.socialTxt);
+        // find view
         dateText = findViewById(R.id.dateText);
         timeText = findViewById(R.id.timeText);
         moodText = findViewById(R.id.moodText);
@@ -78,24 +64,15 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         editButton = findViewById(R.id.editButton);
         moodImage = findViewById(R.id.moodImg);
 
-        int Hr = time.getHr();
-        int Min = time.getMin();
-        timeText.setText(Hr+":"+Min);
-        int year = date.getYear();
-        int Day = date.getDay();
-        int month = date.getMonth();
-        dateText.setText(getMonth(month)+","+Day+","+year);
-        //moodText.setText(moodType);
-        //socialText.setText(socialSituation);
-        descriptionText.setText(reason);
-        setMoodImage(moodType);
+        initial();
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MoodDetailActivity.this, EditMoodActivity.class);
-                intent.putExtra("MoodUID",UID);
+                intent.putExtra("position",position);
                 startActivity(intent);
+                finish();
             }
         });
         delButton.setOnClickListener(new View.OnClickListener() {
@@ -128,5 +105,27 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
         }
+    }
+    private void initial(){
+        moodEvent = communicator.getMoodEvents().get(position);
+
+        moodType = moodEvent.getMoodType();
+        date = moodEvent.getDate();
+        time = moodEvent.getTime();
+        reason = moodEvent.getReason();
+
+
+
+        int Hr = time.getHr();
+        int Min = time.getMin();
+        timeText.setText(Hr+":"+Min);
+        int year = date.getYear();
+        int Day = date.getDay();
+        int month = date.getMonth();
+        dateText.setText(getMonth(month)+","+Day+","+year);
+        //moodText.setText(moodType);
+        //socialText.setText(socialSituation);
+        descriptionText.setText(reason);
+        setMoodImage(moodType);
     }
 }
