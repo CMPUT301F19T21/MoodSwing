@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MoodType;
 import com.example.moodswing.customDataTypes.TimeJar;
 
 import java.io.Serializable;
@@ -34,6 +36,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     TextView moodText;
     TextView descriptionText;
     TextView socialText;
+    ImageView moodImage;
 
 
     private ImageButton delButton;
@@ -66,13 +69,14 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         time = moodEvent.getTime();
         reason = moodEvent.getReason();
 
-        socialText = findViewById(R.id.socialTxt);
+        //socialText = findViewById(R.id.socialTxt);
         dateText = findViewById(R.id.dateText);
         timeText = findViewById(R.id.timeText);
         moodText = findViewById(R.id.moodText);
         descriptionText = findViewById(R.id.descriptionText);
         delButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
+        moodImage = findViewById(R.id.moodImg);
 
         int Hr = time.getHr();
         int Min = time.getMin();
@@ -84,6 +88,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         //moodText.setText(moodType);
         //socialText.setText(socialSituation);
         descriptionText.setText(reason);
+        setMoodImage(moodType);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,5 +108,25 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     }
     private String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month-1];
+    }
+    private void setMoodImage(int moodType){
+        switch(moodType){
+            case 1:
+                moodText.setText("HAPPY");
+                moodImage.setImageResource(R.drawable.mood1);
+                break;
+            case 2:
+                moodText.setText("SAD");
+                moodImage.setImageResource(R.drawable.mood2);
+                break;
+            case 3:
+                moodText.setText("ANGRY");
+                moodImage.setImageResource(R.drawable.mood3);
+                break;
+            case 4:
+                moodText.setText("EDMOTIONAL");
+                moodImage.setImageResource(R.drawable.mood4);
+                break;
+        }
     }
 }
