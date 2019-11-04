@@ -1,5 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.MoodDetailActivity;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
@@ -71,14 +73,17 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         holder.moodHistoryCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDetailedViewActivity(holder.getLayoutPosition());
+                startDetailedViewActivity(holder.getLayoutPosition(),v);
             }
         });
     }
 
 
-    private void startDetailedViewActivity (int cardPosition){
+    private void startDetailedViewActivity (int cardPosition,View v){
         // cardPosition will be passed to detailed view
+        Intent intent = new Intent(v.getContext(), MoodDetailActivity.class);
+
+        v.getContext().startActivity(intent);
 
     }
 

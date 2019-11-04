@@ -203,16 +203,19 @@ public class FirestoreUserDocCommunicator{
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEvent.getUniqueID());
-        UpdateMood.update(
-                "Data.day", dateJar.getDay(),
-                "Date.month", dateJar.getMonth(),
-                "Date.year", dateJar.getYear(),
-                "MoodType", moodEvent.getMoodType(),
-                "reason", moodEvent.getReason(),
-                "socialSituation", moodEvent.getSocialSituation(),
-                "time.hr", timeJar.getHr(),
-                "time.min", timeJar.getMin()
-        );
+        UpdateMood.set(moodEvent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
     }
     public MoodEvent grabMoodEvent(String UID){
 
