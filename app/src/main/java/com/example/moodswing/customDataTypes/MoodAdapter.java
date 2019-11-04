@@ -1,5 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.MoodDetailActivity;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
@@ -82,7 +84,20 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         timeText.setText(getTimeStr(moodEvent.getTime()));
         printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
 
+        holder.moodHistoryCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startDetailedViewActivity(holder.getLayoutPosition(),v);
+            }
+        });
+    }
 
+
+    private void startDetailedViewActivity (int cardPosition,View v){
+        // cardPosition will be passed to detailed view
+        Intent intent = new Intent(v.getContext(), MoodDetailActivity.class);
+        intent.putExtra("position",cardPosition);
+        v.getContext().startActivity(intent);
     }
 
     private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {

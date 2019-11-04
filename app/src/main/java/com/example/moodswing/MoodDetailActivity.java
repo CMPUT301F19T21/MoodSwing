@@ -39,6 +39,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
 
     private ImageButton delButton;
     private ImageButton editButton;
+    Integer position;
 
     private static boolean alreadyLoggedIn = true;
     String UID;
@@ -50,7 +51,9 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         setContentView(R.layout.mood_details);
         communicator = FirestoreUserDocCommunicator.getInstance();
         Intent moodIntent = getIntent();
-        UID = moodIntent.getStringExtra("MoodUID");
+
+        position = moodIntent.getIntExtra("position",-1);
+
 
         moodEvent = communicator.grabMoodEvent(UID);
         if (moodEvent == null){
