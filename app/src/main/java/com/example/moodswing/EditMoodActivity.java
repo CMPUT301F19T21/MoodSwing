@@ -28,6 +28,7 @@ import com.google.protobuf.Empty;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class EditMoodActivity extends AppCompatActivity {
     TextView timeText;
@@ -43,7 +44,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
-
+    private String period;
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private ArrayList<MoodType> moodTypes;
@@ -87,17 +88,8 @@ public class EditMoodActivity extends AppCompatActivity {
 
 
 
-        //moodTypes = initial();
+        initial();
 
-        date = moodEvent.getDate();
-        time = moodEvent.getTime();
-        int Hr = time.getHr();
-        int Min = time.getMin();
-        timeTextView.setText(Hr+":"+Min);
-        int year = date.getYear();
-        int Day = date.getDay();
-        int month = date.getMonth();
-        timeTextView.setText(getMonth(month)+","+Day+","+year);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +103,23 @@ public class EditMoodActivity extends AppCompatActivity {
         });
     }
     private String getMonth(int month) {
-        return new DateFormatSymbols().getMonths()[month-1];
+        return new DateFormatSymbols().getMonths()[month];
+    }
+    private void initial(){
+        date = moodEvent.getDate();
+        time = moodEvent.getTime();
+        int Hr = time.getHr();
+        int Min = time.getMin();
+        if(Hr >12){
+            Hr = Hr-12;
+            period = "PM";
+        }
+        else period = "AM";
+        timeTextView.setText(String.format(Locale.getDefault(), "%d:%02d %s",Hr,Min,period));
+        int year = date.getYear();
+        int Day = date.getDay();
+        int month = date.getMonth();
+        dateTextView.setText(getMonth(month)+","+Day+","+year);
+
     }
 }

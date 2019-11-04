@@ -97,7 +97,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
 
     }
     private String getMonth(int month) {
-        return new DateFormatSymbols().getMonths()[month-1];
+        return new DateFormatSymbols().getMonths()[month];
     }
     private void setMoodImage(int moodType){
         switch(moodType){
