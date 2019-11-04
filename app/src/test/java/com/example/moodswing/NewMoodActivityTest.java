@@ -38,7 +38,7 @@ public class NewMoodActivityTest {
         input.setMin(45);
 
         //setting expected value
-        String expected = "13:45";
+        String expected = "1:45 PM";
 
         //getting output provided by method
         NewMoodActivity newMoodActivity = new NewMoodActivity();

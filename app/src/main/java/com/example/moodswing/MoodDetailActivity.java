@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
+import java.util.Locale;
 
 public class MoodDetailActivity extends AppCompatActivity implements Serializable {
     MoodEvent moodEvent;
@@ -126,11 +127,16 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         time = moodEvent.getTime();
         reason = moodEvent.getReason();
 
-
-
+        String period;
         int Hr = time.getHr();
         int Min = time.getMin();
-        timeText.setText(Hr+":"+Min);
+
+        if(Hr >12){
+            Hr = Hr-12;
+            period = "PM";
+        }
+        else period = "AM";
+        timeText.setText(String.format(Locale.getDefault(), "%d:%02d %s",Hr,Min,period));
         int year = date.getYear();
         int Day = date.getDay();
         int month = date.getMonth();
