@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moodswing.customDataTypes.DateJar;
@@ -35,7 +34,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     TextView moodText;
     TextView descriptionText;
     TextView socialText;
-    ImageView moodView;
+
 
     private ImageButton delButton;
     private ImageButton editButton;
@@ -51,29 +50,27 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         communicator = FirestoreUserDocCommunicator.getInstance();
         Intent moodIntent = getIntent();
         UID = moodIntent.getStringExtra("MoodUID");
-
         moodEvent = communicator.grabMoodEvent(UID);
+
+        //test case
+        username = "1";
+        DateJar dateJar = new DateJar(2000,11,1);
+        TimeJar timeJar = new TimeJar(12,01);
         if (moodEvent == null){
-            DateJar dateJar = new DateJar(1111,11,11);
-            TimeJar timeJar = new TimeJar(11,11);
-            moodEvent = new MoodEvent("123",1,dateJar,timeJar);
-        }
+            moodEvent = new MoodEvent("123",1,dateJar,timeJar);}
 
         moodType = moodEvent.getMoodType();
         date = moodEvent.getDate();
         time = moodEvent.getTime();
         reason = moodEvent.getReason();
 
-        socialText = findViewById(R.id.socialText);
+        socialText = findViewById(R.id.socialTxt);
         dateText = findViewById(R.id.dateText);
         timeText = findViewById(R.id.timeText);
         moodText = findViewById(R.id.moodText);
         descriptionText = findViewById(R.id.descriptionText);
         delButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
-        moodView = findViewById(R.id.moodImg);
-
-        MoodTypesetting(moodType);
 
         int Hr = time.getHr();
         int Min = time.getMin();
@@ -104,26 +101,5 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
     }
     private String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month-1];
-    }
-    private void MoodTypesetting(int moodType){
-
-        switch(moodType){
-            case 1:
-                moodText.setText("HAPPY");
-                moodView.setImageResource(R.drawable.mood1);
-                break;
-            case 2:
-                moodText.setText("SAD");
-                moodView.setImageResource(R.drawable.mood2);
-                break;
-            case 3:
-                moodText.setText("ANGRY");
-                moodView.setImageResource(R.drawable.mood3);
-                break;
-            case 4:
-                moodText.setText("EDMOTIONAL");
-                moodView.setImageResource(R.drawable.mood4);
-                break;
-        }
     }
 }
