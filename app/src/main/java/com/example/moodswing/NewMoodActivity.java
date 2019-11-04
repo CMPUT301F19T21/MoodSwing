@@ -116,7 +116,14 @@ public class NewMoodActivity extends AppCompatActivity {
     }
 
     public String getTimeStr (TimeJar time) {
-        return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
+        int hr = time.getHr();
+        String period;
+        if (hr>12){
+            hr =hr-12;
+            period = "PM";
+        }
+        else period = "AM";
+        return String.format(Locale.getDefault(), "%d:%02d %s",hr,time.getMin(),period);
     }
 
     public String returnMonthStr(int monthInt){
