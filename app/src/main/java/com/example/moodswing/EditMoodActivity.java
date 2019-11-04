@@ -62,7 +62,7 @@ public class EditMoodActivity extends AppCompatActivity {
         communicator = FirestoreUserDocCommunicator.getInstance();
         Intent intent = getIntent();
         UID = intent.getStringExtra("MoodUID");
-        moodEvent = communicator.grabMoodEvent(UID);
+        //moodEvent = communicator.grabMoodEvent(UID);
 
 
         timeText = findViewById(R.id.timeText);

@@ -45,7 +45,7 @@ public class FirestoreUserDocCommunicator{
 
     private static FirestoreUserDocCommunicator instance = null;
 
-    private static MoodEvent moodEvent;
+    private static ArrayList<MoodEvent> moodEvents;
     // reference
 
     protected FirestoreUserDocCommunicator(){
@@ -192,12 +192,11 @@ public class FirestoreUserDocCommunicator{
                 moodAdapter.notifyDataSetChanged();
             }
         });
+        moodEvents= moodAdapter.getMoods();
     }
 
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        DateJar dateJar = moodEvent.getDate();
-        TimeJar timeJar = moodEvent.getTime();
         DocumentReference UpdateMood = db
                 .collection("users")
                 .document(user.getUid())
@@ -217,7 +216,11 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
-    public MoodEvent grabMoodEvent(String UID){
+
+    public static ArrayList<MoodEvent> getMoodEvents() {
+        return moodEvents;
+    }
+    /* public MoodEvent grabMoodEvent(String UID){
 
         DocumentReference MoodEventRef = db
                 .collection("users")
@@ -232,7 +235,7 @@ public class FirestoreUserDocCommunicator{
         });
 
         return moodEvent;
-    }
+    }*/
 
     public void editUserPassword() {
         //

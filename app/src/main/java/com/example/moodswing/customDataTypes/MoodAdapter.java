@@ -82,7 +82,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     private void startDetailedViewActivity (int cardPosition,View v){
         // cardPosition will be passed to detailed view
         Intent intent = new Intent(v.getContext(), MoodDetailActivity.class);
-
+        intent.putExtra("position",cardPosition);
         v.getContext().startActivity(intent);
 
     }
@@ -176,5 +176,9 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
 
     public void addToMoods(MoodEvent moodEvent){
         this.moods.add(moodEvent);
+    }
+
+    public ArrayList<MoodEvent> getMoods() {
+        return moods;
     }
 }
