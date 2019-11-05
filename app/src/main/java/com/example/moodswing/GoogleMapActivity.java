@@ -29,12 +29,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap map;
     private Button backButton;
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
+    private ArrayList<LatLng> arrayList = new ArrayList<LatLng>();
+    private LatLng LRT = new LatLng(53.523926, -113.522310);
+    private LatLng Pavillion = new LatLng(53.524153, -113.527438);
+    private LatLng HUB = new LatLng(53.526452, -113.520661);
+    private LatLng CCIS = new LatLng(53.528164, -113.525744);
+    private LatLng SUB = new LatLng(53.525189, -113.527059);
+
 
 
     private static boolean alreadyLoggedIn = false;
@@ -42,6 +51,12 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
+        arrayList.add(LRT);
+        arrayList.add(Pavillion);
+        arrayList.add(HUB);
+        arrayList.add(CCIS);
+        arrayList.add(SUB);
+
 
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +67,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         alreadyLoggedIn = true;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLastLocation();
-        }
+    }
 
     private void fetchLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -67,7 +82,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                 if (location != null) {
                     currentLocation = location;
                     Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
-                    +""+currentLocation.getLongitude(),Toast.LENGTH_SHORT).show();
+                            +""+currentLocation.getLongitude(),Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment)
                             getSupportFragmentManager().findFragmentById(R.id.map);
                     supportMapFragment.getMapAsync(GoogleMapActivity.this);
@@ -80,11 +95,15 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
         String uid = firebaseDoc.getUsername();
+        for (int i = 0; i < arrayList.size(); i++) {
+            googleMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title(uid));
+        }
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(latLng)
                 .title(uid);
+
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
         googleMap.addMarker(markerOptions);
     }
 
