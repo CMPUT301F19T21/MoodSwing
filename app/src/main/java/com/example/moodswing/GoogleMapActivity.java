@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap map;
@@ -39,9 +43,6 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -51,7 +52,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         alreadyLoggedIn = true;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLastLocation();
-    }
+        }
 
     private void fetchLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -77,18 +78,14 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+        String uid = firebaseDoc.getUsername();
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-                .title("I Am Here");
+                .title(uid);
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
         googleMap.addMarker(markerOptions);
-
-//        map = googleMap;
-//        LatLng UofA = new LatLng(53.524101, -113.524582);
-//        map.addMarker(new MarkerOptions().position(UofA).title("University of Alberta"));
-//        map.moveCamera(CameraUpdateFactory.newLatLng(UofA));
-//        map.animateCamera(CameraUpdateFactory.newLatLngZoom(UofA, 18), 5000, null);
     }
 
     @Override
