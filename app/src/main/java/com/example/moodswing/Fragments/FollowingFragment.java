@@ -1,4 +1,4 @@
-package com.example.moodswing.navigationFragments;
+package com.example.moodswing.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

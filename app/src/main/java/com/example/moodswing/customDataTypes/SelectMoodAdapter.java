@@ -90,7 +90,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                 moodImage.setImageResource(R.drawable.mood3);
                 break;
             case 4:
-                moodTypeText.setText("EDMOTIONAL");
+                moodTypeText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
         }

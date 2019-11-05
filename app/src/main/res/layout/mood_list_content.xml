@@ -41,7 +41,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/dateText"
+                android:id="@+id/moodDetail_dateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="150dp"
@@ -51,23 +51,23 @@
                 android:text="2010-02-27"
                 android:textColor="#8F8F8F"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/moodText"
+                app:layout_constraintBottom_toTopOf="@+id/moodDetail_moodText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/timeText"
+                android:id="@+id/moodDetail_timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:text="2:34 PM"
                 android:textColor="#8F8F8F"
                 android:textStyle="italic"
-                app:layout_constraintStart_toStartOf="@+id/dateText"
-                app:layout_constraintTop_toBottomOf="@+id/dateText" />
+                app:layout_constraintStart_toStartOf="@+id/moodDetail_dateText"
+                app:layout_constraintTop_toBottomOf="@+id/moodDetail_dateText" />
 
             <TextView
-                android:id="@+id/moodText"
+                android:id="@+id/moodDetail_moodText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 

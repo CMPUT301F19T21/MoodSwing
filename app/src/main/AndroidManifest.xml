@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
         <activity android:name=".EditMoodActivity" />
-        <activity android:name=".MoodDetailActivity" />
+        <activity android:name=".Fragments.MoodDetailFragment" />
         <activity android:name=".NewMoodActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".GoogleMapActivity" />
