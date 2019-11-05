@@ -2,6 +2,7 @@ package com.example.moodswing.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DateFormatSymbols;
 import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
 
 public class MoodDetailFragment extends Fragment{
     private FirestoreUserDocCommunicator communicator;
@@ -64,7 +67,7 @@ public class MoodDetailFragment extends Fragment{
         editButton = root.findViewById(R.id.detailedView_edit);
         backButton = root.findViewById(R.id.detailedView_back);
         moodImage = root.findViewById(R.id.detailedView_moodImg);
-        communicator.refreshMoodList();
+
         initialElements();
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -72,8 +75,8 @@ public class MoodDetailFragment extends Fragment{
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),EditMoodActivity.class);
                 intent.putExtra("position",moodPosition);
-                startActivity(intent);
-                //new EditMoodFragment().show(getActivity().getSupportFragmentManager(), "editing");
+                startActivityForResult(intent, 1);
+                //new EditMoodFragment().show(getActivity().getSupportFragmentManager(), "editing")；
             }
         });
 
@@ -94,8 +97,15 @@ public class MoodDetailFragment extends Fragment{
 
         return root;
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            initialElements();
+        }
+    }
     private void initialElements(){
-
+        moodEvent = communicator.getMoodEvent(moodPosition);
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTime()));
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));

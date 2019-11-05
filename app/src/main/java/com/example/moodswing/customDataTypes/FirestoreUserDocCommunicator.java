@@ -222,25 +222,6 @@ public class FirestoreUserDocCommunicator{
         return moodEvents.get(position);
     }
 
-    public void refreshMoodList(){
-        Query moodEventColQuery = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .orderBy("timeStamp", Query.Direction.DESCENDING);
-
-        moodEventColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                moodEvents.clear();
-                for (QueryDocumentSnapshot moodEventDoc : queryDocumentSnapshots){
-                    MoodEvent moodEvent = moodEventDoc.toObject(MoodEvent.class);
-                    moodEvents.add(moodEvent);
-                }
-            }
-        });
-    }
-
     public void editUserPassword() {
         //
     }
