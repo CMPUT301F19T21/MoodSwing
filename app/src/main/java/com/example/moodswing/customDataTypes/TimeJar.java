@@ -24,7 +24,7 @@ public class TimeJar {
         return hr;
     }
 
-    public void setHr(int hr) {
+    public void setHr(Integer hr) {
         this.hr = hr;
     }
 
@@ -32,7 +32,7 @@ public class TimeJar {
         return min;
     }
 
-    public void setMin(int min) {
+    public void setMin(Integer min) {
         this.min = min;
     }
 }
