@@ -2,6 +2,7 @@ package com.example.moodswing.customDataTypes;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.Locale;
 
 /**
  * This class creates an Time object
@@ -35,4 +36,5 @@ public class TimeJar {
     public void setMin(Integer min) {
         this.min = min;
     }
+
 }

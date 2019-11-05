@@ -1,13 +1,11 @@
-package com.example.moodswing;
+package com.example.moodswing.customDataTypes;
 
-import com.example.moodswing.customDataTypes.DateJar;
-import com.example.moodswing.customDataTypes.TimeJar;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class NewMoodActivityTest {
+public class MoodEventUtilityTest {
 
     //testing getDateStr method, which is supposed to convert DateJar to String
     @Test
@@ -22,8 +20,8 @@ public class NewMoodActivityTest {
         String expected =  "March 13, 2019";
 
         //getting output provided by method
-        NewMoodActivity newMoodActivity = new NewMoodActivity();
-        String output = newMoodActivity.getDateStr(input);
+        MoodEventUtility moodEventUtility = new MoodEventUtility();
+        String output = moodEventUtility.getDateStr(input);
 
         //assert to check if method works as expecting, comparing expected and output
         assertEquals(expected, output);
@@ -41,8 +39,25 @@ public class NewMoodActivityTest {
         String expected = "1:45 PM";
 
         //getting output provided by method
-        NewMoodActivity newMoodActivity = new NewMoodActivity();
-        String output = newMoodActivity.getTimeStr(input);
+        MoodEventUtility moodEventUtility = new MoodEventUtility();
+        String output =  moodEventUtility.getTimeStr(input);
+
+        //assert to check if method works as expecting, comparing expected and output
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void getMoodType() {
+        //initializing values
+        int input;
+        String expected;
+        MoodEventUtility moodEventUtility = new MoodEventUtility();
+        String output;
+
+        //setting values
+        input = 1;
+        expected = "Happy";
+        output = moodEventUtility.getMoodType(input);
 
         //assert to check if method works as expecting, comparing expected and output
         assertEquals(expected, output);
@@ -58,11 +73,10 @@ public class NewMoodActivityTest {
         String expected = "May";
 
         //getting output provided by method
-        NewMoodActivity newMoodActivity = new NewMoodActivity();
-        String output = newMoodActivity.returnMonthStr(input);
+        MoodEventUtility moodEventUtility = new MoodEventUtility();
+        String output = moodEventUtility.returnMonthStr(input);
 
         //assert to check if method works as expecting, comparing expected and output
         assertEquals(expected,output);
-
     }
 }

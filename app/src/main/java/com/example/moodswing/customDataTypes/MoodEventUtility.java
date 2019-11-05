@@ -4,7 +4,7 @@ import java.util.Locale;
 
 public final class MoodEventUtility {
 
-    private MoodEventUtility(){
+    public MoodEventUtility(){
         // nothing
     }
     public static String getDateStr (DateJar date) {
@@ -42,7 +42,7 @@ public final class MoodEventUtility {
         return moodTypeString;
     }
 
-    private static String returnMonthStr(int monthInt){
+    public static String returnMonthStr(int monthInt){
         String monthStr = null;
         switch (monthInt){
             case 0:
