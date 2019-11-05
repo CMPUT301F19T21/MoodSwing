@@ -18,7 +18,6 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 
 import com.example.moodswing.customDataTypes.MoodEventUtility;
-import com.example.moodswing.customDataTypes.MoodType;
 
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;

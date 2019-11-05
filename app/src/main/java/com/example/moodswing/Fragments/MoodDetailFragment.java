@@ -64,7 +64,7 @@ public class MoodDetailFragment extends Fragment{
         editButton = root.findViewById(R.id.detailedView_edit);
         backButton = root.findViewById(R.id.detailedView_back);
         moodImage = root.findViewById(R.id.detailedView_moodImg);
-
+        communicator.refreshMoodList();
         initialElements();
 
         editButton.setOnClickListener(new View.OnClickListener() {
