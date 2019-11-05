@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodType;
+
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

@@ -192,7 +192,6 @@ public class FirestoreUserDocCommunicator{
                 moodEvents = moodAdapter.getMoods();
             }
         });
-
     }
 
     /* user management related methods */
