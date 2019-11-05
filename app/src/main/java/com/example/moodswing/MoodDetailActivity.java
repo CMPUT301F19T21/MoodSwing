@@ -140,7 +140,7 @@ public class MoodDetailActivity extends AppCompatActivity implements Serializabl
         int year = date.getYear();
         int Day = date.getDay();
         int month = date.getMonth();
-        dateText.setText(getMonth(month)+","+Day+","+year);
+        dateText.setText(getMonth(month)+" "+Day+" "+year);
         //moodText.setText(moodType);
         //socialText.setText(socialSituation);
         descriptionText.setText(reason);

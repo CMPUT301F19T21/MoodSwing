@@ -119,7 +119,7 @@ public class EditMoodActivity extends AppCompatActivity {
         int year = date.getYear();
         int Day = date.getDay();
         int month = date.getMonth();
-        dateTextView.setText(getMonth(month)+","+Day+","+year);
+        dateTextView.setText(getMonth(month)+" "+Day+", "+year);
 
     }
 }
