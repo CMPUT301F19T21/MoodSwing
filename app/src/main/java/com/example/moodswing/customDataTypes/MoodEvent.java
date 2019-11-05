@@ -23,18 +23,6 @@ public class MoodEvent {
     public MoodEvent() {
     }
 
-    public MoodEvent(@NonNull String uniqueID, @NonNull Long timeStamp, @NonNull Integer moodType, @NonNull DateJar date, @NonNull TimeJar time) {
-        this.uniqueID = uniqueID;
-        this.timeStamp = timeStamp;
-        this.moodType = moodType;
-        this.date = date;
-        this.time = time;
-
-        // init optional field to null
-        this.reason = null;
-        this.socialSituation = null;
-    }
-
     public Long getTimeStamp(){
         return timeStamp;
     }

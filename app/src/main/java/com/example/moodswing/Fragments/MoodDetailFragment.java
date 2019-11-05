@@ -96,6 +96,17 @@ public class MoodDetailFragment extends Fragment{
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTime()));
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
         setMoodImage(moodEvent.getMoodType());
+        setReasonText();
+
+
+    }
+
+    private void setReasonText(){
+        if (moodEvent.getReason() != null){
+            this.reasonText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getReason())));
+        }else{
+            this.reasonText.setText("");
+        }
     }
 
     private void setMoodImage(int moodType){

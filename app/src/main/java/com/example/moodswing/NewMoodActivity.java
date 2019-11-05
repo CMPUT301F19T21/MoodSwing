@@ -105,6 +105,12 @@ public class NewMoodActivity extends AppCompatActivity {
                     // do upload
                     moodEvent.setUniqueID(communicator.generateMoodID());
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+
+                    if (reasonEditText.getText().toString().isEmpty()){
+                        moodEvent.setReason(null);
+                    }else{
+                        moodEvent.setReason(reasonEditText.getText().toString());
+                    }
                     communicator.addMoodEvent(moodEvent);
                     finish();
                 }else{
