@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
-import com.example.moodswing.customDataTypes.MoodType;
 
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
@@ -43,7 +42,6 @@ public class EditMoodActivity extends AppCompatActivity {
     private String period;
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
-    private ArrayList<MoodType> moodTypes;
     private SelectMoodAdapter moodSelectAdapter;
     private RecyclerView moodView;
     private RecyclerView.Adapter moodAdapter;
