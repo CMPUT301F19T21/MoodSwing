@@ -8,24 +8,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
+
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 // import com.example.moodswing.customDataTypes.AddMoodAdapter;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodType;
-import com.example.moodswing.customDataTypes.MoodTypeAdapter;
+
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
-import com.example.moodswing.navigationFragments.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.protobuf.Empty;
 
-import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -69,7 +65,7 @@ public class EditMoodActivity extends AppCompatActivity {
         communicator = FirestoreUserDocCommunicator.getInstance();
         Intent moodIntent = getIntent();
         position = moodIntent.getIntExtra("position",-1);
-        moodEvent = communicator.getMoodEvents().get(position);
+        moodEvent = communicator.getMoodEvent(position);
 
         // find view
         confirmButton = findViewById(R.id.add_confirm);

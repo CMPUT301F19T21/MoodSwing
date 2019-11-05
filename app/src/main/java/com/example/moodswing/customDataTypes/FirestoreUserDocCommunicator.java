@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -175,13 +176,13 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
 
-
-        CollectionReference moodEventCol = db
+        Query moodEventColQuery = db
                 .collection("users")
                 .document(user.getUid())
-                .collection("MoodEvents");
+                .collection("MoodEvents")
+                .orderBy("timeStamp", Query.Direction.DESCENDING);
 
-        moodEventCol.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        moodEventColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 moodAdapter.clearMoodEvents();
@@ -190,9 +191,9 @@ public class FirestoreUserDocCommunicator{
                     moodAdapter.addToMoods(moodEvent);
                 }
                 moodAdapter.notifyDataSetChanged();
+                moodEvents = moodAdapter.getMoods();
             }
         });
-        moodEvents= moodAdapter.getMoods();
     }
 
     /* user management related methods */
@@ -217,25 +218,9 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
-    public static ArrayList<MoodEvent> getMoodEvents() {
-        return moodEvents;
+    public MoodEvent getMoodEvent(int position) {
+        return moodEvents.get(position);
     }
-    /* public MoodEvent grabMoodEvent(String UID){
-
-        DocumentReference MoodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(UID);
-        MoodEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                moodEvent = documentSnapshot.toObject(MoodEvent.class);
-            }
-        });
-
-        return moodEvent;
-    }*/
 
     public void editUserPassword() {
         //
@@ -248,4 +233,7 @@ public class FirestoreUserDocCommunicator{
     public void deleteUser() {
         //
     }
+
+
+
 }

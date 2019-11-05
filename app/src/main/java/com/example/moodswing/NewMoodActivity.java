@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.SocialSituationItem;
@@ -85,14 +86,17 @@ public class NewMoodActivity extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int hr = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
+        Long UTC = calendar.getTimeInMillis();
         DateJar date = new DateJar(year,month,day);
         TimeJar time = new TimeJar(hr,min);
 
+
         moodEvent.setDate(date);
         moodEvent.setTime(time);
+        moodEvent.setTimeStamp(UTC);
             // set date and time for display
-        dateTextView.setText(getDateStr(date));
-        timeTextView.setText(getTimeStr(time));
+        dateTextView.setText(MoodEventUtility.getDateStr(date));
+        timeTextView.setText(MoodEventUtility.getTimeStr(time));
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,65 +112,6 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public String getDateStr (DateJar date) {
-        String month = returnMonthStr(date.getMonth());
-        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
-    }
-
-    public String getTimeStr (TimeJar time) {
-        int hr = time.getHr();
-        String period;
-        if (hr>12){
-            hr =hr-12;
-            period = "PM";
-        }
-        else period = "AM";
-        return String.format(Locale.getDefault(), "%d:%02d %s",hr,time.getMin(),period);
-    }
-
-    public String returnMonthStr(int monthInt){
-        String monthStr = null;
-        switch (monthInt){
-            case 0:
-                monthStr = "January";
-                break;
-            case 1:
-                monthStr = "February";
-                break;
-            case 2:
-                monthStr = "March";
-                break;
-            case 3:
-                monthStr = "April";
-                break;
-            case 4:
-                monthStr = "May";
-                break;
-            case 5:
-                monthStr = "June";
-                break;
-            case 6:
-                monthStr = "July";
-                break;
-            case 7:
-                monthStr = "August";
-                break;
-            case 8:
-                monthStr = "September";
-                break;
-            case 9:
-                monthStr = "October";
-                break;
-            case 10:
-                monthStr = "November";
-                break;
-            case 11:
-                monthStr = "December";
-                break;
-        }
-        return monthStr;
     }
 }
 
