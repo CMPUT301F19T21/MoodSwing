@@ -1,9 +1,14 @@
 package com.example.moodswing;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -13,7 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
@@ -24,6 +31,11 @@ import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.SocialSituationItem;
 import com.example.moodswing.customDataTypes.SpinnerAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -44,6 +56,8 @@ public class NewMoodActivity extends AppCompatActivity {
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
+    private Switch gpsSwitch;
+    private Location currentLocation;
 
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -52,6 +66,9 @@ public class NewMoodActivity extends AppCompatActivity {
     private FirestoreUserDocCommunicator communicator;
     private MoodEvent moodEvent;
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private static final int REQUEST_CODE = 101;
+    private double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +82,7 @@ public class NewMoodActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.add_date);
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
-
+        gpsSwitch = findViewById(R.id.locationSwitch);
 
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -118,6 +135,95 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
+        if (!gpsSwitch.isChecked()) {
+
+        }
+        else {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+            fetchLastLocation();
+        }
+    }
+
+    private String getDateStr (DateJar date) {
+        String month = returnMonthStr(date.getMonth());
+        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
+    }
+
+    private String getTimeStr (TimeJar time) {
+        return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
+    }
+
+    private String returnMonthStr(int monthInt){
+        String monthStr = null;
+        switch (monthInt){
+            case 0:
+                monthStr = "January";
+                break;
+            case 1:
+                monthStr = "February";
+                break;
+            case 2:
+                monthStr = "March";
+                break;
+            case 3:
+                monthStr = "April";
+                break;
+            case 4:
+                monthStr = "May";
+                break;
+            case 5:
+                monthStr = "June";
+                break;
+            case 6:
+                monthStr = "July";
+                break;
+            case 7:
+                monthStr = "August";
+                break;
+            case 8:
+                monthStr = "September";
+                break;
+            case 9:
+                monthStr = "October";
+                break;
+            case 10:
+                monthStr = "November";
+                break;
+            case 11:
+                monthStr = "December";
+                break;
+        }
+        return monthStr;
+    }
+    private void fetchLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    currentLocation = location;
+                    latitude = currentLocation.getLatitude();
+                    longitude = currentLocation.getLongitude();
+                    Toast.makeText(getApplicationContext(), latitude
+                            +""+longitude,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fetchLastLocation();
+                }
+                break;
+        }
     }
 }
 

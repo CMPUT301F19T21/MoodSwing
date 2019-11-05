@@ -46,7 +46,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
 
-    private static boolean alreadyLoggedIn = false;
+//    private static boolean alreadyLoggedIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -64,7 +64,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
                 onBackPressed();
             }
         });
-        alreadyLoggedIn = true;
+//        alreadyLoggedIn = true;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLastLocation();
     }
@@ -96,7 +96,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
         String uid = firebaseDoc.getUsername();
         for (int i = 0; i < arrayList.size(); i++) {
-            googleMap.addMarker(new MarkerOptions().position(arrayList.get(i)).title(uid));
+            googleMap.addMarker(new MarkerOptions().position(arrayList.get(i))
+                    .title(uid));
         }
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(latLng)
