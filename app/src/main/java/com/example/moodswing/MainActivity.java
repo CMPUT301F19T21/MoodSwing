@@ -2,24 +2,18 @@ package com.example.moodswing;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
+import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
-import com.example.moodswing.navigationFragments.FollowingFragment;
-import com.example.moodswing.navigationFragments.HomeFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.moodswing.Fragments.FollowingFragment;
+import com.example.moodswing.Fragments.HomeFragment;
+import com.example.moodswing.Fragments.profileFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -93,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.replace(R.id.fragment_placeHolder, new FollowingFragment());
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add back stack and animation later
+        fragTrans.commit();
+    }
+
+    private void toDetailedView(int moodPosition) {
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment());
         fragTrans.commit();
     }
 

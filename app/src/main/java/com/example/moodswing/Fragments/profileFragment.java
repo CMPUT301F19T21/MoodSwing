@@ -1,4 +1,4 @@
-package com.example.moodswing;
+package com.example.moodswing.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.moodswing.MainActivity;
+import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

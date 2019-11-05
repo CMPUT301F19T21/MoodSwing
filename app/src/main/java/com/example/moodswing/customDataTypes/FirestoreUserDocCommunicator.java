@@ -45,7 +45,7 @@ public class FirestoreUserDocCommunicator{
 
     private static FirestoreUserDocCommunicator instance = null;
 
-    private static MoodEvent moodEvent;
+    private static ArrayList<MoodEvent> moodEvents;
     // reference
 
     protected FirestoreUserDocCommunicator(){
@@ -192,29 +192,35 @@ public class FirestoreUserDocCommunicator{
                 moodAdapter.notifyDataSetChanged();
             }
         });
+        moodEvents= moodAdapter.getMoods();
     }
 
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        DateJar dateJar = moodEvent.getDate();
-        TimeJar timeJar = moodEvent.getTime();
         DocumentReference UpdateMood = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEvent.getUniqueID());
-        UpdateMood.update(
-                "Data.day", dateJar.getDay(),
-                "Date.month", dateJar.getMonth(),
-                "Date.year", dateJar.getYear(),
-                "MoodType", moodEvent.getMoodType(),
-                "reason", moodEvent.getReason(),
-                "socialSituation", moodEvent.getSocialSituation(),
-                "time.hr", timeJar.getHr(),
-                "time.min", timeJar.getMin()
-        );
+        UpdateMood.set(moodEvent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
     }
-    public MoodEvent grabMoodEvent(String UID){
+
+    public static ArrayList<MoodEvent> getMoodEvents() {
+        return moodEvents;
+    }
+    /* public MoodEvent grabMoodEvent(String UID){
 
         DocumentReference MoodEventRef = db
                 .collection("users")
@@ -229,7 +235,7 @@ public class FirestoreUserDocCommunicator{
         });
 
         return moodEvent;
-    }
+    }*/
 
     public void editUserPassword() {
         //

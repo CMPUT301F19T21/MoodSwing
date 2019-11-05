@@ -1,4 +1,4 @@
-package com.example.moodswing.navigationFragments;
+package com.example.moodswing.Fragments;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,15 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.GoogleMapActivity;
-import com.example.moodswing.MainActivity;
-import com.example.moodswing.MoodDetailActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
-import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
-import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -107,7 +102,7 @@ public class HomeFragment extends Fragment {
 //        moodListAdapter.setOnItemClickListener(new MoodAdapter.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(int position) {
-//                Intent intent = new Intent(getActivity(), MoodDetailActivity.class);
+//                Intent intent = new Intent(getActivity(), MoodDetailFragment.class);
 //                intent.putExtra("MoodUID",moodDataList.get(position).getUniqueID());
 //                startActivity(intent);
 //            }

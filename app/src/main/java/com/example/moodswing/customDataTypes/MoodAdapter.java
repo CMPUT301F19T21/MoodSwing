@@ -1,11 +1,9 @@
 package com.example.moodswing.customDataTypes;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
@@ -71,15 +70,17 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         holder.moodHistoryCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDetailedViewActivity(holder.getLayoutPosition());
+                startDetailedViewActivity(holder.getLayoutPosition(),v);
             }
         });
     }
 
 
-    private void startDetailedViewActivity (int cardPosition){
+    private void startDetailedViewActivity (int cardPosition,View view){
         // cardPosition will be passed to detailed view
-
+        Intent intent = new Intent(view.getContext(), MoodDetailFragment.class);
+        intent.putExtra("position",cardPosition);
+        view.getContext().startActivity(intent);
     }
 
     private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
@@ -97,7 +98,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
                 moodImage.setImageResource(R.drawable.mood3);
                 break;
             case 4:
-                moodText.setText("EDMOTIONAL");
+                moodText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
         }
@@ -109,7 +110,14 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     }
 
     private String getTimeStr (TimeJar time) {
-        return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
+        int hr = time.getHr();
+        String period;
+        if (hr>12){
+            hr =hr-12;
+            period = "PM";
+        }
+        else period = "AM";
+        return String.format(Locale.getDefault(), "%d:%02d %s",hr,time.getMin(),period);
     }
 
     private String returnMonthStr(int monthInt){
@@ -155,10 +163,6 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         return monthStr;
     }
 
-
-
-
-
     @Override
     public int getItemCount() {
         return moods.size();
@@ -171,5 +175,9 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
 
     public void addToMoods(MoodEvent moodEvent){
         this.moods.add(moodEvent);
+    }
+
+    public ArrayList<MoodEvent> getMoods() {
+        return moods;
     }
 }
