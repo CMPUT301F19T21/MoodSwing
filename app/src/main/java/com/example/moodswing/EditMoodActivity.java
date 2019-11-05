@@ -63,7 +63,7 @@ public class EditMoodActivity extends AppCompatActivity {
         communicator = FirestoreUserDocCommunicator.getInstance();
         Intent moodIntent = getIntent();
         position = moodIntent.getIntExtra("position",-1);
-        moodEvent = communicator.getMoodEvents().get(position);
+        moodEvent = communicator.getMoodEvent(position);
 
         // find view
         confirmButton = findViewById(R.id.add_confirm);

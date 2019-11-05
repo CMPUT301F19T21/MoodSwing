@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/image_place_holder"
+        android:id="@+id/moodDetail_image_place_holder"
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:layout_marginTop="4dp"
@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/ic_add_circle_grey_24dp" />
 
     <TextView
-        android:id="@+id/dateText"
+        android:id="@+id/moodDetail_dateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -31,11 +31,11 @@
         android:textColor="@color/colorPrimary"
         android:textSize="18dp"
         app:layout_constraintEnd_toStartOf="@+id/detailedView_back"
-        app:layout_constraintStart_toEndOf="@+id/moodImg"
-        app:layout_constraintTop_toTopOf="@+id/moodImg" />
+        app:layout_constraintStart_toEndOf="@+id/detailedView_moodImg"
+        app:layout_constraintTop_toTopOf="@+id/detailedView_moodImg" />
 
     <TextView
-        android:id="@+id/timeText"
+        android:id="@+id/moodDetail_timeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -44,11 +44,11 @@
         android:text="04:45"
         android:textColor="@color/colorPrimary"
         android:textSize="22dp"
-        app:layout_constraintStart_toStartOf="@+id/dateText"
-        app:layout_constraintTop_toBottomOf="@+id/dateText" />
+        app:layout_constraintStart_toStartOf="@+id/moodDetail_dateText"
+        app:layout_constraintTop_toBottomOf="@+id/moodDetail_dateText" />
 
     <TextView
-        android:id="@+id/moodText"
+        android:id="@+id/moodDetail_moodText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="@+id/separator" />
 
     <ImageView
-        android:id="@+id/moodImg"
+        android:id="@+id/detailedView_moodImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -70,7 +70,7 @@
         app:srcCompat="@drawable/mood4" />
 
     <TextView
-        android:id="@+id/locationText"
+        android:id="@+id/moodDetail_locationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -103,8 +103,8 @@
         android:fontFamily="sans-serif-light"
         android:text='"Good Weather"'
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/moodText"
-        app:layout_constraintEnd_toEndOf="@+id/moodText" />
+        app:layout_constraintBottom_toTopOf="@+id/moodDetail_moodText"
+        app:layout_constraintEnd_toEndOf="@+id/moodDetail_moodText" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detailedView_back"

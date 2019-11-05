@@ -27,7 +27,7 @@
         android:clickable="true"
         android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="45dp"
+        app:fabCustomSize="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/home_delete"
         app:layout_constraintTop_toBottomOf="@+id/home_delete"
@@ -41,7 +41,7 @@
         android:clickable="true"
         android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="45dp"
+        app:fabCustomSize="40dp"
         app:layout_constraintStart_toStartOf="@+id/home_filterBtn"
         app:layout_constraintTop_toBottomOf="@+id/home_filterBtn"
         app:srcCompat="@drawable/ic_delete_black_24dp" />
@@ -55,7 +55,7 @@
         android:clickable="true"
         android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="45dp"
+        app:fabCustomSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_map_black_24dp" />
@@ -68,7 +68,7 @@
         android:clickable="true"
         android:soundEffectsEnabled="true"
         app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="45dp"
+        app:fabCustomSize="40dp"
         app:layout_constraintStart_toStartOf="@+id/home_map"
         app:layout_constraintTop_toBottomOf="@+id/home_map"
         app:srcCompat="@drawable/ic_filter_list_black_24dp" />

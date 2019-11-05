@@ -175,7 +175,6 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
 
-
         CollectionReference moodEventCol = db
                 .collection("users")
                 .document(user.getUid())
@@ -190,9 +189,10 @@ public class FirestoreUserDocCommunicator{
                     moodAdapter.addToMoods(moodEvent);
                 }
                 moodAdapter.notifyDataSetChanged();
+                moodEvents = moodAdapter.getMoods();
             }
         });
-        moodEvents= moodAdapter.getMoods();
+
     }
 
     /* user management related methods */
@@ -217,25 +217,9 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
-    public static ArrayList<MoodEvent> getMoodEvents() {
-        return moodEvents;
+    public MoodEvent getMoodEvent(int position) {
+        return moodEvents.get(position);
     }
-    /* public MoodEvent grabMoodEvent(String UID){
-
-        DocumentReference MoodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(UID);
-        MoodEventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                moodEvent = documentSnapshot.toObject(MoodEvent.class);
-            }
-        });
-
-        return moodEvent;
-    }*/
 
     public void editUserPassword() {
         //
@@ -248,4 +232,7 @@ public class FirestoreUserDocCommunicator{
     public void deleteUser() {
         //
     }
+
+
+
 }

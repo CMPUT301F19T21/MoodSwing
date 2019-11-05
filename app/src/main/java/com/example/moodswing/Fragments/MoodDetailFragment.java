@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.moodswing.EditMoodActivity;
+import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,79 +26,81 @@ import java.util.Locale;
 
 public class MoodDetailFragment extends Fragment{
     private FirestoreUserDocCommunicator communicator;
-    private int moodType;
-    private DateJar date;
-    private TimeJar time;
-
-    private String reason;
-    private Integer socialSituation;
     MoodEvent moodEvent;
 
-    TextView dateText;
-    TextView timeText;
-    TextView moodText;
-    TextView descriptionText;
-    ImageView moodImage;
+    private TextView dateText;
+    private TextView timeText;
+    private TextView moodText;
+    private TextView reasonText;
+
+    private FloatingActionButton delButton;
+    private FloatingActionButton editButton;
+    private FloatingActionButton backButton;
+
+    private ImageView moodImage;
 
 
-    private ImageButton delButton;
-    private ImageButton editButton;
-    private FloatingActionButton confirmButton;
+    public MoodDetailFragment(){}
 
-    int position;
+    public MoodDetailFragment(int moodPosition) {
+        this.communicator = FirestoreUserDocCommunicator.getInstance();
+        this.moodEvent = communicator.getMoodEvent(moodPosition);
+        // moodEvent
+
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.mood_details, container, false);
-        communicator = FirestoreUserDocCommunicator.getInstance();
-
-
-
-        Intent moodIntent = getIntent();
-        position = moodIntent.getIntExtra("position",-1);
 
         // find view
-        dateText = findViewById(R.id.dateText);
-        timeText = findViewById(R.id.timeText);
-        moodText = findViewById(R.id.moodText);
-        descriptionText = findViewById(R.id.detailedView_reasonText);
-        delButton = findViewById(R.id.deleteButton);
-        editButton = findViewById(R.id.editButton);
-        moodImage = findViewById(R.id.moodImg);
-        confirmButton = findViewById(R.id.confirm_Button);
+        dateText = root.findViewById(R.id.moodDetail_dateText);
+        timeText = root.findViewById(R.id.moodDetail_timeText);
+        moodText = root.findViewById(R.id.moodDetail_moodText);
+        reasonText = root.findViewById(R.id.detailedView_reasonText);
+        delButton = root.findViewById(R.id.detailedView_delete);
+        editButton = root.findViewById(R.id.detailedView_edit);
+        backButton = root.findViewById(R.id.detailedView_back);
+        moodImage = root.findViewById(R.id.detailedView_moodImg);
 
-        initial();
+        initialElements();
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MoodDetailFragment.this, EditMoodActivity.class);
-                intent.putExtra("position",position);
-                startActivity(intent);
-                finish();
-            }
-        });
+//        editButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MoodDetailFragment.this, EditMoodActivity.class);
+//                intent.putExtra("position",position);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
 
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 communicator.removeMoodEvent(moodEvent);
-                finish();
+                ((MainActivity)getActivity()).toMoodHistory();
             }
         });
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
+        return root;
     }
-    private String getMonth(int month) {
-        return new DateFormatSymbols().getMonths()[month];
+    private void initialElements(){
+
+        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
+        timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTime()));
+        moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
+        setMoodImage(moodEvent.getMoodType());
     }
+
     private void setMoodImage(int moodType){
         switch(moodType){
             case 1:
@@ -118,31 +121,5 @@ public class MoodDetailFragment extends Fragment{
                 break;
         }
     }
-    private void initial(){
-        moodEvent = communicator.getMoodEvents().get(position);
 
-        moodType = moodEvent.getMoodType();
-        date = moodEvent.getDate();
-        time = moodEvent.getTime();
-        reason = moodEvent.getReason();
-
-        String period;
-        int Hr = time.getHr();
-        int Min = time.getMin();
-
-        if(Hr >12){
-            Hr = Hr-12;
-            period = "PM";
-        }
-        else period = "AM";
-        timeText.setText(String.format(Locale.getDefault(), "%d:%02d %s",Hr,Min,period));
-        int year = date.getYear();
-        int Day = date.getDay();
-        int month = date.getMonth();
-        dateText.setText(getMonth(month)+" "+Day+" "+year);
-        //moodText.setText(moodType);
-        //socialText.setText(socialSituation);
-        descriptionText.setText(reason);
-        setMoodImage(moodType);
-    }
 }

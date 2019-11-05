@@ -2,6 +2,7 @@ package com.example.moodswing;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,6 +15,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.Slide;
+import androidx.transition.Transition;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         currentScreenPointer = MOOD_HISTORY_SCREEN;
     }
 
-    private void toMoodHistory(){
+    public void toMoodHistory(){
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
@@ -80,19 +83,22 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.commit();
     }
 
-    private void toFollowing() {
+    public void toDetailedView(int moodPosition) {
+
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
+        fragTrans.addToBackStack(null);
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragTrans.commit();
+    }
+
+    public void toFollowing() {
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new FollowingFragment());
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add back stack and animation later
-        fragTrans.commit();
-    }
-
-    private void toDetailedView(int moodPosition) {
-        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment());
         fragTrans.commit();
     }
 
