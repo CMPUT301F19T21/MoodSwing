@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -21,6 +22,8 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -43,14 +46,34 @@ public class MainactivityTest {
         onView(withId(R.id.home_add))
                 .perform(click());
         intended(hasComponent(NewMoodActivity.class.getName()));
-
-       // solo.assertCurrentActivity("Not in AddMoodActivity", MainActivity.class);
+        onView(withId(R.id.moodSelect_recycler)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.reason_EditView))
+                .perform(typeText("Test Mood"),closeSoftKeyboard());
+        onView(withId(R.id.add_confirm))
+        .perform(click());
+        intended(hasComponent(MainActivity.class.getName()));
 
     }
 
     @Test
+    public void CheckMoodDetail(){
+        onView(withId(R.id.mood_list)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
+    }
+
+    @Test
     public void CheckEditMood(){
-       // solo.clickOnView(solo.getCurrentActivity().findViewById(R.id.));
+        onView(withId(R.id.mood_list)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.detailedView_edit))
+                .perform(click());
+        intended(hasComponent(EditMoodActivity.class.getName()));
+    }
+
+    @Test
+    public void CheckDeleteMood(){
+        //
     }
 
 }

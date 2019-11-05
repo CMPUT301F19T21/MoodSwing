@@ -36,14 +36,15 @@ public class MoodDetailFragment extends Fragment{
     private FloatingActionButton delButton;
     private FloatingActionButton editButton;
     private FloatingActionButton backButton;
-
     private ImageView moodImage;
 
+    private int moodPosition;
 
     public MoodDetailFragment(){}
 
     public MoodDetailFragment(int moodPosition) {
         this.communicator = FirestoreUserDocCommunicator.getInstance();
+        this.moodPosition = moodPosition;
         this.moodEvent = communicator.getMoodEvent(moodPosition);
         // moodEvent
 
@@ -69,7 +70,10 @@ public class MoodDetailFragment extends Fragment{
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new EditMoodFragment().show(getActivity().getSupportFragmentManager(), "editing");
+                Intent intent = new Intent(getActivity(),EditMoodActivity.class);
+                intent.putExtra("position",moodPosition);
+                startActivity(intent);
+                //new EditMoodFragment().show(getActivity().getSupportFragmentManager(), "editing");
             }
         });
 
