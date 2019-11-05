@@ -8,69 +8,64 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
+
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 // import com.example.moodswing.customDataTypes.AddMoodAdapter;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+
+import com.example.moodswing.customDataTypes.MoodEventUtility;
+
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
-import com.example.moodswing.navigationFragments.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.protobuf.Empty;
 
-import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Locale;
 
 public class EditMoodActivity extends AppCompatActivity {
+    TextView timeText;
+
 
     MoodEvent moodEvent;
     private int moodType;
     private DateJar date;
     private TimeJar time;
-    private String UID;
-    private String reason;
-    private Integer socialSituation;
-
-    private RecyclerView moodView;
-    private RecyclerView.Adapter moodAdapter;
-    private RecyclerView.LayoutManager manager;
-
-    FirestoreUserDocCommunicator communicator;
-    String username;
-
     private FloatingActionButton confirmButton;
     private ImageView locationCheckButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
-
+    private String period;
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private SelectMoodAdapter moodSelectAdapter;
+    private RecyclerView moodView;
+    private RecyclerView.Adapter moodAdapter;
+    private RecyclerView.LayoutManager manager;
 
-
+    FirestoreUserDocCommunicator communicator;
+    String username;
+    int position;
+    //@Override
+    //public void onItemClick(View view, int position) {
+     //   Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+     //   moodType = position;
+    //}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_mood);
-
-        // init communicator
         communicator = FirestoreUserDocCommunicator.getInstance();
-
-        //get mood event
-        Intent intent = getIntent();
-        UID = intent.getStringExtra("MoodUID");
-        moodEvent = communicator.grabMoodEvent(UID);
-
+        Intent moodIntent = getIntent();
+        position = moodIntent.getIntExtra("position",-1);
+        moodEvent = communicator.getMoodEvent(position);
 
         // find view
         confirmButton = findViewById(R.id.add_confirm);
@@ -80,6 +75,7 @@ public class EditMoodActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
 
+
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         moodSelectAdapter = new SelectMoodAdapter();
@@ -88,17 +84,7 @@ public class EditMoodActivity extends AppCompatActivity {
 
 
 
-        // set up current date and time
-        date = moodEvent.getDate();
-        time = moodEvent.getTime();
-        int Hr = time.getHr();
-        int Min = time.getMin();
-        dateTextView.setText(Hr+":"+Min);
-        int year = date.getYear();
-        int Day = date.getDay();
-        int month = date.getMonth();
-        timeTextView.setText(getMonth(month)+","+Day+","+year);
-        reason = reasonEditText.getText().toString();
+        initial();
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -106,13 +92,23 @@ public class EditMoodActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (moodSelectAdapter.getSelectedMoodType() != null)
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
-                moodEvent.setReason(reason);
+                moodEvent.setReason(reasonEditText.getText().toString());
                 communicator.updateMoodEvent(moodEvent);
                 finish();
             }
         });
     }
     private String getMonth(int month) {
-        return new DateFormatSymbols().getMonths()[month-1];
+        return new DateFormatSymbols().getMonths()[month];
+    }
+    private void initial(){
+        date = moodEvent.getDate();
+        time = moodEvent.getTime();
+        timeTextView.setText(MoodEventUtility.getTimeStr(time));
+        int year = date.getYear();
+        int Day = date.getDay();
+        int month = date.getMonth();
+        dateTextView.setText(getMonth(month)+" "+Day+", "+year);
+
     }
 }

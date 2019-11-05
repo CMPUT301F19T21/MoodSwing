@@ -2,24 +2,21 @@ package com.example.moodswing;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
+import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
-import com.example.moodswing.navigationFragments.FollowingFragment;
-import com.example.moodswing.navigationFragments.HomeFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.moodswing.Fragments.FollowingFragment;
+import com.example.moodswing.Fragments.HomeFragment;
+import com.example.moodswing.Fragments.profileFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.transition.Slide;
+import androidx.transition.Transition;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         currentScreenPointer = MOOD_HISTORY_SCREEN;
     }
 
-    private void toMoodHistory(){
+    public void toMoodHistory(){
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
@@ -86,7 +83,16 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.commit();
     }
 
-    private void toFollowing() {
+    public void toDetailedView(int moodPosition) {
+
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
+        fragTrans.addToBackStack(null);
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragTrans.commit();
+    }
+
+    public void toFollowing() {
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();

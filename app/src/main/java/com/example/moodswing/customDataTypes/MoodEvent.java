@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class MoodEvent {
     private String uniqueID; // this value is used to identify moodEvent
+    private Long timeStamp;
     // required fields
     private int moodType; // for this design im assuming each moodType has been assigned an unique int
     private DateJar date;
@@ -22,15 +23,12 @@ public class MoodEvent {
     public MoodEvent() {
     }
 
-    public MoodEvent(@NonNull String uniqueID, @NonNull Integer moodType, @NonNull DateJar date, @NonNull TimeJar time) {
-        this.uniqueID = uniqueID;
-        this.moodType = moodType;
-        this.date = date;
-        this.time = time;
+    public Long getTimeStamp(){
+        return timeStamp;
+    }
 
-        // init optional field to null
-        this.reason = null;
-        this.socialSituation = null;
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getUniqueID() {
