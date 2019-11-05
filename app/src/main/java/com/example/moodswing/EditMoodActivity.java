@@ -17,6 +17,9 @@ import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 
+import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.MoodType;
+
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -102,14 +105,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private void initial(){
         date = moodEvent.getDate();
         time = moodEvent.getTime();
-        int Hr = time.getHr();
-        int Min = time.getMin();
-        if(Hr >12){
-            Hr = Hr-12;
-            period = "PM";
-        }
-        else period = "AM";
-        timeTextView.setText(String.format(Locale.getDefault(), "%d:%02d %s",Hr,Min,period));
+        timeTextView.setText(MoodEventUtility.getTimeStr(time));
         int year = date.getYear();
         int Day = date.getDay();
         int month = date.getMonth();
