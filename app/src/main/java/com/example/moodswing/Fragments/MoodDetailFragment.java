@@ -66,15 +66,12 @@ public class MoodDetailFragment extends Fragment{
 
         initialElements();
 
-//        editButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MoodDetailFragment.this, EditMoodActivity.class);
-//                intent.putExtra("position",position);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new EditMoodFragment().show(getActivity().getSupportFragmentManager(), "editing");
+            }
+        });
 
         delButton.setOnClickListener(new View.OnClickListener() {
             @Override
