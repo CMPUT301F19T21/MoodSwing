@@ -33,9 +33,10 @@
                     android:layout_marginEnd="32dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6">
+                    app:layout_constraintTop_toBottomOf="@+id/textView4">
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/managment_following"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </androidx.cardview.widget.CardView>
@@ -46,23 +47,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:clickable="true"
-                    app:fabCustomSize="45sp"
-                    app:layout_constraintEnd_toEndOf="@+id/cardView"
-                    app:layout_constraintStart_toStartOf="@+id/cardView"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView"
-                    app:srcCompat="@drawable/ic_add_pink_24dp" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:clickable="true"
-                    app:fabCustomSize="45sp"
-                    app:layout_constraintEnd_toEndOf="@+id/cardView4"
-                    app:layout_constraintStart_toStartOf="@+id/cardView4"
+                    app:fabCustomSize="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView4"
-                    app:srcCompat="@drawable/ic_check_black_24dp" />
+                    app:srcCompat="@drawable/ic_add_pink_24dp" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
@@ -73,9 +62,10 @@
                     android:layout_marginEnd="32dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4">
+                    app:layout_constraintTop_toBottomOf="@+id/textView6">
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/management_request"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </androidx.cardview.widget.CardView>
@@ -89,18 +79,19 @@
                     android:text="You are following:"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="@+id/cardView"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="64dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="48dp"
                     android:fontFamily="sans-serif-light"
                     android:text="Following request:"
                     android:textSize="18sp"
-                    app:layout_constraintTop_toBottomOf="@+id/request_button"
-                    tools:layout_editor_absoluteX="32dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
