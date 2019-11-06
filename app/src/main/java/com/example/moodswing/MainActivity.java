@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MOOD_HISTORY_SCREEN = 1;
     private static final int FOLLOWING_SCREEN = 2;
+    private static final int MOOD_DETAIL_SCREEN = 3;
 
     private int currentScreenPointer;
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toDetailedView(int moodPosition) {
-
+        currentScreenPointer = MOOD_DETAIL_SCREEN;
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
         fragTrans.addToBackStack(null);
