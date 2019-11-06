@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new HomeFragment());
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add animation and back stack later
         fragTrans.commit();
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new FollowingFragment());
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add back stack and animation later
         fragTrans.commit();

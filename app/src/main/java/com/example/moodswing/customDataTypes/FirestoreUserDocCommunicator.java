@@ -543,6 +543,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    public void unfollow(UserJar userJar){
+        //
+    }
+
 
 
     public ArrayList<MoodEvent> getMoodEvents() {
