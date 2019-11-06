@@ -241,6 +241,14 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    public double getUserLatLng() {
+        if (userDocSnapshot != null) {
+            return (double) userDocSnapshot.get("username");
+        }else{
+            return 0;
+        }
+    }
+
     public void editUserPassword() {
         //
     }

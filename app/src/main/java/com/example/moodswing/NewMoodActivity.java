@@ -107,7 +107,6 @@ public class NewMoodActivity extends AppCompatActivity {
         DateJar date = new DateJar(year,month,day);
         TimeJar time = new TimeJar(hr,min);
 
-
         moodEvent.setDate(date);
         moodEvent.setTime(time);
         moodEvent.setTimeStamp(UTC);
@@ -135,10 +134,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
-        if (!gpsSwitch.isChecked()) {
-
-        }
-        else {
+        if (gpsSwitch.isChecked()) {
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
             fetchLastLocation();
         }
