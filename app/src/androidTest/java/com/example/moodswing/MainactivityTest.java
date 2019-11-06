@@ -36,6 +36,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -58,6 +59,7 @@ public class MainactivityTest {
     @Test
     public void CheckAddMood() throws InterruptedException {
         // check add mood activity
+        Integer oldSize = communicator.getMoodEvents().size();
         onView(withId(R.id.home_add))
                 .perform(click());
         intended(hasComponent(NewMoodActivity.class.getName()));
@@ -67,7 +69,10 @@ public class MainactivityTest {
                 .perform(typeText("Test Mood"),closeSoftKeyboard());
         onView(withId(R.id.add_confirm))
         .perform(click());
-        // check if item correct shows
+        // check if item correct added
+        Integer newSize = communicator.getMoodEvents().size();
+        assertTrue(newSize==(oldSize+1));
+        assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
 
     }
 
@@ -145,12 +150,13 @@ public class MainactivityTest {
                 .perform(typeText("Test Mood"),closeSoftKeyboard());
         onView(withId(R.id.add_confirm))
                 .perform(click());
-        //
+        // delete first mood
         Integer oldSize = communicator.getMoodEvents().size();
         onView(withId(R.id.home_delete))
                 .perform(click());
         onView(withId(R.id.mood_list)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, swipeLeft()));
+        // check if mood deleted
         Integer newSize = communicator.getMoodEvents().size();
         assertTrue(newSize==(oldSize-1));
     }
@@ -167,11 +173,15 @@ public class MainactivityTest {
     public void CheckProfile(){
         onView(withId(R.id.nav_profile))
                 .perform(click());
-        //check if profile shows
-
+        //check if profile correctly shows
+        onView(withId(R.id.profile_username)).check(matches(withText(communicator.getUsername())));
+        //check back button
+        onView(withId(R.id.profile_back))
+                .perform(click());
+        onView(withId(R.id.fragment_placeHolder)).check(matches(isDisplayed()));
     }
 
-    public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
+    /*public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
         checkNotNull(itemMatcher);
         return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
             @Override
@@ -193,6 +203,6 @@ public class MainactivityTest {
 
                 //return itemMatcher.matches(holder.itemView);
         };
-    }
+    }*/
 
 }
