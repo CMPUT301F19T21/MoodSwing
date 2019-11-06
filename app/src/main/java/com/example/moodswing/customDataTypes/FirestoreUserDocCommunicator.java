@@ -439,6 +439,10 @@ public class FirestoreUserDocCommunicator{
 
 
 
+    public static ArrayList<MoodEvent> getMoodEvents() {
+        return moodEvents;
+    }
+
     public void editUserPassword() {
         //
     }
