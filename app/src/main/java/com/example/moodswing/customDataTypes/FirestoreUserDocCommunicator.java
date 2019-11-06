@@ -374,7 +374,7 @@ public class FirestoreUserDocCommunicator{
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "following upload successful");
-                        pushRecentMoodEventToUser(sendersUID);
+                        refreshRecentMoodToUser(sendersUID);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -401,7 +401,7 @@ public class FirestoreUserDocCommunicator{
                             }else{
                                 for (DocumentSnapshot userJarDoc : task.getResult().getDocuments()){
                                     UserJar userJar = userJarDoc.toObject(UserJar.class);
-                                    pushRecentMoodEventToUser(userJar.getUID());
+                                    refreshRecentMoodToUser(userJar.getUID());
                                 }
                             }
                         }else{
@@ -410,39 +410,69 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
+    public void refreshRecentMoodToUser (String uid){
+        if (moodEvents.isEmpty()){
+            pullRecentMoodEventToUser(uid);
+        }else{
+            pushRecentMoodEventToUser(uid);
+        }
+    }
+
 
     private void pushRecentMoodEventToUser(String uid){
         // grab recentMoodEvent
-        if (!(moodEvents.isEmpty())) {
-            MoodEvent mostRecentMoodEvent = moodEvents.get(0);
+        MoodEvent mostRecentMoodEvent = moodEvents.get(0);
 
-            // construct UserJar
-            UserJar myUserJarWithMood = new UserJar();
-            myUserJarWithMood.setUsername(getUsername());
-            myUserJarWithMood.setUID(user.getUid());
-            myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
+        // construct UserJar
+        UserJar myUserJarWithMood = new UserJar();
+        myUserJarWithMood.setUsername(getUsername());
+        myUserJarWithMood.setUID(user.getUid());
+        myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
 
-            // send it to target
-            DocumentReference followingMoodListDoc = db
-                    .collection("users")
-                    .document(uid)
-                    .collection("followingMoodList")
-                    .document(user.getUid());
+        // send it to target
+        DocumentReference followingMoodListDoc = db
+                .collection("users")
+                .document(uid)
+                .collection("followingMoodList")
+                .document(user.getUid());
 
-            followingMoodListDoc.set(myUserJarWithMood)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "sending mood to target uid, done");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "sending mood to target uid, failed");
-                        }
-                    });
-        }
+        followingMoodListDoc.set(myUserJarWithMood)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "sending mood to target uid, done");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "sending mood to target uid, failed");
+                    }
+                });
+    }
+
+    private void pullRecentMoodEventToUser(String uid) {
+
+        // send it to target
+        DocumentReference followingMoodListDoc = db
+                .collection("users")
+                .document(uid)
+                .collection("followingMoodList")
+                .document(user.getUid());
+
+        followingMoodListDoc.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "pull mood from target uid, done");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "pull mood from target uid, failed");
+                    }
+                });
     }
 
     public void initFollowingList(final RecyclerView userJarList){
