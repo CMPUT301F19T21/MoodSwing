@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
@@ -50,6 +51,18 @@ public class FollowingFragment extends Fragment {
         userJarAdaptor = new UserJarAdaptor(userJars);
         userJarList.setLayoutManager(recyclerViewLayoutManager);
         userJarList.setAdapter(userJarAdaptor);
+
+        // setup realtime listener
+        communicator.initFollowingList(userJarList);
+
+        //setup listeners
+
+        managementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).toManagement();
+            }
+        });
 
 
         return root;

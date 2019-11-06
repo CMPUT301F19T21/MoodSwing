@@ -361,20 +361,20 @@ public class FirestoreUserDocCommunicator{
         DocumentReference followingListReference = db
                 .collection("users")
                 .document(sendersUID)
-                .collection("MoodEvents")
+                .collection("following")
                 .document(user.getUid());
 
         followingListReference.set(myUserJar)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "moodEvent upload successful");
+                        Log.d(TAG, "following upload successful");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "moodEvent upload fail");
+                        Log.d(TAG, "following upload fail");
                     }
                 });
     }
@@ -456,6 +456,50 @@ public class FirestoreUserDocCommunicator{
                 }
                 userJarAdaptor.notifyDataSetChanged();
                 userJars = userJarAdaptor.getUserJars();
+            }
+        });
+    }
+
+    public void initManagementFollowingList(final RecyclerView userJarList){
+        @NonNull
+        SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
+
+        Query followingMoodListColQuery = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("following");
+
+        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                userJarAdaptor.clearUserJars();
+                for (QueryDocumentSnapshot userJarDoc : queryDocumentSnapshots){
+                    UserJar userJar = userJarDoc.toObject(UserJar.class);
+                    userJarAdaptor.addToUserJars(userJar);
+                }
+                userJarAdaptor.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void initManagementRequestList(final RecyclerView userJarList){
+        @NonNull
+        SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
+
+        Query followingMoodListColQuery = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("mailBox");
+
+        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                userJarAdaptor.clearUserJars();
+                for (QueryDocumentSnapshot userJarDoc : queryDocumentSnapshots){
+                    UserJar userJar = userJarDoc.toObject(UserJar.class);
+                    userJarAdaptor.addToUserJars(userJar);
+                }
+                userJarAdaptor.notifyDataSetChanged();
             }
         });
     }
