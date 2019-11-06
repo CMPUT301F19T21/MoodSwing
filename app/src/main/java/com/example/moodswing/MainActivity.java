@@ -6,11 +6,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.moodswing.Fragments.ManageRequestFragment;
+import com.example.moodswing.Fragments.ManagementFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
 import com.example.moodswing.Fragments.profileFragment;
+import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MOOD_HISTORY_SCREEN = 1;
     private static final int FOLLOWING_SCREEN = 2;
-    private static final int MOOD_DETAIL_SCREEN = 3;
 
     private int currentScreenPointer;
 
@@ -71,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
         // other action that need to be init
         toMoodHistory(); // default view -> moodHistory
-        currentScreenPointer = MOOD_HISTORY_SCREEN;
     }
 
     public void toMoodHistory(){
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toDetailedView(int moodPosition) {
-        currentScreenPointer = MOOD_DETAIL_SCREEN;
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
         fragTrans.addToBackStack(null);
@@ -103,8 +103,20 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.commit();
     }
 
+    public void toManagement() {
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.fragment_placeHolder, new ManagementFragment());
+        fragTrans.addToBackStack(null);
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragTrans.commit();
+    }
+
     public void openProfileFragment(){
         new profileFragment().show(getSupportFragmentManager(), "profile");
+    }
+
+    public void openManageRequestFragment(UserJar userJar) {
+        new ManageRequestFragment(userJar).show(getSupportFragmentManager(), "manage_request");
     }
 
     public void signOut() {

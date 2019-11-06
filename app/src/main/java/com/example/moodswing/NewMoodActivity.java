@@ -236,7 +236,7 @@ public class NewMoodActivity extends AppCompatActivity {
         });
     }
 
-    
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

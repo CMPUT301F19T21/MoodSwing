@@ -54,7 +54,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         }
     }
 
-    public  SelectMoodAdapter() {
+    public SelectMoodAdapter() {
         selectedPosition = null;
         moodTypes = new ArrayList<>();
         for (int i = 1; i < 5; i++){
