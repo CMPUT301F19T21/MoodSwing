@@ -19,6 +19,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -150,6 +151,7 @@ public class FirestoreUserDocCommunicator{
                         Log.d(TAG, "moodEvent upload fail");
                     }
                 });
+        updateRecentMoodToFollowers();
     }
 
     public void removeMoodEvent(MoodEvent moodEvent){
@@ -173,6 +175,7 @@ public class FirestoreUserDocCommunicator{
                         Log.d(TAG, "moodEvent delete fail");
                     }
                 });
+        updateRecentMoodToFollowers();
     }
 
     public void initMoodEventsList(final RecyclerView moodList){
@@ -219,6 +222,7 @@ public class FirestoreUserDocCommunicator{
                         Log.d(TAG, "moodEvent upload fail");
                     }
                 });
+        updateRecentMoodToFollowers();
     }
 
     public MoodEvent getMoodEvent(int position) {
@@ -357,7 +361,7 @@ public class FirestoreUserDocCommunicator{
         String sendersUID = sendersUserJar.getUID();
         UserJar myUserJar = new UserJar();
         myUserJar.setUID(user.getUid());
-        myUserJar.setUsername(user.getUid());
+        myUserJar.setUsername(getUsername());
 
         DocumentReference followingListReference = db
                 .collection("users")
@@ -370,6 +374,7 @@ public class FirestoreUserDocCommunicator{
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "following upload successful");
+                        pushRecentMoodEventToUser(sendersUID);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -408,33 +413,36 @@ public class FirestoreUserDocCommunicator{
 
     private void pushRecentMoodEventToUser(String uid){
         // grab recentMoodEvent
-        MoodEvent mostRecentMoodEvent = moodEvents.get(0);
+        if (!(moodEvents.isEmpty())) {
+            MoodEvent mostRecentMoodEvent = moodEvents.get(0);
 
-        // construct UserJar
-        UserJar myUserJarWithMood = new UserJar();
-        myUserJarWithMood.setUsername(getUsername());
-        myUserJarWithMood.setUID(user.getUid());
-        myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
+            // construct UserJar
+            UserJar myUserJarWithMood = new UserJar();
+            myUserJarWithMood.setUsername(getUsername());
+            myUserJarWithMood.setUID(user.getUid());
+            myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
 
-        // send it to target
-        CollectionReference followingMoodListCol = db
-                .collection("users")
-                .document(uid)
-                .collection("followingMoodList");
+            // send it to target
+            DocumentReference followingMoodListDoc = db
+                    .collection("users")
+                    .document(uid)
+                    .collection("followingMoodList")
+                    .document(user.getUid());
 
-        followingMoodListCol.add(myUserJarWithMood)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "sending mood to target uid, done");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "sending mood to target uid, failed");
-                    }
-                });
+            followingMoodListDoc.set(myUserJarWithMood)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "sending mood to target uid, done");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "sending mood to target uid, failed");
+                        }
+                    });
+        }
     }
 
     public void initFollowingList(final RecyclerView userJarList){
@@ -445,7 +453,7 @@ public class FirestoreUserDocCommunicator{
                 .collection("users")
                 .document(user.getUid())
                 .collection("followingMoodList")
-                .orderBy("timeStamp", Query.Direction.DESCENDING);
+                .orderBy("moodEvent.timeStamp",Query.Direction.DESCENDING);
 
         followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

@@ -11,6 +11,7 @@
         android:id="@+id/following_list"
         android:layout_width="0dp"
         android:layout_height="731dp"
+        android:layout_marginEnd="8dp"
         android:clipToPadding="false"
         android:paddingBottom="50dp"
         app:layout_constraintEnd_toStartOf="@+id/following_filterBtn"

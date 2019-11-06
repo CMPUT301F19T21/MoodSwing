@@ -56,6 +56,7 @@ public class ManageRequestFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 communicator.acceptRequest(userJar);
+                dismiss();
             }
         });
 
@@ -70,6 +71,7 @@ public class ManageRequestFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 communicator.removeRequest(userJar);
+                dismiss();
             }
         });
 
