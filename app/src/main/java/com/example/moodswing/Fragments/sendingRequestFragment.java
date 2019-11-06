@@ -46,6 +46,7 @@ public class sendingRequestFragment extends DialogFragment {
             public void onClick(View v) {
                 String username = usernameEditText.getText().toString();
                 communicator.sendFollowingRequest(username);
+                dismiss();
             }
         });
 
