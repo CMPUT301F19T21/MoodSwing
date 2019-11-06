@@ -48,7 +48,8 @@ public class FirestoreUserDocCommunicator{
 
     private static FirestoreUserDocCommunicator instance = null;
 
-    private static ArrayList<MoodEvent> moodEvents;
+    private ArrayList<MoodEvent> moodEvents;
+    private ArrayList<UserJar> userJars;
     // reference
 
     protected FirestoreUserDocCommunicator(){
@@ -435,11 +436,33 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    public void initFollowingList(final RecyclerView userJarList){
+        @NonNull
+        UserJarAdaptor userJarAdaptor = (UserJarAdaptor) userJarList.getAdapter();
+
+        Query followingMoodListColQuery = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("followingMoodList")
+                .orderBy("timeStamp", Query.Direction.DESCENDING);
+
+        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                userJarAdaptor.clearUserJars();
+                for (QueryDocumentSnapshot userJarDoc : queryDocumentSnapshots){
+                    UserJar userJar = userJarDoc.toObject(UserJar.class);
+                    userJarAdaptor.addToUserJars(userJar);
+                }
+                userJarAdaptor.notifyDataSetChanged();
+                userJars = userJarAdaptor.getUserJars();
+            }
+        });
+    }
 
 
 
-
-    public static ArrayList<MoodEvent> getMoodEvents() {
+    public ArrayList<MoodEvent> getMoodEvents() {
         return moodEvents;
     }
 

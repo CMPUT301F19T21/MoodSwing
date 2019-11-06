@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -51,12 +52,11 @@ public class NewMoodActivity extends AppCompatActivity {
 ////    private String socialSitToAdd;
 
     private FloatingActionButton confirmButton;
-    private ImageView locationCheckButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
-    private Switch gpsSwitch;
+    private FloatingActionButton locationButton;
     private Location currentLocation;
 
     private RecyclerView moodSelectList;
@@ -70,6 +70,8 @@ public class NewMoodActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 101;
     private double latitude, longitude;
 
+    private boolean ifLocationEnabled;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +84,7 @@ public class NewMoodActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.add_date);
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
-        gpsSwitch = findViewById(R.id.locationSwitch);
+        locationButton = findViewById(R.id.moodhistory_locationButton);
 
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -93,6 +95,8 @@ public class NewMoodActivity extends AppCompatActivity {
         // init communicator
         communicator = FirestoreUserDocCommunicator.getInstance();
         moodEvent = new MoodEvent();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        ifLocationEnabled = false;
 
         // set up current date and time
         Calendar calendar = Calendar.getInstance();
@@ -115,6 +119,22 @@ public class NewMoodActivity extends AppCompatActivity {
         dateTextView.setText(MoodEventUtility.getDateStr(date));
         timeTextView.setText(MoodEventUtility.getTimeStr(time));
 
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ifLocationEnabled){
+                    // turn off
+                    ifLocationEnabled = false;
+                    locationButton.setCompatElevation(12f);
+                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    ifLocationEnabled = true;
+                    locationButton.setCompatElevation(0f);
+                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+                }
+            }
+        });
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +148,12 @@ public class NewMoodActivity extends AppCompatActivity {
                     }else{
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
+                    // hey jamie, i changed this part, cuz before, the condition your set up will never be true since the time user
+                    // can interact with the UI, onCreate method is called. it should be inside the listener.
+                    // also i changed back the UI design, and finished the button functionality.
+                    if (ifLocationEnabled) {
+                        fetchLastLocation();
+                    }
                     communicator.addMoodEvent(moodEvent);
                     finish();
                 }else{
@@ -135,13 +161,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
-        if (!gpsSwitch.isChecked()) {
 
-        }
-        else {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-            fetchLastLocation();
-        }
     }
 
     private String getDateStr (DateJar date) {
@@ -215,6 +235,8 @@ public class NewMoodActivity extends AppCompatActivity {
             }
         });
     }
+
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
