@@ -3,6 +3,7 @@ package com.example.moodswing.Fragments;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.FilterFragment;
 import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
@@ -95,6 +97,13 @@ public class HomeFragment extends Fragment {
                     delButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
                     delButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_sweep_black_24dp));
                 }
+            }
+        });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FilterFragment().show(getFragmentManager(), "FILTER_MOOD");
             }
         });
 

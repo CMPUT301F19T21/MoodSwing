@@ -6,11 +6,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.moodswing.Fragments.ManageRequestFragment;
+import com.example.moodswing.Fragments.ManagementFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
 import com.example.moodswing.Fragments.profileFragment;
+import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
         // other action that need to be init
         toMoodHistory(); // default view -> moodHistory
-        currentScreenPointer = MOOD_HISTORY_SCREEN;
     }
 
     public void toMoodHistory(){
@@ -78,13 +80,13 @@ public class MainActivity extends AppCompatActivity {
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new HomeFragment());
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add animation and back stack later
         fragTrans.commit();
     }
 
     public void toDetailedView(int moodPosition) {
-
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
         fragTrans.addToBackStack(null);
@@ -97,13 +99,26 @@ public class MainActivity extends AppCompatActivity {
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new FollowingFragment());
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add back stack and animation later
         fragTrans.commit();
     }
 
+    public void toManagement() {
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+        fragTrans.replace(R.id.fragment_placeHolder, new ManagementFragment());
+        fragTrans.addToBackStack(null);
+        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragTrans.commit();
+    }
+
     public void openProfileFragment(){
         new profileFragment().show(getSupportFragmentManager(), "profile");
+    }
+
+    public void openManageRequestFragment(UserJar userJar) {
+        new ManageRequestFragment(userJar).show(getSupportFragmentManager(), "manage_request");
     }
 
     public void signOut() {

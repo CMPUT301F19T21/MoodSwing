@@ -94,6 +94,7 @@ public class EditMoodActivity extends AppCompatActivity {
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                 moodEvent.setReason(reasonEditText.getText().toString());
                 communicator.updateMoodEvent(moodEvent);
+                setResult(RESULT_OK, null);
                 finish();
             }
         });
