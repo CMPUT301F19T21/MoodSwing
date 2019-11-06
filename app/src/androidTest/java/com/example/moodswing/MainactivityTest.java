@@ -96,14 +96,16 @@ public class MainactivityTest {
         int min = calendar.get(Calendar.MINUTE);
         DateJar date = new DateJar(year,month,day);
         TimeJar time = new TimeJar(hr,min);
-        //
+        // check if data matched
         onView(withId(R.id.mood_list)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        //Thread.sleep(2000);
         onView(withId(R.id.moodDetail_moodText)).check(matches(withText("HAPPY")));
         onView(withId(R.id.moodDetail_timeText)).check(matches(withText(MoodEventUtility.getTimeStr(time))));
         onView(withId(R.id.moodDetail_dateText)).check(matches(withText(MoodEventUtility.getDateStr(date))));
         onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Test Mood\"")));
+        // check if click back succeed
+        onView(withId(R.id.detailedView_back)).perform(click());
+
     }
 
     @Test
@@ -124,8 +126,15 @@ public class MainactivityTest {
         onView(withId(R.id.detailedView_edit))
                 .perform(click());
         intended(hasComponent(EditMoodActivity.class.getName()));
-
-
+        // editing mood
+        onView(withId(R.id.moodSelect_recycler)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        onView(withId(R.id.reason_EditView))
+                .perform(typeText("Edited Test Mood"),closeSoftKeyboard());
+        onView(withId(R.id.add_confirm)).perform(click());
+        //Check if Mood being edited
+        onView(withId(R.id.moodDetail_moodText)).check(matches(withText("SAD")));
+        onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Edited Test Mood\"")));
     }
 
     @Test
