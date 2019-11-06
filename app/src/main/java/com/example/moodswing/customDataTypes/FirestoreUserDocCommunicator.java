@@ -1,5 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -198,12 +199,12 @@ public class FirestoreUserDocCommunicator{
 
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        DocumentReference UpdateMood = db
+        DocumentReference moodEventRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEvent.getUniqueID());
-        UpdateMood.set(moodEvent)
+        moodEventRef.set(moodEvent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -221,6 +222,107 @@ public class FirestoreUserDocCommunicator{
     public MoodEvent getMoodEvent(int position) {
         return moodEvents.get(position);
     }
+
+    // following feature
+
+    public void isUsernameUnique() {
+        // this is critical for following feature, will implement later
+        // need a workaround, since no callback
+    }
+
+
+    public void sendFollowingRequest (String username) {
+        // should first check if uid exist
+        Query findUserColQuery = db
+                .collection("users")
+                .whereEqualTo("username",username)
+                .limit(1);
+
+        findUserColQuery
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()){
+                                unlockRequestButton();
+                                // do something
+                            }else{
+                                unlockRequestButton();
+                                // not empty, proceed
+                                // should be only one
+                                DocumentSnapshot doc = task.getResult().toObjects(DocumentSnapshot.class).get(0);
+                                String UID = doc.getId();
+                                addRequestToMailBox(UID);
+                            }
+                        }else{
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void unlockRequestButton(){
+        // this method is empty for now, it will be used in sendRequestMethod to implement a lock
+        // idea: system lock UI, then, system will wait to check if username exist, if it exist, it will unlock the UI.
+
+    }
+
+    private void addRequestToMailBox(String targetUID){
+        // given an UID, add request to his mailBox
+        DocumentReference requestRef = db
+                .collection("users")
+                .document(targetUID) // enter other user's doc
+                .collection("mailBox")
+                .document(user.getUid()); // doc name is your UID
+
+        Map<String, String> usernameEntry = new HashMap<>();
+        usernameEntry.put("username",getUsername());
+
+        requestRef.set(usernameEntry)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "sending request successful");
+                        // maybe do something
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "sending request failed");
+                    }
+                });
+    }
+
+    // 
+
+
+    public void addFollowing(String uid) {
+        // at this point UID should be always correct, since it is checked in sendingRequest method
+
+        DocumentReference followingListReference = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(uid);
+
+        followingListReference.set(uid)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
+    }
+
+
 
     public void editUserPassword() {
         //
