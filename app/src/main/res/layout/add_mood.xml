@@ -100,29 +100,19 @@
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
-                                <Switch
-                                    android:id="@+id/locationSwitch"
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/moodhistory_locationButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginEnd="16dp"
-                                    android:checked="false"
-                                    android:textOn="On"
-                                    android:textOff="Off"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="35dp"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.75" />
-
-                                <ImageView
-                                    android:id="@+id/locationIcon"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="28dp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.135"
-                                    app:srcCompat="@drawable/locationbutton" />
+                                    app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </androidx.cardview.widget.CardView>
