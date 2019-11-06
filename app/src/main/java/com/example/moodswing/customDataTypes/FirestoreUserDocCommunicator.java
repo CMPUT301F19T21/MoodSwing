@@ -222,6 +222,10 @@ public class FirestoreUserDocCommunicator{
         return moodEvents.get(position);
     }
 
+    public static ArrayList<MoodEvent> getMoodEvents() {
+        return moodEvents;
+    }
+
     public void editUserPassword() {
         //
     }

@@ -37,13 +37,17 @@ import static androidx.core.util.Preconditions.checkNotNull;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+
+//Test assume current user is exist now
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class MainactivityTest {
     private FirestoreUserDocCommunicator communicator;
@@ -58,17 +62,17 @@ public class MainactivityTest {
 
     @Test
     public void CheckAddMood() throws InterruptedException {
+        // check add mood activity
         onView(withId(R.id.home_add))
                 .perform(click());
         intended(hasComponent(NewMoodActivity.class.getName()));
         onView(withId(R.id.moodSelect_recycler)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, click()));
+                RecyclerViewActions.actionOnItemAtPosition(3, click()));
         onView(withId(R.id.reason_EditView))
                 .perform(typeText("Test Mood"),closeSoftKeyboard());
         onView(withId(R.id.add_confirm))
         .perform(click());
-        Thread.sleep(2000);
-
+        // check if item correct shows
         //onView(withId(R.id.mood_list)).check(matches(atPosition(0, withText("HAPPY"))));
 
     }
@@ -87,8 +91,6 @@ public class MainactivityTest {
                 .perform(click());
         // Get current time
         Calendar calendar = Calendar.getInstance();
-
-        // set date and time
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
@@ -139,9 +141,41 @@ public class MainactivityTest {
 
     @Test
     public void CheckDeleteMood(){
+        // add a new mood to test
+        onView(withId(R.id.home_add))
+                .perform(click());
+        intended(hasComponent(NewMoodActivity.class.getName()));
+        onView(withId(R.id.moodSelect_recycler)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.reason_EditView))
+                .perform(typeText("Test Mood"),closeSoftKeyboard());
+        onView(withId(R.id.add_confirm))
+                .perform(click());
         //
+        Integer oldSize = communicator.getMoodEvents().size();
+        onView(withId(R.id.home_delete))
+                .perform(click());
+        onView(withId(R.id.mood_list)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, swipeLeft()));
+        Integer newSize = communicator.getMoodEvents().size();
+        assertTrue(newSize==(oldSize-1));
     }
 
+    @Test
+    public void CheckFollowing(){
+        onView(withId(R.id.nav_followingBtn))
+                .perform(click());
+        //check if in the following screen shows
+
+    }
+
+    @Test
+    public void CheckProfile(){
+        onView(withId(R.id.nav_profile))
+                .perform(click());
+        //check if profile shows
+        
+    }
 
     public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
         checkNotNull(itemMatcher);
