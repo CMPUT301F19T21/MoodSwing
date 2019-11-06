@@ -1,5 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.io.Serializable;
 import java.sql.Time;
@@ -198,12 +200,12 @@ public class FirestoreUserDocCommunicator{
 
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        DocumentReference UpdateMood = db
+        DocumentReference moodEventRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("MoodEvents")
                 .document(moodEvent.getUniqueID());
-        UpdateMood.set(moodEvent)
+        moodEventRef.set(moodEvent)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -221,6 +223,221 @@ public class FirestoreUserDocCommunicator{
     public MoodEvent getMoodEvent(int position) {
         return moodEvents.get(position);
     }
+
+    // following feature
+
+    public void isUsernameUnique() {
+        // this is critical for following feature, will implement later
+        // need a workaround, since no callback
+    }
+
+    // mailBox feature
+    public void sendFollowingRequest (String username) {
+        // should first check if uid exist
+        Query findUserColQuery = db
+                .collection("users")
+                .whereEqualTo("username",username)
+                .limit(1);
+
+        findUserColQuery
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()){
+                                // do something
+                            }else{
+                                // not empty, proceed
+                                // should be only one
+                                DocumentSnapshot doc = task.getResult().toObjects(DocumentSnapshot.class).get(0);
+                                String UID = doc.getId();
+                                addRequestToMailBox(UID);
+                            }
+                        }else{
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void unlockRequestButton(){
+        // this method is empty for now, it will be used in sendRequestMethod to implement a lock
+        // idea: system lock UI, then, system will wait to check if username exist, if it exist, it will unlock the UI.
+
+    }
+
+    private void addRequestToMailBox(String targetUID){
+        // given an UID, add request to his mailBox
+        DocumentReference requestRef = db
+                .collection("users")
+                .document(targetUID) // enter other user's doc
+                .collection("mailBox")
+                .document(user.getUid()); // doc name is your UID
+
+
+        UserJar userJar = new UserJar();
+        userJar.setUsername(getUsername());
+        userJar.setUID(user.getUid());
+
+        requestRef.set(userJar)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "sending request successful");
+                        // maybe do something
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "sending request failed");
+                    }
+                });
+    }
+
+    // mailBox feature
+    public void removeRequest (UserJar userJar) {
+        // error code need to be created
+        DocumentReference requestRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("mailBox")
+                .document(userJar.getUID());
+
+        requestRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "request delete successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "request delete fail");
+                    }
+                });
+    }
+
+    public void acceptRequest(UserJar userJar) {
+        // responding to sender's request
+        // two action to do here,
+        // 1. adding the uid&username (current entry) to user's permitted list
+        // 2. pack uid and RecentMood, send recentMood to sender
+        //    a. send uid/username to sender's following list  b. trigger one recentMood update
+
+        removeRequest(userJar);
+        DocumentReference myPermittedListRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("permittedList")
+                .document(userJar.getUID());
+        myPermittedListRef
+                .set(userJar)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "accept Step 1 Success");
+                        addToSendersFollowing(userJar);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "accept Fail");
+                    }
+                });
+    }
+    private void addToSendersFollowing(UserJar sendersUserJar) {
+        // at this point UID should be always correct, since it is checked in sendingRequest method
+        String sendersUID = sendersUserJar.getUID();
+        UserJar myUserJar = new UserJar();
+        myUserJar.setUID(user.getUid());
+        myUserJar.setUsername(user.getUid());
+
+        DocumentReference followingListReference = db
+                .collection("users")
+                .document(sendersUID)
+                .collection("MoodEvents")
+                .document(user.getUid());
+
+        followingListReference.set(myUserJar)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
+    }
+    private void updateRecentMoodToFollowers(){
+
+        CollectionReference permittedList = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("permittedList");
+
+        permittedList.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            if (task.getResult().isEmpty()){
+                                Log.d(TAG, "no followers");
+                            }else{
+                                for (DocumentSnapshot userJarDoc : task.getResult().getDocuments()){
+                                    UserJar userJar = userJarDoc.toObject(UserJar.class);
+                                    pushRecentMoodEventToUser(userJar.getUID());
+                                }
+                            }
+                        }else{
+                            Log.d(TAG, "failed finding permittedList");
+                        }
+                    }
+                });
+    }
+
+    private void pushRecentMoodEventToUser(String uid){
+        // grab recentMoodEvent
+        MoodEvent mostRecentMoodEvent = moodEvents.get(0);
+
+        // construct UserJar
+        UserJar myUserJarWithMood = new UserJar();
+        myUserJarWithMood.setUsername(getUsername());
+        myUserJarWithMood.setUID(user.getUid());
+        myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
+
+        // send it to target
+        CollectionReference followingMoodListCol = db
+                .collection("users")
+                .document(uid)
+                .collection("followingMoodList");
+
+        followingMoodListCol.add(myUserJarWithMood)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "sending mood to target uid, done");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "sending mood to target uid, failed");
+                    }
+                });
+    }
+
+
+
+
 
     public static ArrayList<MoodEvent> getMoodEvents() {
         return moodEvents;
