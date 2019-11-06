@@ -251,9 +251,10 @@ public class FirestoreUserDocCommunicator{
                             }else{
                                 // not empty, proceed
                                 // should be only one
-                                DocumentSnapshot doc = task.getResult().toObjects(DocumentSnapshot.class).get(0);
-                                String UID = doc.getId();
-                                addRequestToMailBox(UID);
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String UID = document.getId();
+                                    addRequestToMailBox(UID);
+                                }
                             }
                         }else{
                             Log.d(TAG, "Error getting documents: ", task.getException());

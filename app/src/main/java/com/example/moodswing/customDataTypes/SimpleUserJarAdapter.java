@@ -12,6 +12,8 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.Fragments.ManageRequestFragment;
+import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
@@ -56,11 +58,15 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView usernameText = holder.usernameText;
         usernameText.setText(userJars.get(position).getUsername());
+        UserJar currentUserJar = userJars.get(position);
 
         holder.requestLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // mode comes to play
+                if (mode == 1){
+                    new ManageRequestFragment(currentUserJar)
+                            .show(((MainActivity)v.getContext()).getSupportFragmentManager(), "manage_request");
+                }
             }
         });
     }

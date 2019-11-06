@@ -6,12 +6,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.moodswing.Fragments.ManageRequestFragment;
 import com.example.moodswing.Fragments.ManagementFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
 import com.example.moodswing.Fragments.profileFragment;
+import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void openProfileFragment(){
         new profileFragment().show(getSupportFragmentManager(), "profile");
+    }
+
+    public void openManageRequestFragment(UserJar userJar) {
+        new ManageRequestFragment(userJar).show(getSupportFragmentManager(), "manage_request");
     }
 
     public void signOut() {
