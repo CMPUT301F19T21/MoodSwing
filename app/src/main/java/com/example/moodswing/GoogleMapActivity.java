@@ -38,11 +38,11 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private ArrayList<LatLng> arrayList = new ArrayList<LatLng>();
-    private LatLng LRT = new LatLng(53.523926, -113.522310);
-    private LatLng Pavillion = new LatLng(53.524153, -113.527438);
-    private LatLng HUB = new LatLng(53.526452, -113.520661);
-    private LatLng CCIS = new LatLng(53.528164, -113.525744);
-    private LatLng SUB = new LatLng(53.525189, -113.527059);
+//    private LatLng LRT = new LatLng(53.523926, -113.522310);
+//    private LatLng Pavillion = new LatLng(53.524153, -113.527438);
+//    private LatLng HUB = new LatLng(53.526452, -113.520661);
+//    private LatLng CCIS = new LatLng(53.528164, -113.525744);
+//    private LatLng SUB = new LatLng(53.525189, -113.527059);
 
 
 
@@ -51,11 +51,11 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
-        arrayList.add(LRT);
-        arrayList.add(Pavillion);
-        arrayList.add(HUB);
-        arrayList.add(CCIS);
-        arrayList.add(SUB);
+//        arrayList.add(LRT);
+//        arrayList.add(Pavillion);
+//        arrayList.add(HUB);
+//        arrayList.add(CCIS);
+//        arrayList.add(SUB);
 
 
         backButton = findViewById(R.id.backButton);

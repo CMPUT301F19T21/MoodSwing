@@ -72,8 +72,8 @@ public class ManagementFragment extends Fragment {
 
 
         // setup realtime listener
-        communicator.initManagementRequestList(requestList);
-        communicator.initManagementFollowingList(followingList);
+//        communicator.initManagementRequestList(requestList);
+//        communicator.initManagementFollowingList(followingList);
 
         //setup listeners
 

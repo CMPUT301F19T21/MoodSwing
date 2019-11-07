@@ -38,6 +38,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
-    private double latitude, longitude;
+    private double latitude, longitude, Lat, Lng;
 
     private boolean ifLocationEnabled;
 
@@ -234,6 +236,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     currentLocation = location;
                     latitude = currentLocation.getLatitude();
                     longitude = currentLocation.getLongitude();
+                    moodEvent.setLatitude(latitude);
+                    moodEvent.setLongitude(longitude);
                     Toast.makeText(getApplicationContext(), latitude
                             +""+longitude,Toast.LENGTH_SHORT).show();
                 }
@@ -241,6 +245,17 @@ public class NewMoodActivity extends AppCompatActivity {
         });
     }
 
+//    public double Latitude() {
+//        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+//        currentLocation = location;
+//        Lat = currentLocation.getLatitude();
+//        return Lat;
+//    }
+//
+//    public double Longitude() {
+//        Lng = currentLocation.getLongitude();
+//        return Lng;
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -252,20 +267,32 @@ public class NewMoodActivity extends AppCompatActivity {
                 break;
         }
     }
-    public String Lat = Double.toString(latitude);
-    public String Lng = Double.toString(longitude);
-    public HashMap<String, String> addLatLng(String Latitude, String Longitude){
-        HashMap<String, String> locationData = new HashMap<>();
-        locationData.put("Latitude", Lat);
-        locationData.put("Longitude", Lng);
-        db.collection("LatLng").document("users")
-                .collection("MoodEvents")
-                .document(user.getUid())
-                //.collection("MoodEvents")
-                .document();
-                //.getId();
-        return locationData;
-    }
+//    public Map<String,String> addLatLng() {
+//        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+//        String uid = firebaseDoc.getUsername();
+//        String Lat = Double.toString(latitude);
+//        String Lng = Double.toString(longitude);
+//        Map<String, String> locationData = new HashMap<>();
+//        locationData.put(Lat, Lng);
+//        DocumentReference addLatLng = db
+//                .collection("users")
+//                .document(user.getUid())
+//                .collection("MoodEvents")
+//                .document(moodEvent.getUniqueID())
+//                .set(locationData);
+//        locationData.put("Latitude", Lat);
+//        locationData.put("Longitude", Lng);
+//        db.collection("LatLng")
+//                .document("users")
+//                .collection("MoodEvents");
+//                .document(user.getUid())
+//                .collection("MoodEvents")
+//                .document()
+//                 .getId();
+
+//        return locationData;
+//    }
+
 }
 
 ////        ArrayList<Integer> viewColors = new ArrayList<>();
