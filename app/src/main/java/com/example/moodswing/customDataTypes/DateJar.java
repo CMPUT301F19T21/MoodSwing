@@ -20,27 +20,40 @@ public class DateJar {
 
     public DateJar(){}
 
+    /**
+     * @param year The year
+     * @param month The month
+     * @param day The day of the month
+     */
     public DateJar(int year, int month, int day) {
         this.setYear(year);
         this.setMonth(month);
         this.setDay(day);
     }
 
+
     public Integer getYear() {
         return year;
     }
+
+
 
     public Integer getMonth() {
         return month;
     }
 
+
+
     public Integer getDay() {
         return day;
     }
 
+
+
     public void setYear(int year) {
         this.year = year;
     }
+
 
     public void setMonth(int month) {
         this.month = month;
