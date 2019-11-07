@@ -87,7 +87,7 @@ public class LoginTest {
         try {
             Thread.sleep(1500);
         } catch(InterruptedException e) {
-            System.out.println("got interrupted!");
+            Log.d("Loginerror", "interrupted thread.sleep");
         }
         intended(hasComponent(MainActivity.class.getName()));
 
