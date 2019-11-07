@@ -73,7 +73,7 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
-    private double latitude, longitude, Lat, Lng;
+    private Double latitude, longitude;
 
     private boolean ifLocationEnabled;
 
@@ -133,6 +133,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
                 }else{
                     ifLocationEnabled = true;
+//                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(NewMoodActivity.this);
+                    fetchLastLocation();
                     locationButton.setCompatElevation(0f);
                     locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
                 }
@@ -156,7 +158,12 @@ public class NewMoodActivity extends AppCompatActivity {
                     // can interact with the UI, onCreate method is called. it should be inside the listener.
                     // also i changed back the UI design, and finished the button functionality.
                     if (ifLocationEnabled) {
-                        fetchLastLocation();
+                        moodEvent.setLatitude(latitude);
+                        moodEvent.setLongitude(longitude);
+                    }
+                    else {
+                        moodEvent.setLatitude(null);
+                        moodEvent.setLongitude(null);
                     }
                     communicator.addMoodEvent(moodEvent);
                     finish();
@@ -165,10 +172,10 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
-        if (ifLocationEnabled == true) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-            fetchLastLocation();
-        }
+//        if (ifLocationEnabled == true) {
+//            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+//            fetchLastLocation();
+//        }
     }
 
     private String getDateStr (DateJar date) {
@@ -236,8 +243,6 @@ public class NewMoodActivity extends AppCompatActivity {
                     currentLocation = location;
                     latitude = currentLocation.getLatitude();
                     longitude = currentLocation.getLongitude();
-                    moodEvent.setLatitude(latitude);
-                    moodEvent.setLongitude(longitude);
                     Toast.makeText(getApplicationContext(), latitude
                             +""+longitude,Toast.LENGTH_SHORT).show();
                 }

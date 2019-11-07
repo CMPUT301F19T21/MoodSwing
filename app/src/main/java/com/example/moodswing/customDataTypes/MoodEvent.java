@@ -19,8 +19,8 @@ public class MoodEvent {
     // optional fields
     private String reason;
     private String socialSituation;
-    private double Latitude;
-    private double Longitude;
+    private Double Latitude;
+    private Double Longitude;
 
     public MoodEvent() {
     }
@@ -79,19 +79,19 @@ public class MoodEvent {
         return socialSituation;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return Latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return Longitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         Latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         Longitude = longitude;
     }
 }
