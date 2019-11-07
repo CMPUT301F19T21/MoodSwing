@@ -43,7 +43,6 @@ public class Registertest {
     private String password;
     private String username;
     private FirestoreUserDocCommunicator communicator;
-    private FirebaseFirestore db;
 
     @Rule
     public IntentsTestRule<RegisterActivity> intentsTestRule =
@@ -51,17 +50,16 @@ public class Registertest {
 
     @Before
     public void initCredentials() {
-        loginEmail = "testmail@mail.com";
+        loginEmail = "registertest@mail.com";
         password = "123456";
-        username = "testUser";
-        communicator = FirestoreUserDocCommunicator.getInstance();
-        db = FirebaseFirestore.getInstance();
+        username = "UABSTUDENT";
     }
 
 
     @After
     public void delete() {
-
+        communicator = FirestoreUserDocCommunicator.getInstance();
+        communicator.deleteUser();
     }
 
     @Test
