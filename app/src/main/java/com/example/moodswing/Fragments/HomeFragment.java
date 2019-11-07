@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moodswing.FilterFragment;
 import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
@@ -103,7 +102,7 @@ public class HomeFragment extends Fragment {
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FilterFragment().show(getFragmentManager(), "FILTER_MOOD");
+//                new FilterFragment().show(getFragmentManager(), "FILTER_MOOD");
             }
         });
 
