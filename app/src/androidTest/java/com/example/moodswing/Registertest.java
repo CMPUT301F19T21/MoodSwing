@@ -74,6 +74,9 @@ public class Registertest {
                 .perform(typeText(password), closeSoftKeyboard());
         onView(withId(R.id.regButton))
                 .perform(click());
+
+
+
     }
 
 

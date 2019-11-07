@@ -76,7 +76,7 @@ public class MoodDetailFragment extends Fragment{
                 Intent intent = new Intent(getActivity(),EditMoodActivity.class);
                 intent.putExtra("position",moodPosition);
                 startActivityForResult(intent, 1);
-                //new EditMoodFragment().show(getActivity().getSupportFragmentManager(), "editing")；
+
             }
         });
 

@@ -53,6 +53,7 @@ public class FirestoreUserDocCommunicator{
     private ArrayList<UserJar> userJars;
     // reference
 
+
     protected FirestoreUserDocCommunicator(){
         // init db
         this.db = FirebaseFirestore.getInstance();
@@ -70,6 +71,9 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
+    /**
+     * Accesses the firestore database and gets all the users
+     */
     private void getUserSnapShot(){
         // throw exception here if not login
         db.collection("users")
@@ -87,11 +91,18 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * Signs out the current user
+     */
     private void userSignOut(){
         mAuth.signOut();
         user = null;
     }
 
+    /**
+     * Gets the current user's username
+     * @return A string of the username
+     */
     public String getUsername(){
         if (userDocSnapshot != null) {
             return (String) userDocSnapshot.get("username");
@@ -100,6 +111,7 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
+
     public static FirestoreUserDocCommunicator getInstance() {
         if (instance == null) {
             instance = new FirestoreUserDocCommunicator();
@@ -107,6 +119,9 @@ public class FirestoreUserDocCommunicator{
         return instance;
     }
 
+    /**
+     * Signs the user out
+     */
     public static void destroy(){
         instance.userSignOut();
         instance = null;
@@ -115,6 +130,10 @@ public class FirestoreUserDocCommunicator{
     /* moodEvent related methods*/
 
 
+    /**
+     * Generates the users Mood ID
+     * @return Returns the ID as a string
+     */
     public String generateMoodID(){
         String refID = db
                 .collection("users")
@@ -127,6 +146,10 @@ public class FirestoreUserDocCommunicator{
     }
 
 
+    /**
+     *
+     * @param moodEvent
+     */
     public void addMoodEvent(MoodEvent moodEvent) {
         // lacking error returning code here
         //
@@ -154,6 +177,10 @@ public class FirestoreUserDocCommunicator{
         updateRecentMoodToFollowers();
     }
 
+    /**
+     * Deletes a mood event from in the users list and their followers in the firestore database
+     * @param moodEvent The mood event to be deleted
+     */
     public void removeMoodEvent(MoodEvent moodEvent){
         // error code need to be created
         DocumentReference moodEventRef = db
@@ -178,6 +205,10 @@ public class FirestoreUserDocCommunicator{
         updateRecentMoodToFollowers();
     }
 
+    /**
+     * Initializes the mood events for the user into the local RecyclerView
+     * @param moodList the view the moods are being appended to
+     */
     public void initMoodEventsList(final RecyclerView moodList){
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
@@ -202,6 +233,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * Updates/edits an existing moodEvent
+     * @param moodEvent The moodEvent to edit
+     */
     /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
         DocumentReference moodEventRef = db
@@ -236,6 +271,10 @@ public class FirestoreUserDocCommunicator{
         // need a workaround, since no callback
     }
 
+    /**
+     * Sends a following request to another user
+     * @param username The username of the user that is going to receive the request
+     */
     // mailBox feature
     public void sendFollowingRequest (String username) {
         // should first check if uid exist
@@ -273,8 +312,11 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * given an UID, adds request to the target users mailBox
+     * @param targetUID the receiving user's UID
+     */
     private void addRequestToMailBox(String targetUID){
-        // given an UID, add request to his mailBox
         DocumentReference requestRef = db
                 .collection("users")
                 .document(targetUID) // enter other user's doc
@@ -302,7 +344,11 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
-    // mailBox feature
+
+    /**
+     * Deletes a request from the user's mailbox collection
+     * @param userJar The userJar of the user to be deleted
+     */
     public void removeRequest (UserJar userJar) {
         // error code need to be created
         DocumentReference requestRef = db
@@ -327,6 +373,10 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    /**
+     * Accepts an incoming follow request
+     * @param userJar The userJar of the user sending the request
+     */
     public void acceptRequest(UserJar userJar) {
         // responding to sender's request
         // two action to do here,
@@ -356,6 +406,11 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
+
+    /**
+     * Adds a user to the senders following collection after an accepted request
+     * @param sendersUserJar The sendering user's userJar
+     */
     private void addToSendersFollowing(UserJar sendersUserJar) {
         // at this point UID should be always correct, since it is checked in sendingRequest method
         String sendersUID = sendersUserJar.getUID();
@@ -384,6 +439,11 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
+
+    /**
+     * This method refreshes the recent mood(ie. when a user deletes, edits, or adds a new mood to
+     * their list) and sends the updated status to firestore
+     */
     private void updateRecentMoodToFollowers(){
 
         CollectionReference permittedList = db
@@ -410,6 +470,11 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
+
+    /**
+     * This method gets the updated status of the user from firestore
+     * @param uid UID of the user
+     */
     public void refreshRecentMoodToUser (String uid){
         if (moodEvents.isEmpty()){
             pullRecentMoodEventToUser(uid);
@@ -419,6 +484,11 @@ public class FirestoreUserDocCommunicator{
     }
 
 
+    /**
+     *  This method handles getting the moodevent locally from the user, and then sending it to the
+     *  receiving user
+     * @param uid UID of the user receiving the status update
+     */
     private void pushRecentMoodEventToUser(String uid){
         // grab recentMoodEvent
         MoodEvent mostRecentMoodEvent = moodEvents.get(0);
@@ -451,6 +521,11 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    /**
+     * Grabs the moodEvent from firestore from the sending user and receives it to populate the
+     * follower's list
+     * @param uid UID of the user who you want to update the status/current mood of
+     */
     private void pullRecentMoodEventToUser(String uid) {
 
         // send it to target
@@ -475,6 +550,10 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    /**
+     * Gets all the users from firestore that the current user is following and populates the local user's following list with them
+     * @param userJarList A view of all users the current user is following
+     */
     public void initFollowingList(final RecyclerView userJarList){
         @NonNull
         UserJarAdaptor userJarAdaptor = (UserJarAdaptor) userJarList.getAdapter();
@@ -499,6 +578,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * Populates the Following list for the management screen
+     * @param userJarList The view to be populated with users that we're following
+     */
     public void initManagementFollowingList(final RecyclerView userJarList){
         @NonNull
         SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
@@ -521,6 +604,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * Initiatizes the request list on the management screen by getting the unresolved request from the users mailbox in firestore
+     * @param userJarList the view to be populated with requests
+     */
     public void initManagementRequestList(final RecyclerView userJarList){
         @NonNull
         SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
