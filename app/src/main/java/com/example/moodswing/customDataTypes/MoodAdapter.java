@@ -43,6 +43,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
             this.timeText = view.findViewById(R.id.moodDetail_timeText);
             this.moodImage = view.findViewById(R.id.moodIcon_placeHolder);
             this.moodHistoryCard = view.findViewById(R.id.moodhistory_card);
+
         }
     }
 

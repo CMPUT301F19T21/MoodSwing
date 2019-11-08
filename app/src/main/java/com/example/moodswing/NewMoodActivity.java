@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +69,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private TextView timeTextView;
     private FloatingActionButton locationButton;
     private Location currentLocation;
+    private Spinner socialSpinner;
 
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -78,6 +81,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private Double latitude, longitude;
+    private String social;
 
     private boolean ifLocationEnabled;
 
@@ -94,6 +98,8 @@ public class NewMoodActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
         locationButton = findViewById(R.id.moodhistory_locationButton);
+        socialSpinner = (findViewById(R.id.social_spinner));
+        String socialSituationToAdd;
 
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -152,6 +158,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     // do upload
                     moodEvent.setUniqueID(communicator.generateMoodID());
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+                    moodEvent.setSocialSituation(social);
 
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
@@ -176,6 +183,27 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Social Situation
+        ArrayAdapter<String> socialAdapter = new ArrayAdapter<String>(NewMoodActivity.this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.socialSit));
+        socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        socialSpinner.setAdapter(socialAdapter);
+        socialSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(adapterView.getItemAtPosition(i).equals("Select Social Situation")){
+                    //do nothing
+                }
+                else{
+                    social = adapterView.getItemAtPosition(i).toString();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private String getDateStr (DateJar date) {
@@ -188,45 +216,7 @@ public class NewMoodActivity extends AppCompatActivity {
     }
 
     private String returnMonthStr(int monthInt){
-        String monthStr = null;
-        switch (monthInt){
-            case 0:
-                monthStr = "January";
-                break;
-            case 1:
-                monthStr = "February";
-                break;
-            case 2:
-                monthStr = "March";
-                break;
-            case 3:
-                monthStr = "April";
-                break;
-            case 4:
-                monthStr = "May";
-                break;
-            case 5:
-                monthStr = "June";
-                break;
-            case 6:
-                monthStr = "July";
-                break;
-            case 7:
-                monthStr = "August";
-                break;
-            case 8:
-                monthStr = "September";
-                break;
-            case 9:
-                monthStr = "October";
-                break;
-            case 10:
-                monthStr = "November";
-                break;
-            case 11:
-                monthStr = "December";
-                break;
-        }
+        String monthStr = MoodEventUtility.returnMonthStr(monthInt);
         return monthStr;
     }
     private void fetchLastLocation() {
@@ -260,6 +250,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }
 
 ////        ArrayList<Integer> viewColors = new ArrayList<>();
