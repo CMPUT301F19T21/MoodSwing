@@ -24,6 +24,11 @@ public class SpinnerAdapter extends ArrayAdapter<SocialSituationItem> {
     private TextView spinnerText;
     private SocialSituationItem current;
 
+    /**
+     * @param context The activity context
+     * @param situationList The arraylist of situation items for the adapter to show
+     */
+
     public SpinnerAdapter(Context context, ArrayList<SocialSituationItem> situationList) {
         super(context,0,situationList);
     }
