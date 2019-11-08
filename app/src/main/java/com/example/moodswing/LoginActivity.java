@@ -30,6 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  *      - working fine for now
  *      - lacking error handling, if empty program will crash. but will deal error cases later
  */
+
+//The login screen. This is the entrypoint for our app. User will be prompted for login credentials or can register.
 public class LoginActivity extends AppCompatActivity {
     private static final int RETURN_CODE_TO_REG = 1;
     private static final int RETURN_CODE_TO_MOOD = 2;

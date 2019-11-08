@@ -18,6 +18,8 @@ import com.example.moodswing.R;
 
 import java.util.ArrayList;
 
+// An adapter for UserJars
+
 public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdapter.MyViewHolder>{
 
 
@@ -38,6 +40,11 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
 
     public SimpleUserJarAdapter(){}
 
+    /**
+     * initializes the adapter with an arraylist of UserJars, and an int.
+     * @param userJars the arraylist of userJars for the adapters
+     * @param mode 0 for requests, 1 for following
+     */
     public SimpleUserJarAdapter(ArrayList<UserJar> userJars, int mode){
         // 0 -> request
         // 1 -> following
@@ -77,11 +84,18 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
     }
 
 
+    /**
+     * Clears the arraylist of UserJars
+     */
     public void clearUserJars(){
         this.userJars.clear();
     }
 
 
+    /**
+     * adds a UserJar to the adapter arraylist
+     * @param userJar the object to be added
+     */
     public void addToUserJars(UserJar userJar){
         this.userJars.add(userJar);
     }

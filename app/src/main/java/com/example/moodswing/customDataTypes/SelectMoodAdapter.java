@@ -21,6 +21,8 @@ import java.util.List;
 
 import io.opencensus.resource.Resource;
 
+//an adapter for selecting the mood
+
 public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.MyViewHolder> {
 
 //    private List<Integer> moodID;
@@ -54,6 +56,9 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         }
     }
 
+    /**
+     * initializes an array of numbers that correspond to each mood in the view, sets the one selected to null
+     */
     public SelectMoodAdapter() {
         selectedPosition = null;
         moodTypes = new ArrayList<>();
@@ -116,6 +121,10 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         return moodTypes.size();
     }
 
+    /**
+     * returns the selected mood
+     * @return the selected mood
+     */
     public Integer getSelectedMoodType(){
         if (selectedPosition != null) {
             return moodTypes.get(selectedPosition);

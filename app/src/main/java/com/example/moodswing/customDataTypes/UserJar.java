@@ -1,5 +1,9 @@
 package com.example.moodswing.customDataTypes;
-
+/**
+ * This class creates a User object which can be used for followers
+ * Each user has a moodevent, their username, and their generated UID as fields
+ *
+ */
 public class UserJar {
     private MoodEvent moodEvent;
     private String username;

@@ -2,16 +2,30 @@ package com.example.moodswing.customDataTypes;
 
 import java.util.Locale;
 
+/**
+ * This is a utility class to handle functionality for mood objects and their arguments
+ */
 public final class MoodEventUtility {
 
     public MoodEventUtility(){
         // nothing
     }
+
+    /**
+     * Gets a DateJar object and returns a string of the date stored
+     * @param date The DateJar object to be converted into a string
+     * @return Returns a string of the DateJar's date
+     */
     public static String getDateStr (DateJar date) {
         String month = returnMonthStr(date.getMonth());
         return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
     }
 
+    /**
+     * Gets a TimeJar object and returns a string of the time stored
+     * @param time the TimeJar object to be converted into a string
+     * @return Returns a string of the TimeJar's time
+     */
     public static String getTimeStr (TimeJar time) {
         int hr = time.getHr();
         String period;
@@ -23,6 +37,11 @@ public final class MoodEventUtility {
         return String.format(Locale.getDefault(), "%d:%02d %s",hr,time.getMin(),period);
     }
 
+    /**
+     * Each mood is associated with a number, this method finds the string description when given the number
+     * @param moodTypeInt the int value of the mood
+     * @return The string value of the mood
+     */
     public static String getMoodType (int moodTypeInt) {
         String moodTypeString = null;
         switch (moodTypeInt){
@@ -42,6 +61,11 @@ public final class MoodEventUtility {
         return moodTypeString;
     }
 
+    /**
+     * Converts the numeric month into the word
+     * @param monthInt the month as an int, starting at 0 for January
+     * @return the month as a string
+     */
     public static String returnMonthStr(int monthInt){
         String monthStr = null;
         switch (monthInt){

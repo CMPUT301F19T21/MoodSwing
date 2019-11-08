@@ -17,12 +17,18 @@ import com.example.moodswing.R;
 
 import java.util.ArrayList;
 
+/**
+ * the adapter for the moodlist
+ */
 public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> {
 
     private ArrayList<MoodEvent> moods;
 //    private Integer selectedPosition; // note: use of this attribute MAY cause bug (not matching) because of realtime listner,
 //    // need to invest more later! - Scott (especially on following screen, where the card at position can be changed in realtime)
 
+    /**
+     * Holds all the views for the fields
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView moodType;
         TextView dateText;
@@ -46,6 +52,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
 //        this.selectedPosition = null;
     }
 
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
@@ -53,6 +60,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
                 .inflate(R.layout.mood_list_content, parent, false);
         return new MyViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder (final MyViewHolder holder, final int position) {
@@ -76,11 +84,22 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     }
 
 
+    /**
+     * Starts the detailed view activity with the position of the mood card
+     * @param cardPosition This is the position of the card, currently it can be in range 1-4 inc.
+     * @param view the current view passed
+     */
     private void startDetailedViewActivity (int cardPosition,View view){
         // cardPosition will be passed to detailed view
         ((MainActivity) view.getContext()).toDetailedView(cardPosition);
     }
 
+    /**
+     * initializes the card with the image and associated text with the image
+     * @param moodTypeInt the card number, currently 1-4
+     * @param moodText the text associated with the card
+     * @param moodImage the image of the mood
+     */
     private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
         switch(moodTypeInt){
             case 1:
@@ -107,11 +126,18 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         return moods.size();
     }
 
+    /**
+     * Clears the mood events
+     */
     public void clearMoodEvents(){
         this.moods.clear();
     }
 
 
+    /**
+     * adds a mood to the mood array
+     * @param moodEvent the mood to be added
+     */
     public void addToMoods(MoodEvent moodEvent){
         this.moods.add(moodEvent);
     }

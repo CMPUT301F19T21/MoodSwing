@@ -15,12 +15,18 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+
+//The screen that handles the buttons in editmood
+
 public class EditMoodFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
     private TextView username;
     private FloatingActionButton logoutBtn;
     private FloatingActionButton backBtn;
 
+    /**
+     * initializes the communicator
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +35,9 @@ public class EditMoodFragment extends DialogFragment {
 
     }
 
+    /**
+     * creates the functionality for the buttons displayed on screen
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
