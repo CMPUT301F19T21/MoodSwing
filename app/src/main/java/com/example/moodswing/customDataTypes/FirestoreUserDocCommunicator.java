@@ -71,7 +71,7 @@ public class FirestoreUserDocCommunicator{
     }
 
     /**
-     * Accesses the firestore database and gets all the users
+     * Accesses the firestore database and gets a specific user
      */
     private void getUserSnapShot(){
         // throw exception here if not login
@@ -112,7 +112,7 @@ public class FirestoreUserDocCommunicator{
     }
 
     /**
-     * this method returns the reference to the singletone object
+     * this method returns the reference to the singleton object
      * @return FirestoreUserDoccommunicator reference
      */
     public static FirestoreUserDocCommunicator getInstance() {
@@ -151,8 +151,8 @@ public class FirestoreUserDocCommunicator{
 
 
     /**
-     *
-     * @param moodEvent
+     * Adds a mood event to the user's list of moods in firestore
+     * @param moodEvent the moodEvent to be added
      */
     public void addMoodEvent(MoodEvent moodEvent) {
         // lacking error returning code here

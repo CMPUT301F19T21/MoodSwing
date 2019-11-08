@@ -13,6 +13,7 @@ import java.util.Date;
  *      int month
  *      int day
  */
+//A DateJar object contains a specific date, including Year,month, and day
 public class DateJar {
     private Integer year;
     private Integer month;

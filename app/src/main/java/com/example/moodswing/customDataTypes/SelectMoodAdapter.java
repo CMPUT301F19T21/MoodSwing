@@ -78,6 +78,10 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         return new MyViewHolder(view);
     }
 
+    /**
+     * Sets the viewable card on screen to have the mood text(ie HAPPY), and the
+     * associated picture(ie. a happy face)
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView moodTypeText= holder.moodTypeText;

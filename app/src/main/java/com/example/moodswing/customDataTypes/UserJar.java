@@ -9,6 +9,9 @@ public class UserJar {
     private String username;
     private String UID;
 
+    /**
+     * empty constructor, fields will be given values using setter methods
+     */
     public UserJar(){}
 
     public MoodEvent getMoodEvent() {

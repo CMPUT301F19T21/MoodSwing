@@ -28,6 +28,9 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
 //    private Integer selectedPosition; // note: use of this attribute MAY cause bug (not matching) because of realtime listner,
 //    // need to invest more later! - Scott (especially on following screen, where the card at position can be changed in realtime)
 
+    /**
+     * Initializes the views(time,date,moodtype,username,the mood image, and the card they are in) and relates them to their XML IDs
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView moodType;
         TextView dateText;
@@ -57,6 +60,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
 //        this.selectedPosition = null;
     }
 
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
@@ -65,6 +69,9 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         return new MyViewHolder(view);
     }
 
+    /**
+     * sets the value of the views(except the mood itself) created in MyViewHolder
+     */
     @Override
     public void onBindViewHolder (final MyViewHolder holder, final int position) {
         TextView moodType = holder.moodType;
@@ -96,6 +103,12 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         ((MainActivity) view.getContext()).toDetailedView(cardPosition);
     }
 
+    /**
+     * Prints the mood to the CardView
+     * @param moodTypeInt the mood number
+     * @param moodText the text associated with the mood number
+     * @param moodImage the image associated with the mood number
+     */
     private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
         switch(moodTypeInt){
             case 1:

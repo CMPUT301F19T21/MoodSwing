@@ -63,6 +63,9 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
         return new SimpleUserJarAdapter.MyViewHolder(view);
     }
 
+    /**
+     * OnClick listener for the Fragment Manager
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView usernameText = holder.usernameText;
