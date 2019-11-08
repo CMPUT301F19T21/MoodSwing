@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -42,6 +43,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -197,6 +199,7 @@ public class MainactivityTest {
         assertTrue(newSize==(oldSize-1));
     }
 
+    //Test Following not complete since some function  for following is not complete such as delete following
     @Test
     public void CheckFollowing(){
         onView(withId(R.id.nav_followingBtn))
@@ -208,6 +211,21 @@ public class MainactivityTest {
                 .perform(click());
         onView(withId(R.id.managment_following)).check(matches(isDisplayed()));//check if in the FollowingFragment
         // check follow someone
+        onView(withId(R.id.request_button))
+                .perform(click());
+        onView(withId(R.id.requestFrag_requestEnter))
+                .perform(typeText("Edited Test Mood"),closeSoftKeyboard());
+        onView(withId(R.id.requestFrag_confirm))
+                .perform(click());
+
+        // accept request
+
+        onView(withId(R.id.management_request))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.checkrequest_confirm))
+                .perform(click());
+        //check if following shows
+        //
     }
 
     @Test
@@ -225,7 +243,7 @@ public class MainactivityTest {
                 .perform(click());
         onView(withId(R.id.profile_LogOut))
                 .perform(click());
-        //intended(hasComponent(LoginActivity.class.getName()));// check current activity is login
+        // check current activity is login
 
     }
     @After
@@ -233,28 +251,5 @@ public class MainactivityTest {
         Intents.release();
     }
 
-    /*public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
-        checkNotNull(itemMatcher);
-        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
-            @Override
-            public void describeTo(org.hamcrest.Description description) {
-                description.appendText("has item at position " + position + ": ");
-                itemMatcher.describeTo(description);
-            }
-            @Override
-            protected boolean matchesSafely(final RecyclerView view) {
-                RecyclerView.Adapter adapter = view.getAdapter();
-                int type = adapter.getItemViewType(position);
-                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, type);
-                adapter.onBindViewHolder(holder, position);
-                if (itemMatcher.matches(holder.itemView)) {
-                    return true;
-                }
-                return false;
-            }
-
-                //return itemMatcher.matches(holder.itemView);
-        };
-    }*/
 
 }
