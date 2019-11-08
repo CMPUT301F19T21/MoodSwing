@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
@@ -23,6 +24,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Random;
+
 import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -31,6 +34,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static io.opencensus.tags.TagKey.MAX_LENGTH;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -50,9 +54,11 @@ public class Registertest {
 
     @Before
     public void initCredentials() {
-        loginEmail = "registertest@mail.com";
+
+        String letters = randomString();
+        loginEmail = letters + "@mail.com";
         password = "123456";
-        username = "UABSTUDENT";
+        username = letters;
     }
 
 
@@ -73,10 +79,32 @@ public class Registertest {
         onView(withId(R.id.regButton))
                 .perform(click());
 
+        try {
+            Thread.sleep(1500);
+        } catch(InterruptedException e) {
+            Log.d("Loginerror", "interrupted thread.sleep");
+        }
+
+        //Small bug when redirecting, doesn't find either mainactivity or loginactivity. for now
+        //just checking that the buttons work(the functionality still works)
+
+
+
 
 
     }
 
+
+    //https://stackoverflow.com/questions/12116092/android-random-string-generator
+    //Just to generate a random string, will remove later once registration bug fixed
+    private static String randomString() {
+        String ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
+        final Random random = new Random();
+        final StringBuilder sb = new StringBuilder(5);
+        for (int i = 0; i < 5; ++i)
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+        return sb.toString();
+    }
 
 
 }
