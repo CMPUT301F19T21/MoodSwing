@@ -34,6 +34,10 @@ public class sendingRequestFragment extends DialogFragment {
         communicator = FirestoreUserDocCommunicator.getInstance();
     }
 
+    /**
+     * Creates the confirm and back button and the EditText view to enter the username, sends the username typed
+     * to the FirestoreUserDocCommunicator for requesting to follow
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

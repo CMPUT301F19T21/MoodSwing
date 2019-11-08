@@ -50,6 +50,11 @@ public class MoodDetailFragment extends Fragment{
 
     public MoodDetailFragment(){}
 
+    /**
+     * It can be instantiated with the moodposition, which corresponds to a specific mood event
+     * (ie. 1=happy) to be displayed at the top of the screen
+     * @param moodPosition
+     */
     public MoodDetailFragment(int moodPosition) {
         this.communicator = FirestoreUserDocCommunicator.getInstance();
         this.moodPosition = moodPosition;
@@ -58,6 +63,9 @@ public class MoodDetailFragment extends Fragment{
 
     }
 
+    /**
+     * All the fields that a MoodEvent has are created here, as well as the navigation buttons
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -103,6 +111,9 @@ public class MoodDetailFragment extends Fragment{
 
         return root;
     }
+    /**
+     * Passes in all the elements of the clicked MoodEvent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -110,6 +121,10 @@ public class MoodDetailFragment extends Fragment{
             initialElements();
         }
     }
+
+    /**
+     * Sets the values of the fields created in OnCreate
+     */
     private void initialElements(){
         moodEvent = communicator.getMoodEvent(moodPosition);
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));

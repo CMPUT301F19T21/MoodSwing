@@ -44,6 +44,10 @@ public class ManagementFragment extends Fragment {
     private ArrayList<UserJar> following_userJars;
     private RecyclerView followingList;
 
+    /**
+     *initializes the arraylists for followers and following and their respective adapters as well as firestore listener
+     * and the send new following request button
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_management, container, false);
         // the view is created after this

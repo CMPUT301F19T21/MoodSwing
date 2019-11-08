@@ -37,12 +37,19 @@ public class ManageRequestFragment extends DialogFragment {
         this.userJar = userJar;
     }
 
+    /**
+     * Just the communicator being instantiated
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         communicator = FirestoreUserDocCommunicator.getInstance();
     }
 
+    /**
+     * creates the confirm following request, reject request, and back button, and handles
+     * redirects to the FirestoreUserDocCommunicator which handles the update of the request
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

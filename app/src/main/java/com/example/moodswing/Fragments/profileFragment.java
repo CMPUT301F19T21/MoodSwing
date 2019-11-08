@@ -34,6 +34,9 @@ public class profileFragment extends DialogFragment {
 
     }
 
+    /**
+     * Profile buttons created and redirects to appropriate activities(logout and back). Shows the user's username as a TextView
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -39,6 +39,10 @@ public class FollowingFragment extends Fragment {
     private ArrayList<UserJar> userJars;
     private RecyclerView userJarList;
 
+    /**
+     * Initializes the UI buttons, the following/follower lists, the redirect to management fragment
+     */
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_following, container, false);
         // the view is created after this
