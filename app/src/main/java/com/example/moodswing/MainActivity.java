@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private Button followingBtn;
     private FloatingActionButton profileBtn;
 
+
+    /**
+     * Creates the buttons and handles redirects to different fragments
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         toMoodHistory(); // default view -> moodHistory
     }
 
+    /**
+     * The functionality for transitioning to the MoodHistory fragment
+     */
     public void toMoodHistory(){
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -92,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
         // will add animation and back stack later
         fragTrans.commit();
     }
-
+    /**
+     * The functionality for transitioning to the DetailedView fragment
+     */
     public void toDetailedView(int moodPosition) {
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
@@ -101,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.commit();
     }
 
+    /**
+     * The functionality for transitioning to the toFollowing fragment
+     */
     public void toFollowing() {
         followingBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -112,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.commit();
     }
 
+    /**
+     * The functionality for transitioning to the Follower/Following Management fragment
+     */
     public void toManagement() {
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new ManagementFragment());
@@ -120,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.commit();
     }
 
+    /**
+     * The functionality for transitioning to the Profile fragment
+     */
     public void openProfileFragment(){
         new profileFragment().show(getSupportFragmentManager(), "profile");
     }
@@ -127,7 +145,9 @@ public class MainActivity extends AppCompatActivity {
     public void openManageRequestFragment(UserJar userJar) {
         new ManageRequestFragment(userJar).show(getSupportFragmentManager(), "manage_request");
     }
-
+    /**
+     * Signs the user out, used when logoutBtn is clicked
+     */
     public void signOut() {
         FirestoreUserDocCommunicator.destroy();
         finishAffinity();

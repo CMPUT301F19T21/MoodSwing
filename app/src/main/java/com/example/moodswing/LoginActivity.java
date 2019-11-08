@@ -48,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
 
+    /**
+     * Initializes the buttons and editTexts
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +79,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * If the user is already logged in, they will skip the login screen and go straight to the
+     * main activity
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -85,6 +92,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Moving to the main activity upon successful login
+     */
     private void loginPost() {
         FirestoreUserDocCommunicator communicator = FirestoreUserDocCommunicator.getInstance();
         //Intent returnIntent = new Intent();
@@ -97,6 +107,10 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    /**
+     * This method stores the new user in firestore
+     */
     private void loginProcess(){
         final String email = emailEditText.getText().toString();
         final String password = passwordEditText.getText().toString();
