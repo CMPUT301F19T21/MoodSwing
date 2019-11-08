@@ -46,6 +46,10 @@ public class HomeFragment extends Fragment {
     // other
     private boolean deleteEnabled;
 
+    /**
+     * initializes the UI buttons and navigation on the Home screen(the one right after logging in),
+     * the mood history and adapters,and swipe-delete functionality
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // inflate fragment layout
