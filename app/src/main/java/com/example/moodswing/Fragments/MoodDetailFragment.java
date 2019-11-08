@@ -28,7 +28,9 @@ import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
-//The screen the user comes to after clicking on a moodEvent. shows the details of the moodEvent.
+/**
+ * The screen the user comes to after clicking on a moodEvent. shows the details of the moodEvent.
+ */
 public class MoodDetailFragment extends Fragment{
     private FirestoreUserDocCommunicator communicator;
     MoodEvent moodEvent;

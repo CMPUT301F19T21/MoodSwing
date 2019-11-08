@@ -34,10 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//Handles all the functionality related to firestore, a go-between for the app and firestore
 /**
- * ------------ PLEASE READ --------------
- *  missing check ifLogin.
+ * This class Handles all the functionality related to firestore, a go-between for the app and firestore
  *
  */
 public class FirestoreUserDocCommunicator{
@@ -113,7 +111,10 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
-
+    /**
+     * this method returns the reference to the singletone object
+     * @return FirestoreUserDoccommunicator reference
+     */
     public static FirestoreUserDocCommunicator getInstance() {
         if (instance == null) {
             instance = new FirestoreUserDocCommunicator();

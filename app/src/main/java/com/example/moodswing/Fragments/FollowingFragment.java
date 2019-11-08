@@ -21,8 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-//The following fragment screen, accessed from mainactivity. redirects to following management
-
+/**
+ * This class is the following fragment screen, accessed from mainactivity. redirects to following management
+ */
 public class FollowingFragment extends Fragment {
     // communicator
     private FirestoreUserDocCommunicator communicator;

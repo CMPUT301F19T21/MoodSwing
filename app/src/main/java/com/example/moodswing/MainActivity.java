@@ -23,6 +23,11 @@ import androidx.transition.Transition;
 
 //This activity holds the following, profile, and Home fragments, and holds the functionality for
 // redirecting the user to other fragments
+
+/**
+ * This class is the main Activity, it handles the fragments navigation
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final int MOOD_HISTORY_SCREEN = 1;

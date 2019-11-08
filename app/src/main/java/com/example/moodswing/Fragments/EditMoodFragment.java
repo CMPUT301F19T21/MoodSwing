@@ -16,8 +16,9 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
-//The screen that handles the buttons in editmood
-
+/**
+ * This class handles editing fuctionality, it uses the same layout as new mood Activity
+ */
 public class EditMoodFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
     private TextView username;

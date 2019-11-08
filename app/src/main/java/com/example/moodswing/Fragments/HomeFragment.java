@@ -23,7 +23,10 @@ import com.example.moodswing.customDataTypes.MoodEvent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-//The first screen after logging in, part of mainActivity. User will see their own moodlist here
+
+/**
+ * The first screen after logging in, part of mainActivity. User will see their own moodlist here
+ */
 public class HomeFragment extends Fragment {
     // communicator
     private FirestoreUserDocCommunicator communicator;

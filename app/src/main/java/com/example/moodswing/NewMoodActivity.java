@@ -55,6 +55,10 @@ import java.util.Locale;
 import java.util.Map;
 
 // The screen for adding a new mood, accessed from the Home screen.
+
+/**
+ * The screen for adding a new mood, accessed from the Home screen.
+ */
 public class NewMoodActivity extends AppCompatActivity {
 ////    private ArrayList<SocialSituationItem> mSocialList;
 ////    private SpinnerAdapter spinnerAdapter;

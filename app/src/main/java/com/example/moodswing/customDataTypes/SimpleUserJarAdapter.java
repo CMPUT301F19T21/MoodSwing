@@ -18,7 +18,9 @@ import com.example.moodswing.R;
 
 import java.util.ArrayList;
 
-// An adapter for UserJars
+/**
+ * An adapter for UserJars
+ */
 
 public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdapter.MyViewHolder>{
 

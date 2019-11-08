@@ -32,9 +32,9 @@ import java.util.Map;
 
 
 /**
+ * This is the reg activity
  * Notes:
- *      - working fine for now
- *      - lacking error handling, if empty program will crash. but will deal error cases later
+ *      - will add code here in part4 to make sure username uniqueness
  */
 //This activity handles registration of a new user
 public class RegisterActivity extends AppCompatActivity {

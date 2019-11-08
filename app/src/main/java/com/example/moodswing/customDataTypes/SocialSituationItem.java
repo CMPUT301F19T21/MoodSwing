@@ -1,6 +1,7 @@
 package com.example.moodswing.customDataTypes;
 
 //The social situation item blueprint to put in the spinner
+// this class is not used yet. since the feature is not in release.
 
 public class SocialSituationItem {
 

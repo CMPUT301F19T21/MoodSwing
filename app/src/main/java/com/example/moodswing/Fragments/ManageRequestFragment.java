@@ -18,8 +18,9 @@ import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.auth.User;
 
-//The screen to show pending requests for being followed.
-
+/**
+ * The screen to show pending requests for being followed.
+ */
 public class ManageRequestFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
     private UserJar userJar;

@@ -16,7 +16,12 @@ import com.google.firebase.firestore.auth.User;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-//An adapter for UserJars to be shown, will be used for following/follower list
+//
+
+/**
+ * This class is an adapter for UserJars to be shown, will be used for following/follower list
+ *
+ */
 public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHolder> {
 
     private ArrayList<UserJar> userJars;

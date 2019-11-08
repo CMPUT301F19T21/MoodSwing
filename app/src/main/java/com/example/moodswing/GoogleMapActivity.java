@@ -32,6 +32,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * this class is the GoogleMapActivity
+ */
 public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap map;
     private Button backButton;

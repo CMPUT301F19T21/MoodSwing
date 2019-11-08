@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 //https://codinginflow.com/tutorials/android/custom-spinner
 //This is the adapter for the social situation spinner(a dropdown menu).
+// this class is not in use. (not in release)
 
 public class SpinnerAdapter extends ArrayAdapter<SocialSituationItem> {
 
