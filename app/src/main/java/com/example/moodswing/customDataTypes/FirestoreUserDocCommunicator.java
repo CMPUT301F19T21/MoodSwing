@@ -270,10 +270,10 @@ public class FirestoreUserDocCommunicator{
 
     // following feature
 
-    public void isUsernameUnique() {
+    //public void isUsernameUnique() {
         // this is critical for following feature, will implement later
         // need a workaround, since no callback
-    }
+    //}
 
     /**
      * Sends a following request to another user
@@ -310,11 +310,11 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
-    private void unlockRequestButton(){
+    //private void unlockRequestButton(){
         // this method is empty for now, it will be used in sendRequestMethod to implement a lock
         // idea: system lock UI, then, system will wait to check if username exist, if it exist, it will unlock the UI.
 
-    }
+    //}
 
     /**
      * given an UID, adds request to the target users mailBox

@@ -138,6 +138,10 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * this set mood image by giving integer
+     * @param moodType
+     */
     private void setMoodImage(int moodType){
         switch(moodType){
             case 1:

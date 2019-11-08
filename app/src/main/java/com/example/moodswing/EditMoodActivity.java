@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 //The edit mood screen, contains all the functionality for editing an existing mood
+/**
+ * The screen for edit a mood, accessed from the mood detail screen.
+ */
 public class EditMoodActivity extends AppCompatActivity {
     TextView timeText;
 
@@ -128,9 +131,19 @@ public class EditMoodActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * This transfer integer to name of month
+     * @param month
+     * @return
+     */
     private String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month];
     }
+
+    /**
+     * This set all view to show correct data
+     */
     private void initial(){
         date = moodEvent.getDate();
         time = moodEvent.getTime();

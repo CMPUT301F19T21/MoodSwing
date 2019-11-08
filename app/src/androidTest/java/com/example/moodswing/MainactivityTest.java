@@ -60,6 +60,12 @@ public class MainactivityTest {
     @Rule
     public ActivityTestRule<LoginActivity> rule =
             new ActivityTestRule<>(LoginActivity.class);
+
+    /**
+     * Runs before all tests
+     * Log out current account and login to test account
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception{
         Intents.init();
@@ -78,6 +84,11 @@ public class MainactivityTest {
         //delete all mood
     }
 
+    /**
+     * Check whether fragment correct switch
+     * Check whether mood being added
+     * @throws InterruptedException
+     */
     @Test
     public void CheckAddMood() throws InterruptedException {
         // check add mood activity
@@ -92,13 +103,20 @@ public class MainactivityTest {
         onView(withId(R.id.add_confirm))
         .perform(click());
         // check if item correct added
+        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
         Integer newSize = communicator.getMoodEvents().size();
         assertTrue(newSize==(oldSize+1));
         assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
-        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
+
 
     }
 
+    /**
+     * Check whether fragment correct switch
+     * Check if data correct shows
+     * Test delete mood from moodDetail screen
+     * @throws InterruptedException
+     */
     @Test
     public void CheckMoodDetail() throws InterruptedException {
         //add a mood to test
@@ -143,6 +161,10 @@ public class MainactivityTest {
         assertTrue(newSize==(oldSize-1));// check if delete succeed
     }
 
+    /**
+     * Check whether activity correctly switched
+     * Test whether data is edited
+     */
     @Test
     public void CheckEditMood(){
         // add a new mood to test
@@ -175,6 +197,10 @@ public class MainactivityTest {
         onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Edited Test Mood\"")));
     }
 
+    /**
+     * Test if delete mood function correctly work
+     * Check if mood is deleted
+     */
     @Test
     public void CheckDeleteMood(){
         // add a new mood to test
@@ -199,7 +225,11 @@ public class MainactivityTest {
         assertTrue(newSize==(oldSize-1));
     }
 
-    //Test Following not complete since some function  for following is not complete such as delete following
+    /**
+     * Check whether fragment correct switch
+     * Test follow function is work
+     */
+    //Test Following not complete since some function for following is not complete such as delete following
     @Test
     public void CheckFollowing(){
         onView(withId(R.id.nav_followingBtn))
@@ -214,20 +244,27 @@ public class MainactivityTest {
         onView(withId(R.id.request_button))
                 .perform(click());
         onView(withId(R.id.requestFrag_requestEnter))
-                .perform(typeText("Edited Test Mood"),closeSoftKeyboard());
+                .perform(typeText("yinsong"),closeSoftKeyboard());
         onView(withId(R.id.requestFrag_confirm))
                 .perform(click());
 
         // accept request
-
+/*
         onView(withId(R.id.management_request))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.checkrequest_confirm))
                 .perform(click());
+
+ */
         //check if following shows
         //
     }
 
+    /**
+     * Check whether fragment correct switch
+     * Check if user name correct shows
+     * Test log out from mood profile
+     */
     @Test
     public void CheckProfile(){
         onView(withId(R.id.nav_profile))

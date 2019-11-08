@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.api.Authentication;
@@ -42,33 +44,44 @@ public class LoginTest {
     private FirebaseAuth mAuth;
 
     @Rule
-    public IntentsTestRule<LoginActivity> intentsTestRule =
-            new IntentsTestRule<>(LoginActivity.class);
+    public ActivityTestRule<LoginActivity> intentsTestRule =
+            new ActivityTestRule<>(LoginActivity.class);
 
+    /**
+     * log out if currently login
+     */
     @Before
     public void initCredentials() {
         loginEmail = "test@mail.com";
         password = "123456";
+        Intents.init();
+        // login to test account
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser()!=null) {
-            FirestoreUserDocCommunicator.destroy();
-        }
+        if (mAuth.getCurrentUser()!=null){
+            onView(withId(R.id.nav_profile)).perform(click());
+            onView(withId(R.id.profile_LogOut)).perform(click());}
 
 
 
     }
+
+    /**
+     * logout current account
+     */
     @After
     public void logout() {
         mAuth = FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
-            FirestoreUserDocCommunicator.destroy();
+        FirestoreUserDocCommunicator.destroy();
+        Intents.release();
 
     }
 
 
-
-
-
+    /**
+     * test login function
+     * test if activity correct switch
+     */
 
     @Test
     public void testLogin() {
