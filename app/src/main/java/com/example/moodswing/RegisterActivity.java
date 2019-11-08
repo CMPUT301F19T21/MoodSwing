@@ -51,6 +51,10 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
 
+    /**
+     * initializes the email, username, and password fields as well as the OnClickListener for
+     * going back to the login screen and to the registration screen
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +85,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * registration handling with firestore
+     */
     private void registerNewUser(){
         // error handling missing here, for now - gengyuan
 
@@ -119,6 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * going back to previous screen(login screen, which will now redirect the user to mainActivity)
+     */
     private void toLogin(){
         finish();
     }

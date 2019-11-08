@@ -89,6 +89,10 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private boolean ifLocationEnabled;
 
+    /**
+     * All the fields for creating a new mood are created and the current date/time are generated.
+     * All redirect button functionality is handled here too.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,10 +223,21 @@ public class NewMoodActivity extends AppCompatActivity {
         return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
     }
 
+    /**
+     * MoodEventUtility class will take the numeric conversion of the month and return the word
+     * (Ie. "January")
+     * @param monthInt the integer value of the month
+     * @return The string of the month
+     */
     private String returnMonthStr(int monthInt){
         String monthStr = MoodEventUtility.returnMonthStr(monthInt);
         return monthStr;
     }
+
+    /**
+     * This method gets the latitude and longitude that the google maps API found, and
+     * assigns the value to our fields
+     */
     private void fetchLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
@@ -244,6 +259,9 @@ public class NewMoodActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *a utility method  for permission, see fetchLastLocation for functionality
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

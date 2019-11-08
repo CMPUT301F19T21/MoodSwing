@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 //The edit mood screen, contains all the functionality for editing an existing mood
+// Some restrictions on fields to be completed, and photograph
 public class EditMoodActivity extends AppCompatActivity {
     TextView timeText;
 
@@ -64,6 +65,10 @@ public class EditMoodActivity extends AppCompatActivity {
      //   moodType = position;
     //}
 
+    /**
+     * Instantiating all the fields required to make a moodEvent, as well as the onclicklisteners
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
