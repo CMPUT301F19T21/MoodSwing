@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEvent;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -68,8 +69,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
-                            + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
+//                            + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment)
                             getSupportFragmentManager().findFragmentById(R.id.map);
                     supportMapFragment.getMapAsync(GoogleMapActivity.this);
@@ -81,15 +82,14 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-        ArrayList moodEvents = firebaseDoc.getMoodEvents();
+        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
         String uid = firebaseDoc.getUsername();
-        for (int i = 0; i < moodEvents.size(); i++) {
-            if()
-            Double Lat = firebaseDoc.getLatitude();
-            Double Lng = firebaseDoc.getLongitude();
-            LatLng latlng = new LatLng(Lat, Lng);
-            googleMap.addMarker(new MarkerOptions().position(latlng)
-                    .title(uid));
+        for (MoodEvent moodEvent : moodEvents) {
+            if (moodEvent.getLatitude() != null) {
+                LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(latlng)
+                        .title(uid));
+            }
         }
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 //        MarkerOptions markerOptions = new MarkerOptions().position(latLng)

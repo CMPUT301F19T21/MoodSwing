@@ -242,8 +242,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     currentLocation = location;
                     latitude = currentLocation.getLatitude();
                     longitude = currentLocation.getLongitude();
-                    Toast.makeText(getApplicationContext(), latitude
-                            +""+longitude,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), latitude
+//                            +""+longitude,Toast.LENGTH_SHORT).show();
                 }
             }
         });
