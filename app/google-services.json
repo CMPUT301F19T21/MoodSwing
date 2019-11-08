@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "454905459575",
+    "firebase_url": "https://moodswing-cce1b.firebaseio.com",
+    "project_id": "moodswing-cce1b",
+    "storage_bucket": "moodswing-cce1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454905459575:android:64df4c580ba25083a42772",
+        "android_client_info": {
+          "package_name": "com.example.moodswing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454905459575-rlknavral9rogjli45doq0arrn3d3kbo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrTDv08LOzbk2EQGrOhP5fzejZ_Am5Qzk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454905459575-rlknavral9rogjli45doq0arrn3d3kbo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

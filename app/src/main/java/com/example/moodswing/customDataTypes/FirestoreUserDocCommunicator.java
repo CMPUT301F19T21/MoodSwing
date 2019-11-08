@@ -107,10 +107,27 @@ public class FirestoreUserDocCommunicator{
         if (userDocSnapshot != null) {
             return (String) userDocSnapshot.get("username");
         }else{
-            return null; // something wrong, possible not enough time to finish query
+            return null;
+            // something wrong, possible not enough time to finish query
         }
     }
 
+    public Double getLatitude() {
+        if (userDocSnapshot != null) {
+            return (Double) userDocSnapshot.get("longitude");
+        }else{
+            return 100.0;
+        }
+    }
+
+    public Double getLongitude() {
+        if (userDocSnapshot != null) {
+
+            return (Double) userDocSnapshot.get("longitude");
+        }else{
+            return 100.0;
+        }
+    }
 
     public static FirestoreUserDocCommunicator getInstance() {
         if (instance == null) {
@@ -141,6 +158,7 @@ public class FirestoreUserDocCommunicator{
                 .collection("MoodEvents")
                 .document()
                 .getId();
+
 
         return refID;
     }
