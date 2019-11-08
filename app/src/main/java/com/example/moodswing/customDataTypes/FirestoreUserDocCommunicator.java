@@ -112,22 +112,6 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
-    public Double getLatitude() {
-        if (userDocSnapshot != null) {
-            return (Double) userDocSnapshot.get("longitude");
-        }else{
-            return 100.0;
-        }
-    }
-
-    public Double getLongitude() {
-        if (userDocSnapshot != null) {
-
-            return (Double) userDocSnapshot.get("longitude");
-        }else{
-            return 100.0;
-        }
-    }
 
     public static FirestoreUserDocCommunicator getInstance() {
         if (instance == null) {

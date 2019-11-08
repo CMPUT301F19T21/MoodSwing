@@ -84,6 +84,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         ArrayList moodEvents = firebaseDoc.getMoodEvents();
         String uid = firebaseDoc.getUsername();
         for (int i = 0; i < moodEvents.size(); i++) {
+            if()
             Double Lat = firebaseDoc.getLatitude();
             Double Lng = firebaseDoc.getLongitude();
             LatLng latlng = new LatLng(Lat, Lng);
