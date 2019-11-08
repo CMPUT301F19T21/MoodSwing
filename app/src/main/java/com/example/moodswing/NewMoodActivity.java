@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,15 +37,20 @@ import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class NewMoodActivity extends AppCompatActivity {
 ////    private ArrayList<SocialSituationItem> mSocialList;
@@ -51,6 +58,7 @@ public class NewMoodActivity extends AppCompatActivity {
 ////    private Spinner socialSituationSpinner;
 ////    private String socialSitToAdd;
 
+    private FirebaseFirestore db;
     private FloatingActionButton confirmButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
@@ -68,7 +76,7 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
-    private double latitude, longitude;
+    private Double latitude, longitude;
 
     private boolean ifLocationEnabled;
 
@@ -101,7 +109,7 @@ public class NewMoodActivity extends AppCompatActivity {
         // set up current date and time
         Calendar calendar = Calendar.getInstance();
 
-            // set date and time
+        // set date and time
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
@@ -111,11 +119,10 @@ public class NewMoodActivity extends AppCompatActivity {
         DateJar date = new DateJar(year,month,day);
         TimeJar time = new TimeJar(hr,min);
 
-
         moodEvent.setDate(date);
         moodEvent.setTime(time);
         moodEvent.setTimeStamp(UTC);
-            // set date and time for display
+        // set date and time for display
         dateTextView.setText(MoodEventUtility.getDateStr(date));
         timeTextView.setText(MoodEventUtility.getTimeStr(time));
 
@@ -129,6 +136,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
                 }else{
                     ifLocationEnabled = true;
+//                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(NewMoodActivity.this);
+                    fetchLastLocation();
                     locationButton.setCompatElevation(0f);
                     locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
                 }
@@ -152,7 +161,12 @@ public class NewMoodActivity extends AppCompatActivity {
                     // can interact with the UI, onCreate method is called. it should be inside the listener.
                     // also i changed back the UI design, and finished the button functionality.
                     if (ifLocationEnabled) {
-                        fetchLastLocation();
+                        moodEvent.setLatitude(latitude);
+                        moodEvent.setLongitude(longitude);
+                    }
+                    else {
+                        moodEvent.setLatitude(null);
+                        moodEvent.setLongitude(null);
                     }
                     communicator.addMoodEvent(moodEvent);
                     finish();
@@ -161,7 +175,6 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private String getDateStr (DateJar date) {
@@ -229,19 +242,18 @@ public class NewMoodActivity extends AppCompatActivity {
                     currentLocation = location;
                     latitude = currentLocation.getLatitude();
                     longitude = currentLocation.getLongitude();
-                    Toast.makeText(getApplicationContext(), latitude
-                            +""+longitude,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), latitude
+//                            +""+longitude,Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     fetchLastLocation();
                 }
                 break;

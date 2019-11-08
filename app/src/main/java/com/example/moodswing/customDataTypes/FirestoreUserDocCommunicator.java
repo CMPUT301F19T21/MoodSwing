@@ -107,7 +107,8 @@ public class FirestoreUserDocCommunicator{
         if (userDocSnapshot != null) {
             return (String) userDocSnapshot.get("username");
         }else{
-            return null; // something wrong, possible not enough time to finish query
+            return null;
+            // something wrong, possible not enough time to finish query
         }
     }
 
@@ -141,6 +142,7 @@ public class FirestoreUserDocCommunicator{
                 .collection("MoodEvents")
                 .document()
                 .getId();
+
 
         return refID;
     }

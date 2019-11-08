@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEvent;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,27 +38,14 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
-    private ArrayList<LatLng> arrayList = new ArrayList<LatLng>();
-    private LatLng LRT = new LatLng(53.523926, -113.522310);
-    private LatLng Pavillion = new LatLng(53.524153, -113.527438);
-    private LatLng HUB = new LatLng(53.526452, -113.520661);
-    private LatLng CCIS = new LatLng(53.528164, -113.525744);
-    private LatLng SUB = new LatLng(53.525189, -113.527059);
 
-
-
-//    private static boolean alreadyLoggedIn = false;
+    //    private static boolean alreadyLoggedIn = false;
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
-        arrayList.add(LRT);
-        arrayList.add(Pavillion);
-        arrayList.add(HUB);
-        arrayList.add(CCIS);
-        arrayList.add(SUB);
 
-
+        ArrayList<LatLng> LatLngList = (ArrayList<LatLng>) getIntent().getSerializableExtra("LatLngList");
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -81,8 +69,8 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
-                            +""+currentLocation.getLongitude(),Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
+//                            + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment)
                             getSupportFragmentManager().findFragmentById(R.id.map);
                     supportMapFragment.getMapAsync(GoogleMapActivity.this);
@@ -94,25 +82,29 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
         String uid = firebaseDoc.getUsername();
-        for (int i = 0; i < arrayList.size(); i++) {
-            googleMap.addMarker(new MarkerOptions().position(arrayList.get(i))
-                    .title(uid));
+        for (MoodEvent moodEvent : moodEvents) {
+            if (moodEvent.getLatitude() != null) {
+                LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(latlng)
+                        .title(uid));
+            }
         }
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-                .title(uid);
+//        MarkerOptions markerOptions = new MarkerOptions().position(latLng)
+//                .title(uid);
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-        googleMap.addMarker(markerOptions);
+//        googleMap.addMarker(markerOptions);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     fetchLastLocation();
                 }
                 break;
