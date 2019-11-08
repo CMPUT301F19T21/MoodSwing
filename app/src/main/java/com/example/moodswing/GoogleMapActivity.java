@@ -42,24 +42,32 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     private FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
 
-    //    private static boolean alreadyLoggedIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
-        ArrayList<LatLng> LatLngList = (ArrayList<LatLng>) getIntent().getSerializableExtra("LatLngList");
+        /*
+         * Creates a button that takes the user back to the previous page
+         */
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-//        alreadyLoggedIn = true;
+
+        /*
+         * A public class that extends to Google Api that allows the users to access google map
+         */
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLastLocation();
     }
 
+    /*
+     * A method that gets the data of current location of the user to display on the map
+     * If the user does not allow the app to access current location, the method returns nothing
+     */
     private void fetchLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
@@ -72,8 +80,6 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-//                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
-//                            + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment)
                             getSupportFragmentManager().findFragmentById(R.id.map);
                     supportMapFragment.getMapAsync(GoogleMapActivity.this);
@@ -82,6 +88,11 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
         });
     }
 
+    /*
+     * A method that stores latitude and longitude of the user's location
+     * when a mood is added and GPS is on and stores null when off
+     * Displays a marker on the map using the latitude and longitude from firestore
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
@@ -95,14 +106,13 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         }
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-//        MarkerOptions markerOptions = new MarkerOptions().position(latLng)
-//                .title(uid);
-
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-//        googleMap.addMarker(markerOptions);
     }
 
+    /*
+     * Asks the user to allow user's location
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
