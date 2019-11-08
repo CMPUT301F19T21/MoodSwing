@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 
+//The filter for the moodlist, to be completed
 public class FilterFragment extends DialogFragment {
 
     private FirestoreUserDocCommunicator communicator;

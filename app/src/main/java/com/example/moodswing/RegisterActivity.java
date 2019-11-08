@@ -36,6 +36,7 @@ import java.util.Map;
  *      - working fine for now
  *      - lacking error handling, if empty program will crash. but will deal error cases later
  */
+//This activity handles registration of a new user
 public class RegisterActivity extends AppCompatActivity {
     private static final int RETURN_CODE_TO_LOGIN = 1;
     //

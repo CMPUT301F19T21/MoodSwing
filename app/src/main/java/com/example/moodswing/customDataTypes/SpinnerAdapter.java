@@ -16,6 +16,7 @@ import com.example.moodswing.R;
 import java.util.ArrayList;
 
 //https://codinginflow.com/tutorials/android/custom-spinner
+//This is the adapter for the social situation spinner(a dropdown menu).
 
 public class SpinnerAdapter extends ArrayAdapter<SocialSituationItem> {
 
@@ -38,6 +39,9 @@ public class SpinnerAdapter extends ArrayAdapter<SocialSituationItem> {
         return initView(position, convertView, parent);
     }
 
+    /**
+     * Each entry in the dropdown menu will have an image and text. see SocialSituationItem
+     */
     private View initView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if(convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.social_situation_spinner,parent,false);

@@ -16,7 +16,7 @@ import com.google.firebase.firestore.auth.User;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+//An adapter for UserJars to be shown, will be used for following/follower list
 public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHolder> {
 
     private ArrayList<UserJar> userJars;
@@ -42,6 +42,10 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         }
     }
 
+    /**
+     * intializes the arraylist of UserJars for the adapter
+     * @param userJars the arraylist to display
+     */
     public UserJarAdaptor(ArrayList<UserJar> userJars) {
         //Customize the list
         this.userJars = userJars;
@@ -113,10 +117,17 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         return userJars.size();
     }
 
+    /**
+     * clears the arraylist of UserJars
+     */
     public void clearUserJars(){
         this.userJars.clear();
     }
 
+    /**
+     * adds a user to the UserJar arraylist
+     * @param userJar the UserJar to add
+     */
     public void addToUserJars(UserJar userJar){
         this.userJars.add(userJar);
     }

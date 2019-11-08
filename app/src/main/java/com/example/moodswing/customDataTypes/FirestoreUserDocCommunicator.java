@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//Handles all the functionality related to firestore, a go-between for the app and firestore
 /**
  * ------------ PLEASE READ --------------
  *  missing check ifLogin.

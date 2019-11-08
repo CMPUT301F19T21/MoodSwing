@@ -21,6 +21,8 @@ import java.util.List;
 
 import io.opencensus.resource.Resource;
 
+//an adapter for selecting the mood
+
 public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.MyViewHolder> {
 
 //    private List<Integer> moodID;

@@ -27,6 +27,7 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
+//The edit mood screen, contains all the functionality for editing an existing mood
 public class EditMoodActivity extends AppCompatActivity {
     TextView timeText;
 

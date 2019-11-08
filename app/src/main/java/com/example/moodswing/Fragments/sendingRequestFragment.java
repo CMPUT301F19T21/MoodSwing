@@ -16,6 +16,8 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+//The screen that is redirected to when the user presses the button in the following/follower management screen.
+//It will prompt the user for a username, and a request will be sent to that user to become their follower
 public class sendingRequestFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
     private EditText usernameEditText;

@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+// The follower management screen. Shows followers and following, and can send new requests.
 public class ManagementFragment extends Fragment {
     // communicator
     private FirestoreUserDocCommunicator communicator;
