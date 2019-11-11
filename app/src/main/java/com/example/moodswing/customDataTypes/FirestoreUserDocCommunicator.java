@@ -594,12 +594,12 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
 
-        Query followingMoodListColQuery = db
+        CollectionReference followingListColRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("following");
 
-        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        followingListColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 userJarAdaptor.clearUserJars();
@@ -620,12 +620,12 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
 
-        Query followingMoodListColQuery = db
+        CollectionReference requestListColRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("mailBox");
 
-        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        requestListColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 userJarAdaptor.clearUserJars();
