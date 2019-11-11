@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the MoodHistory fragment
      */
     public void toMoodHistory(){
-        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        followingBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
+        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new HomeFragment());
         fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the toFollowing fragment
      */
     public void toFollowing() {
-        followingBtn.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
+        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
         FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
         fragTrans.replace(R.id.fragment_placeHolder, new FollowingFragment());
         fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

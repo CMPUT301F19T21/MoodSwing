@@ -73,11 +73,9 @@
     <FrameLayout
         android:id="@+id/navigationBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="bottom"
-            app:cardCornerRadius="4dp">
+            app:cardCornerRadius="4dp"
+            app:cardElevation="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -97,10 +96,10 @@
                     android:id="@+id/nav_homeBtn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/color_button_lightGrey"
                     android:fontFamily="sans-serif-medium"
                     android:text="Home"
-                    android:textColor="#FFF4E2"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/space"
@@ -121,10 +120,10 @@
                     android:id="@+id/nav_followingBtn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/color_button_lightGrey_pressed"
                     android:fontFamily="sans-serif-medium"
                     android:text="Following"
-                    android:textColor="#FFF4E2"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -137,8 +136,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:cardBackgroundColor="#000000"
-            app:cardCornerRadius="4dp"
+            app:cardBackgroundColor="#646464"
+            app:cardCornerRadius="2dp"
             app:cardElevation="10dp">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -147,8 +146,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:clickable="true"
+                android:src="@drawable/ic_person_white_24dp"
                 app:backgroundTint="#D5D5D5"
-                app:fabCustomSize="35dp" />
+                app:fabCustomSize="40dp" />
         </androidx.cardview.widget.CardView>
 
     </FrameLayout>
