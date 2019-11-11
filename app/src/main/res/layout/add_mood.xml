@@ -20,7 +20,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="800dp">
+                android:layout_height="900dp">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -42,28 +42,71 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView7"
-                            android:layout_width="0dp"
+                        <View
+                            android:id="@+id/addMood_separator1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="200dp"
+                            android:layout_marginEnd="32dp"
+                            android:background="#D5D5D5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/selectMood_text" />
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="8dp"
-                            app:cardCornerRadius="10dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:fontFamily="sans-serif-light"
+                            android:text="SELECT A SOCIAL SITUATION"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/addMood_separator2" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardView_reason"
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="16dp"
+                            app:cardCornerRadius="6dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView2">
+                            app:layout_constraintTop_toBottomOf="@+id/cardView3">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <Spinner
-                                    android:id="@+id/social_spinner"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
+
+                                <EditText
+                                    android:id="@+id/reason_EditView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:background="@drawable/edittext_round"
+                                    android:ems="10"
+                                    android:fontFamily="sans-serif-light"
+                                    android:gravity="center"
+                                    android:hint="Enter a reason here (optional)"
+                                    android:inputType="textPersonName"
+                                    android:textColorHint="@color/colorPrimary"
+                                    android:textSize="14sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -73,15 +116,13 @@
                             android:id="@+id/cardView6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="250dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
-                            app:cardCornerRadius="10dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:cardCornerRadius="6dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/selectMood_text">
+                            app:layout_constraintTop_toBottomOf="@+id/textView14">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -130,7 +171,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="8dp"
-                                    android:layout_marginRight="8dp"
                                     android:clickable="true"
                                     app:backgroundTint="@color/color_button_lightGrey"
                                     app:fabCustomSize="35dp"
@@ -142,82 +182,29 @@
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                            android:id="@+id/add_confirm"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_marginTop="24dp"
-                            android:clickable="true"
-                            app:backgroundTint="@color/color_button_lightGrey"
-                            app:fabCustomSize="45dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView7"
-                            app:srcCompat="@drawable/ic_check_grey_24dp" />
-
                         <TextView
                             android:id="@+id/selectMood_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:layout_marginLeft="16dp"
                             android:layout_marginTop="10dp"
+                            android:layout_marginEnd="16dp"
                             android:fontFamily="sans-serif-light"
-                            android:text="Select Your Mood"
+                            android:text="SELECT A MOOD"
+                            android:textColor="@color/colorPrimary"
                             android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
-                            app:cardCornerRadius="10dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView3">
-
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <EditText
-                                    android:id="@+id/reason_EditView"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:background="@drawable/edittext_round"
-                                    android:ems="10"
-                                    android:fontFamily="sans-serif-light"
-                                    android:gravity="center"
-                                    android:hint="Enter a reason here (optional)"
-                                    android:inputType="textPersonName"
-                                    android:textColorHint="@color/colorPrimary"
-                                    android:textSize="16sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-                        </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardView3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
-                            app:cardCornerRadius="10dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginEnd="16dp"
+                            app:cardCornerRadius="6dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cardView6">
@@ -240,6 +227,149 @@
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </androidx.cardview.widget.CardView>
 
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardView_socialSituation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:cardCornerRadius="6dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView10">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/addMood_oneAnotherBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="45dp"
+                                    app:layout_constraintEnd_toStartOf="@+id/addMood_twoMoreBtn"
+                                    app:layout_constraintStart_toEndOf="@+id/addMood_aloneBtn"
+                                    app:layout_constraintTop_toTopOf="@+id/addMood_twoMoreBtn"
+                                    app:srcCompat="@drawable/ic_people_black_24dp" />
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/addMood_twoMoreBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="24dp"
+                                    android:layout_marginEnd="32dp"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="45dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_account_group" />
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/addMood_aloneBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="24dp"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="45dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_person_black_24dp" />
+
+                                <TextView
+                                    android:id="@+id/textView11"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Alone"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/addMood_aloneBtn"
+                                    app:layout_constraintStart_toStartOf="@+id/addMood_aloneBtn"
+                                    app:layout_constraintTop_toBottomOf="@+id/addMood_aloneBtn" />
+
+                                <TextView
+                                    android:id="@+id/textView12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="with another"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/addMood_oneAnotherBtn"
+                                    app:layout_constraintStart_toStartOf="@+id/addMood_oneAnotherBtn"
+                                    app:layout_constraintTop_toBottomOf="@+id/addMood_oneAnotherBtn" />
+
+                                <TextView
+                                    android:id="@+id/textView13"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="two more"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/addMood_twoMoreBtn"
+                                    app:layout_constraintStart_toStartOf="@+id/addMood_twoMoreBtn"
+                                    app:layout_constraintTop_toBottomOf="@+id/addMood_twoMoreBtn" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/add_confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="64dp"
+                            android:clickable="true"
+                            app:backgroundTint="@color/button_brown"
+                            app:fabCustomSize="45dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cardView_socialSituation"
+                            app:srcCompat="@drawable/ic_check_grey_24dp" />
+
+                        <TextView
+                            android:id="@+id/textView14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="sans-serif-light"
+                            android:text="FILL OUT INFO"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/addMood_separator1" />
+
+                        <View
+                            android:id="@+id/addMood_separator2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginEnd="32dp"
+                            android:background="#D5D5D5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cardView_reason" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -249,7 +379,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="75dp"
+                    android:layout_marginTop="60dp"
                     android:elevation="10dp"
                     app:layout_constraintTop_toTopOf="parent">
 

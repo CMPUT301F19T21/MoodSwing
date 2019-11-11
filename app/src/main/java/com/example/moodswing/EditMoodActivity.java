@@ -88,7 +88,7 @@ public class EditMoodActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.add_date);
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
-        socialSpinner = (findViewById(R.id.social_spinner));
+//        socialSpinner = (findViewById(R.id.social_spinner));
 
 
         // recyclerView
@@ -108,33 +108,33 @@ public class EditMoodActivity extends AppCompatActivity {
                 if (moodSelectAdapter.getSelectedMoodType() != null)
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                 moodEvent.setReason(reasonEditText.getText().toString());
-                moodEvent.setSocialSituation(social);
+//                moodEvent.setSocialSituation(social);
                 communicator.updateMoodEvent(moodEvent);
                 setResult(RESULT_OK, null);
                 finish();
             }
         });
         
-        //Social Situation
-        ArrayAdapter<String> socialAdapter = new ArrayAdapter<String>(EditMoodActivity.this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.socialSit));
-        socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        socialSpinner.setAdapter(socialAdapter);
-        socialSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(adapterView.getItemAtPosition(i).equals("Select Social Situation")){
-                    //do nothing
-                }
-                else{
-                    social = adapterView.getItemAtPosition(i).toString();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        //Social Situation
+//        ArrayAdapter<String> socialAdapter = new ArrayAdapter<String>(EditMoodActivity.this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.socialSit));
+//        socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        socialSpinner.setAdapter(socialAdapter);
+//        socialSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                if(adapterView.getItemAtPosition(i).equals("Select Social Situation")){
+//                    //do nothing
+//                }
+//                else{
+//                    social = adapterView.getItemAtPosition(i).toString();
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
     }
 
     /**

@@ -46,6 +46,7 @@ public class MoodDetailFragment extends Fragment{
     private FloatingActionButton backButton;
     private ImageView moodImage;
     private ImageView locationImg;
+    private ImageView socialIcon;
 
     private int moodPosition;
 
@@ -83,6 +84,7 @@ public class MoodDetailFragment extends Fragment{
         moodImage = root.findViewById(R.id.detailedView_moodImg);
         socialText = root.findViewById(R.id.moodDetail_SocialText);
         locationImg = root.findViewById(R.id.moodDetail_locationImg);
+        socialIcon = root.findViewById(R.id.moodDetail_socialSitIcon);
 
         initialElements();
 
@@ -140,24 +142,34 @@ public class MoodDetailFragment extends Fragment{
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
         setMoodImage(moodEvent.getMoodType());
         setReasonText();
-        setSocialText();
-
-
+        setSocialSituation();
     }
 
     private void setReasonText(){
         if (moodEvent.getReason() != null){
             this.reasonText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getReason())));
         }else{
-            this.reasonText.setText("");
+            this.reasonText.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void setSocialText(){
-        if (moodEvent.getSocialSituation() != null){
-            this.socialText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getSocialSituation())));
-        }else{
-            this.socialText.setText("");
+    private void setSocialSituation(){
+        Integer socialSituation = moodEvent.getSocialSituation();
+        switch (socialSituation){
+            case 0:
+                this.socialText.setVisibility(View.INVISIBLE);
+                this.socialIcon.setVisibility(View.INVISIBLE);
+            case 1:
+                this.socialText.setText("Alone");
+                this.socialIcon.setImageResource(R.drawable.ic_person_black_24dp);
+                break;
+            case 2:
+                this.socialText.setText("With one person");
+                this.socialIcon.setImageResource(R.drawable.ic_people_black_24dp);
+                break;
+            case 3:
+                this.socialText.setText("With two more people");
+                this.socialIcon.setImageResource(R.drawable.ic_account_group);
         }
     }
 
