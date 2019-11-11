@@ -108,7 +108,7 @@ public class EditMoodActivity extends AppCompatActivity {
                 if (moodSelectAdapter.getSelectedMoodType() != null)
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                 moodEvent.setReason(reasonEditText.getText().toString());
-                moodEvent.setSocialSituation(social);
+//                moodEvent.setSocialSituation(social);
                 communicator.updateMoodEvent(moodEvent);
                 setResult(RESULT_OK, null);
                 finish();
