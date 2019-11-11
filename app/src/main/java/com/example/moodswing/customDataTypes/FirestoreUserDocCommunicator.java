@@ -2,6 +2,7 @@ package com.example.moodswing.customDataTypes;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,9 @@ public class FirestoreUserDocCommunicator{
     private ArrayList<UserJar> userJars;
     // reference
 
+    // other
+    private Integer requestCount;
+
 
     protected FirestoreUserDocCommunicator(){
         // init db
@@ -60,6 +64,9 @@ public class FirestoreUserDocCommunicator{
         this.user = mAuth.getCurrentUser();
         this.userDocSnapshot = null;
         this.getUserSnapShot();
+
+        // init requestCount to 0
+        this.requestCount = 0;
     }
 
     private boolean ifLogin(){
@@ -270,11 +277,6 @@ public class FirestoreUserDocCommunicator{
 
     // following feature
 
-    //public void isUsernameUnique() {
-        // this is critical for following feature, will implement later
-        // need a workaround, since no callback
-    //}
-
     /**
      * Sends a following request to another user
      * @param username The username of the user that is going to receive the request
@@ -309,12 +311,6 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
-
-    //private void unlockRequestButton(){
-        // this method is empty for now, it will be used in sendRequestMethod to implement a lock
-        // idea: system lock UI, then, system will wait to check if username exist, if it exist, it will unlock the UI.
-
-    //}
 
     /**
      * given an UID, adds request to the target users mailBox
@@ -583,6 +579,14 @@ public class FirestoreUserDocCommunicator{
     }
 
     /**
+     * this method returns an instance of all the userJars in followingMoodlist
+     * @return an ArrayList<UserJar> object contains all the userJars
+     */
+    public ArrayList<UserJar> getUserJars(){
+        return this.userJars;
+    }
+
+    /**
      * Populates the Following list for the management screen
      * @param userJarList The view to be populated with users that we're following
      */
@@ -590,12 +594,12 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
 
-        Query followingMoodListColQuery = db
+        CollectionReference followingListColRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("following");
 
-        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        followingListColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 userJarAdaptor.clearUserJars();
@@ -616,12 +620,12 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         SimpleUserJarAdapter userJarAdaptor = (SimpleUserJarAdapter) userJarList.getAdapter();
 
-        Query followingMoodListColQuery = db
+        CollectionReference requestListColRef = db
                 .collection("users")
                 .document(user.getUid())
                 .collection("mailBox");
 
-        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        requestListColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 userJarAdaptor.clearUserJars();
@@ -630,6 +634,29 @@ public class FirestoreUserDocCommunicator{
                     userJarAdaptor.addToUserJars(userJar);
                 }
                 userJarAdaptor.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void setAutoDisplayViewForNewRequest(View notificationBar){
+        CollectionReference mainBoxColRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("mailBox");
+
+        mainBoxColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots.isEmpty()){
+                    notificationBar.setVisibility(View.GONE);
+                    requestCount = 0;
+                }else{
+                    Integer currentRequestCount = queryDocumentSnapshots.size();
+                    if (currentRequestCount > requestCount){
+                        notificationBar.setVisibility(View.VISIBLE);
+                    }
+                    requestCount = queryDocumentSnapshots.size();
+                }
             }
         });
     }

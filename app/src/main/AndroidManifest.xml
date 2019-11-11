@@ -19,6 +19,7 @@
         <activity android:name=".NewMoodActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".GoogleMapActivity" />
+        <activity android:name=".ManagementActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -2,12 +2,11 @@ package com.example.moodswing;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.example.moodswing.Fragments.ManageRequestFragment;
-import com.example.moodswing.Fragments.ManagementFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.Fragments.FollowingFragment;
@@ -17,9 +16,8 @@ import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.transition.Slide;
-import androidx.transition.Transition;
 
 //This activity holds the following, profile, and Home fragments, and holds the functionality for
 // redirecting the user to other fragments
@@ -30,14 +28,20 @@ import androidx.transition.Transition;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private FirestoreUserDocCommunicator communicator;
+
     private static final int MOOD_HISTORY_SCREEN = 1;
     private static final int FOLLOWING_SCREEN = 2;
 
     private int currentScreenPointer;
+    private boolean ifDisplayNotification;
 
     private Button moodHistoryBtn;
     private Button followingBtn;
     private FloatingActionButton profileBtn;
+    private FrameLayout notificationBar;
+    private CardView notificationBar_card;
+    private FloatingActionButton notificationBar_closeBtn;
 
 
     /**
@@ -48,11 +52,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
+        communicator = FirestoreUserDocCommunicator.getInstance();
+
 
         // link all elements
         moodHistoryBtn = findViewById(R.id.nav_homeBtn);
         followingBtn = findViewById(R.id.nav_followingBtn);
         profileBtn = findViewById(R.id.nav_profile);
+        notificationBar = findViewById(R.id.notificationBar);
+        notificationBar_card = findViewById(R.id.notificationBar_card);
+        notificationBar_closeBtn = findViewById(R.id.notificationBar_close_button);
 
         // listeners
         moodHistoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +91,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        notificationBar_closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notificationBar.setVisibility(View.GONE);
+            }
+        });
+
         // other action that need to be init
+
+        communicator.setAutoDisplayViewForNewRequest(notificationBar);
         toMoodHistory(); // default view -> moodHistory
     }
 
@@ -121,17 +139,6 @@ public class MainActivity extends AppCompatActivity {
         fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
         // will add back stack and animation later
-        fragTrans.commit();
-    }
-
-    /**
-     * The functionality for transitioning to the Follower/Following Management fragment
-     */
-    public void toManagement() {
-        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.fragment_placeHolder, new ManagementFragment());
-        fragTrans.addToBackStack(null);
-        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragTrans.commit();
     }
 

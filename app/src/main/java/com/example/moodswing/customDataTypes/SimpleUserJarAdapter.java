@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.Fragments.ManageRequestFragment;
 import com.example.moodswing.MainActivity;
+import com.example.moodswing.ManagementActivity;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
             public void onClick(View v) {
                 if (mode == 1){
                     new ManageRequestFragment(currentUserJar)
-                            .show(((MainActivity)v.getContext()).getSupportFragmentManager(), "manage_request");
+                            .show(((ManagementActivity)v.getContext()).getSupportFragmentManager(), "manage_request");
                 }
             }
         });

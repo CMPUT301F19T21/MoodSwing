@@ -20,7 +20,7 @@
         android:id="@+id/followingList_moodCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:cardBackgroundColor="#F6F1E9"
+        app:cardBackgroundColor="@color/background_yellow_accent"
         app:cardCornerRadius="5dp"
         app:cardElevation="6dp"
         app:cardUseCompatPadding="true"

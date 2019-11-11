@@ -26,6 +26,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +41,6 @@ import java.util.Map;
  */
 //This activity handles registration of a new user
 public class RegisterActivity extends AppCompatActivity {
-    private static final int RETURN_CODE_TO_LOGIN = 1;
-    //
     private static final String TAG = "RegisterActivity";
     private TextView toLogin;
     private FloatingActionButton registerButton;
@@ -60,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registerview);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // link all elements
         toLogin = findViewById(R.id.switchToLog);
@@ -72,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         toLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toLogin();
+                finish();
             }
         });
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -81,8 +83,6 @@ public class RegisterActivity extends AppCompatActivity {
                 registerNewUser();
             }
         });
-
-
     }
 
     /**
@@ -95,12 +95,33 @@ public class RegisterActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         String username = usernameEditText.getText().toString();
 
-        /**
-         * error checking here, some ideas:
-         *      - check if username already exists
-         *      - check if username and password valid
-         */
+        if ((username.isEmpty())||(password.isEmpty())||(email.isEmpty())) {
+            Toast.makeText(RegisterActivity.this, "Sorry, empty email/username/password",
+                    Toast.LENGTH_SHORT).show();
+        }else{
+            Query findUserColQuery = db
+                    .collection("users")
+                    .whereEqualTo("username", username)
+                    .limit(1);
 
+            findUserColQuery
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                createUser(email, username, password);
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Sorry, the username already exist",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.d(TAG, "Error while executing finding username query: ", task.getException());
+                        }
+                    });
+        }
+    }
+
+    private void createUser(String email, String username, String password){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -108,17 +129,13 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            Map<String, Object> newUser = new HashMap<>();
-                            newUser.put("username",username);
-                            db.collection("users").document(user.getUid())
-                                    .set(newUser);
-                            toLogin();
+                            createFirestoreUserDoc(username);
+                            // all done, successful!!
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, "Authentication failed, email may already be used",
                                     Toast.LENGTH_SHORT).show();
                             // do something, but for now do nothing.
                         }
@@ -126,10 +143,10 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * going back to previous screen(login screen, which will now redirect the user to mainActivity)
-     */
-    private void toLogin(){
-        finish();
+    private void createFirestoreUserDoc(String username){
+        Map<String, Object> newUser = new HashMap<>();
+        newUser.put("username",username);
+        db.collection("users").document(mAuth.getCurrentUser().getUid())
+                .set(newUser);
     }
 }

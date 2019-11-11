@@ -1,5 +1,6 @@
 package com.example.moodswing.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.MainActivity;
+import com.example.moodswing.ManagementActivity;
+import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
@@ -67,7 +70,7 @@ public class FollowingFragment extends Fragment {
         managementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).toManagement();
+                startActivity(new Intent(getActivity(), ManagementActivity.class));
             }
         });
 
