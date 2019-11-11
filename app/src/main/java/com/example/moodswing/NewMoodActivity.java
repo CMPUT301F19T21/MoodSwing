@@ -214,26 +214,6 @@ public class NewMoodActivity extends AppCompatActivity {
         });
     }
 
-    private String getDateStr (DateJar date) {
-        String month = returnMonthStr(date.getMonth());
-        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
-    }
-
-    private String getTimeStr (TimeJar time) {
-        return String.format(Locale.getDefault(), "%02d:%02d",time.getHr(),time.getMin());
-    }
-
-    /**
-     * MoodEventUtility class will take the numeric conversion of the month and return the word
-     * (Ie. "January")
-     * @param monthInt the integer value of the month
-     * @return The string of the month
-     */
-    private String returnMonthStr(int monthInt){
-        String monthStr = MoodEventUtility.returnMonthStr(monthInt);
-        return monthStr;
-    }
-
     /**
      * This method gets the latitude and longitude that the google maps API found, and
      * assigns the value to our fields

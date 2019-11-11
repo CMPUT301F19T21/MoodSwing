@@ -1,4 +1,4 @@
-package com.example.moodswing.Fragments;
+package com.example.moodswing;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.Fragments.sendingRequestFragment;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 /**
  * The follower management screen. Shows followers and following, and can send new requests.
  */
-public class ManagementFragment extends Fragment {
+public class ManagementActivity extends AppCompatActivity {
     // communicator
     private FirestoreUserDocCommunicator communicator;
 
@@ -48,21 +50,21 @@ public class ManagementFragment extends Fragment {
      *initializes the arraylists for followers and following and their respective adapters as well as firestore listener
      * and the send new following request button
      */
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_management, container, false);
-        // the view is created after this
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_management);
 
 
         communicator = FirestoreUserDocCommunicator.getInstance();
 
-        sendRequestButton = root.findViewById(R.id.request_button);
-        requestList = root.findViewById(R.id.management_request);
-        followingList = root.findViewById(R.id.managment_following);
+        sendRequestButton = findViewById(R.id.request_button);
+        requestList = findViewById(R.id.management_request);
+        followingList = findViewById(R.id.managment_following);
 
 
-        recyclerViewLayoutManager_request = new LinearLayoutManager(getContext());
-        recyclerViewLayoutManager_following = new LinearLayoutManager(getContext());
+        recyclerViewLayoutManager_request = new LinearLayoutManager(this);
+        recyclerViewLayoutManager_following = new LinearLayoutManager(this);
 
 
         request_userJars = new ArrayList<>();
@@ -87,11 +89,8 @@ public class ManagementFragment extends Fragment {
         sendRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new sendingRequestFragment().show(getActivity().getSupportFragmentManager(), "request");
+                new sendingRequestFragment().show(getSupportFragmentManager(), "request");
             }
         });
-
-
-        return root;
     }
 }

@@ -2,6 +2,7 @@ package com.example.moodswing.customDataTypes;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,9 @@ public class FirestoreUserDocCommunicator{
     private ArrayList<UserJar> userJars;
     // reference
 
+    // other
+    private Integer requestCount;
+
 
     protected FirestoreUserDocCommunicator(){
         // init db
@@ -60,6 +64,9 @@ public class FirestoreUserDocCommunicator{
         this.user = mAuth.getCurrentUser();
         this.userDocSnapshot = null;
         this.getUserSnapShot();
+
+        // init requestCount to 0
+        this.requestCount = 0;
     }
 
     private boolean ifLogin(){
@@ -627,6 +634,29 @@ public class FirestoreUserDocCommunicator{
                     userJarAdaptor.addToUserJars(userJar);
                 }
                 userJarAdaptor.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void setAutoDisplayViewForNewRequest(View notificationBar){
+        CollectionReference mainBoxColRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("mailBox");
+
+        mainBoxColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots.isEmpty()){
+                    notificationBar.setVisibility(View.GONE);
+                    requestCount = 0;
+                }else{
+                    Integer currentRequestCount = queryDocumentSnapshots.size();
+                    if (currentRequestCount > requestCount){
+                        notificationBar.setVisibility(View.VISIBLE);
+                    }
+                    requestCount = queryDocumentSnapshots.size();
+                }
             }
         });
     }
