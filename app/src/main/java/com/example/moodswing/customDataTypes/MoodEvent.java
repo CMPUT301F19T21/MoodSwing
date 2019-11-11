@@ -18,7 +18,7 @@ public class MoodEvent {
 
     // optional fields
     private String reason;
-    private String socialSituation;
+    private Integer socialSituation;
     private Double Latitude;
     private Double Longitude;
 
@@ -73,9 +73,9 @@ public class MoodEvent {
         this.reason = reason;
     }
 
-    public void setSocialSituation(String socialSituation) {this.socialSituation = socialSituation;}
+    public void setSocialSituation(Integer socialSituation) {this.socialSituation = socialSituation;}
 
-    public String getSocialSituation() {
+    public Integer getSocialSituation() {
         return socialSituation;
     }
 

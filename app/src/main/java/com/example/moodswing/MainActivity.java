@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.Slide;
 
 //This activity holds the following, profile, and Home fragments, and holds the functionality for
 // redirecting the user to other fragments
@@ -110,12 +111,11 @@ public class MainActivity extends AppCompatActivity {
     public void toMoodHistory(){
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
         followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
-        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.fragment_placeHolder, new HomeFragment());
-        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
-        // will add animation and back stack later
-        fragTrans.commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
+                .replace(R.id.fragment_placeHolder, new HomeFragment())
+                .commit();
     }
     /**
      * The functionality for transitioning to the DetailedView fragment
@@ -134,12 +134,11 @@ public class MainActivity extends AppCompatActivity {
     public void toFollowing() {
         followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
         moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
-        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.fragment_placeHolder, new FollowingFragment());
-        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        // fragTrans.setCustomAnimations(android.R.animator.fade_in,android.R.animator.fade_out);
-        // will add back stack and animation later
-        fragTrans.commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
+                .replace(R.id.fragment_placeHolder, new FollowingFragment())
+                .commit();
     }
 
     /**

@@ -73,7 +73,9 @@ public class NewMoodActivity extends AppCompatActivity {
     private TextView timeTextView;
     private FloatingActionButton locationButton;
     private Location currentLocation;
-    private Spinner socialSpinner;
+    private FloatingActionButton social_aloneBtn;
+    private FloatingActionButton social_oneBtn;
+    private FloatingActionButton social_twoMoreBtn;
 
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -88,6 +90,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private String social;
 
     private boolean ifLocationEnabled;
+    private Integer socialSituation;
 
     /**
      * All the fields for creating a new mood are created and the current date/time are generated.
@@ -106,8 +109,11 @@ public class NewMoodActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
         locationButton = findViewById(R.id.moodhistory_locationButton);
-        socialSpinner = (findViewById(R.id.social_spinner));
-        String socialSituationToAdd;
+
+        social_aloneBtn = findViewById(R.id.addMood_aloneBtn);
+        social_oneBtn = findViewById(R.id.addMood_oneAnotherBtn);
+        social_twoMoreBtn = findViewById(R.id.addMood_twoMoreBtn);
+
 
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -159,6 +165,8 @@ public class NewMoodActivity extends AppCompatActivity {
             }
         });
 
+        setSocialSituationBtns();
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +174,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     // do upload
                     moodEvent.setUniqueID(communicator.generateMoodID());
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
-                    moodEvent.setSocialSituation(social);
+                    moodEvent.setSocialSituation(socialSituation);
 
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
@@ -189,25 +197,74 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        //Social Situation
-        ArrayAdapter<String> socialAdapter = new ArrayAdapter<String>(NewMoodActivity.this,android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.socialSit));
-        socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        socialSpinner.setAdapter(socialAdapter);
-        socialSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    private void setSocialSituationBtns(){
+        socialSituation = 0;
+
+        social_aloneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(adapterView.getItemAtPosition(i).equals("Select Social Situation")){
-                    //do nothing
-                }
-                else{
-                    social = adapterView.getItemAtPosition(i).toString();
+            public void onClick(View v) {
+                if (socialSituation != 1) {
+                    // press this button
+                    socialSituation = 1;
+                    social_aloneBtn.setCompatElevation(0f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+                    // unpress other button
+                    social_oneBtn.setCompatElevation(12f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    social_twoMoreBtn.setCompatElevation(12f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    socialSituation = 0;
+                    social_aloneBtn.setCompatElevation(12f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
                 }
             }
+        });
 
+        social_oneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onClick(View v) {
+                if (socialSituation != 2) {
+                    // press this button
+                    socialSituation = 2;
+                    social_oneBtn.setCompatElevation(0f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
 
+                    // unpress other button
+                    social_aloneBtn.setCompatElevation(12f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    social_twoMoreBtn.setCompatElevation(12f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    socialSituation = 0;
+                    social_oneBtn.setCompatElevation(12f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }
+            }
+        });
+
+        social_twoMoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (socialSituation != 3) {
+                    // press this button
+                    socialSituation = 3;
+                    social_twoMoreBtn.setCompatElevation(0f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+                    // unpress other button
+                    social_oneBtn.setCompatElevation(12f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    social_aloneBtn.setCompatElevation(12f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    socialSituation = 0;
+                    social_twoMoreBtn.setCompatElevation(12f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }
             }
         });
     }
