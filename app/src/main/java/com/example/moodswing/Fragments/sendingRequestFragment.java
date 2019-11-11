@@ -17,9 +17,11 @@ import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.RegisterActivity;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.auth.User;
 
 
 /**
@@ -75,32 +77,48 @@ public class sendingRequestFragment extends DialogFragment {
         return view;
     }
 
+    private boolean ifInFollowing(String username){
+        for (UserJar userJar : communicator.getUserJars()){
+            if (userJar.getUsername().equals(username)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void sendingRequest(String username){
         if (username.isEmpty()) {
-            Toast.makeText(getContext(), "Sorry, username cannot be empty",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Sorry, username cannot be empty", Toast.LENGTH_SHORT).show();
         }else{
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            Query findUserColQuery = db
-                    .collection("users")
-                    .whereEqualTo("username", username)
-                    .limit(1);
+            if (communicator.getUsername().equals(username)){
+                Toast.makeText(getContext(), "Sorry, you cannot follow yourself", Toast.LENGTH_SHORT).show();
+            }else{
+                if (ifInFollowing(username)){
+                    Toast.makeText(getContext(), "Sorry, user already in your following List", Toast.LENGTH_SHORT).show();
+                }else{
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    Query findUserColQuery = db
+                            .collection("users")
+                            .whereEqualTo("username", username)
+                            .limit(1);
 
-            findUserColQuery
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().isEmpty()) {
-                                Toast.makeText(getContext(), "Sorry, the username you entered doesn't exist",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                communicator.sendFollowingRequest(username);
-                                dismiss();
-                            }
-                        } else {
-                            Log.d(TAG, "Error while executing finding username query: ", task.getException());
-                        }
-                    });
+                    findUserColQuery
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    if (task.getResult().isEmpty()) {
+                                        Toast.makeText(getContext(), "Sorry, the username you entered doesn't exist",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        communicator.sendFollowingRequest(username);
+                                        dismiss();
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error while executing finding username query: ", task.getException());
+                                }
+                            });
+                }
+            }
         }
     }
 }

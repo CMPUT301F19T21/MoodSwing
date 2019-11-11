@@ -270,11 +270,6 @@ public class FirestoreUserDocCommunicator{
 
     // following feature
 
-    //public void isUsernameUnique() {
-        // this is critical for following feature, will implement later
-        // need a workaround, since no callback
-    //}
-
     /**
      * Sends a following request to another user
      * @param username The username of the user that is going to receive the request
@@ -309,12 +304,6 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
-
-    //private void unlockRequestButton(){
-        // this method is empty for now, it will be used in sendRequestMethod to implement a lock
-        // idea: system lock UI, then, system will wait to check if username exist, if it exist, it will unlock the UI.
-
-    //}
 
     /**
      * given an UID, adds request to the target users mailBox
@@ -580,6 +569,14 @@ public class FirestoreUserDocCommunicator{
                 userJars = userJarAdaptor.getUserJars();
             }
         });
+    }
+
+    /**
+     * this method returns an instance of all the userJars in followingMoodlist
+     * @return an ArrayList<UserJar> object contains all the userJars
+     */
+    public ArrayList<UserJar> getUserJars(){
+        return this.userJars;
     }
 
     /**
