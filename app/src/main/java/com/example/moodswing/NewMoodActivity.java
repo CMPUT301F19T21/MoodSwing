@@ -173,9 +173,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     }else{
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
-                    // hey jamie, i changed this part, cuz before, the condition your set up will never be true since the time user
-                    // can interact with the UI, onCreate method is called. it should be inside the listener.
-                    // also i changed back the UI design, and finished the button functionality.
+
                     if (ifLocationEnabled) {
                         moodEvent.setLatitude(latitude);
                         moodEvent.setLongitude(longitude);

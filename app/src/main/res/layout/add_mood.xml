@@ -29,7 +29,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#F6F1E9"
+                    app:cardBackgroundColor="@color/background_yellow_accent"
                     app:cardCornerRadius="10dp"
                     app:contentPadding="3dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -148,11 +148,12 @@
                             android:layout_height="45dp"
                             android:layout_marginTop="24dp"
                             android:clickable="true"
+                            app:backgroundTint="@color/color_button_lightGrey"
                             app:fabCustomSize="45dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/cardView7"
-                            app:srcCompat="@drawable/ic_check_black_24dp" />
+                            app:srcCompat="@drawable/ic_check_grey_24dp" />
 
                         <TextView
                             android:id="@+id/selectMood_text"
