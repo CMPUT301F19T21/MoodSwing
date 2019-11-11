@@ -11,13 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.ManagementActivity;
-import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
-import com.example.moodswing.customDataTypes.MoodAdapter;
-import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.example.moodswing.customDataTypes.UserJarAdaptor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,7 +43,7 @@ public class FollowingFragment extends Fragment {
      */
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_following, container, false);
+        View root = inflater.inflate(R.layout.fragment_following, container, false);
         // the view is created after this
 
         communicator = FirestoreUserDocCommunicator.getInstance();

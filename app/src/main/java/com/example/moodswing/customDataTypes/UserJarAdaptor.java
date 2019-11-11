@@ -37,6 +37,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         TextView timeText;
         TextView username;
         ImageView moodImage;
+        ImageView locationImage;
         CardView userJarCard;
 
         public MyViewHolder(View view){
@@ -46,6 +47,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
             this.timeText = view.findViewById(R.id.followingList_moodDetail_timeText);
             this.username = view.findViewById(R.id.followingList_username);
             this.moodImage = view.findViewById(R.id.followingList_moodIcon_placeHolder);
+            this.locationImage = view.findViewById(R.id.followingList_locationButton_moodListCard);
             this.userJarCard = view.findViewById(R.id.followingList_moodCard);
         }
     }
@@ -80,6 +82,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         TextView usernameTextView = holder.username;
 
         ImageView moodImage = holder.moodImage;
+        ImageView locationImage = holder.locationImage;
 
         UserJar userJar = userJars.get(position);
         MoodEvent moodEvent = userJar.getMoodEvent();
@@ -95,6 +98,12 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
                 // start detailed moodEvent (will be slightly modified version).
             }
         });
+
+        if (moodEvent.getLatitude() == null) {
+            locationImage.setImageResource(R.drawable.ic_location_off_grey_24dp);
+        }else{
+            locationImage.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
+        }
     }
 
 

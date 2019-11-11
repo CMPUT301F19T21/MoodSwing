@@ -16,13 +16,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/moodDetail_locationImg"
         app:srcCompat="@drawable/ic_add_circle_grey_24dp" />
 
     <TextView
         android:id="@+id/moodDetail_dateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="sans-serif-light"
@@ -61,8 +62,8 @@
 
     <ImageView
         android:id="@+id/detailedView_moodImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,9 +78,9 @@
         android:fontFamily="sans-serif-light"
         android:text="University of Alberta"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintBottom_toBottomOf="@+id/moodDetail_locationImg"
         app:layout_constraintStart_toStartOf="@+id/separator"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/moodDetail_locationImg" />
 
     <View
         android:id="@+id/separator"
@@ -144,7 +145,7 @@
         app:srcCompat="@drawable/ic_delete_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/moodDetail_locationImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
