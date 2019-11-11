@@ -5,29 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="240dp">
 
-    <ImageView
-        android:id="@+id/followingList_moodIcon_placeHolder"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:elevation="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mood2" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/followingList_moodCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         app:cardBackgroundColor="@color/background_yellow_accent"
         app:cardCornerRadius="5dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:contentPadding="5dp"
+        app:contentPadding="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,16 +29,28 @@
             tools:layout_editor_absoluteX="13dp"
             tools:layout_editor_absoluteY="15dp">
 
+            <ImageView
+                android:id="@+id/followingList_moodIcon_placeHolder"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/transparent"
+                android:elevation="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/separator_followingList"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mood2" />
+
             <TextView
                 android:id="@+id/followingList_moodDetail_dateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="200dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="64dp"
                 android:fontFamily="sans-serif-light"
                 android:text="2010-02-27"
-                android:textColor="#8F8F8F"
+                android:textColor="@color/colorPrimary"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -58,11 +60,12 @@
                 android:id="@+id/followingList_moodDetail_timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-light"
                 android:text="2:34 PM"
-                android:textColor="#8F8F8F"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
                 android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/followingList_moodDetail_dateText"
                 app:layout_constraintStart_toStartOf="@+id/followingList_moodDetail_dateText"
                 app:layout_constraintTop_toBottomOf="@+id/followingList_moodDetail_dateText" />
 
@@ -85,13 +88,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
+                android:layout_marginBottom="4dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="end"
                 android:text="EMOTIONAL"
-                android:textColor="#8F8F8F"
+                android:textColor="@color/colorPrimary"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toTopOf="@+id/separator_followingList"
-                app:layout_constraintEnd_toEndOf="@+id/separator_followingList" />
+                app:layout_constraintEnd_toEndOf="@+id/followingList_locationButton_moodListCard" />
 
             <ImageView
                 android:id="@+id/followingList_locationButton_moodListCard"
@@ -100,7 +104,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/followingList_moodDetail_moodText"
+                app:layout_constraintEnd_toEndOf="@+id/separator_followingList"
                 app:srcCompat="@drawable/ic_location_on_accent_red_24dp" />
 
             <TextView
@@ -110,6 +114,7 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-light"
                 android:text="Gengyuan Huang"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/followingList_locationButton_moodListCard"
                 app:layout_constraintStart_toStartOf="@+id/separator_followingList"

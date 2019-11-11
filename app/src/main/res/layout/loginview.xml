@@ -10,13 +10,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:cardBackgroundColor="#F6F1E9"
-        app:cardCornerRadius="10dp"
+        android:layout_marginEnd="16dp"
+        app:cardBackgroundColor="@color/background_yellow_accent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,33 +26,41 @@
             <EditText
                 android:id="@+id/userEmailField"
 
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="36dp"
 
+                android:layout_marginStart="64dp"
+                android:layout_marginEnd="64dp"
                 android:background="@drawable/edittext_round"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:hint="Email"
                 android:inputType="textPersonName"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/switchToReg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
 
             <EditText
                 android:id="@+id/passField"
 
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="36dp"
 
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="64dp"
                 android:background="@drawable/edittext_round"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:hint="Password"
                 android:inputType="textPassword"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/userEmailField" />
@@ -64,53 +69,57 @@
                 android:id="@+id/switchToReg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="sans-serif-thin"
                 android:text="Don't have an account? Register!"
+                android:textColor="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/loginComfirmBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                app:backgroundTint="#B87373"
+                app:backgroundTint="@color/button_brown"
                 app:fabCustomSize="45dp"
                 app:layout_constraintBottom_toTopOf="@+id/switchToReg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.492"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passField"
-                app:srcCompat="@drawable/ic_check_black_24dp" />
+                app:srcCompat="@drawable/ic_check_grey_24dp" />
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="Swing"
-                android:textColor="#B87373"
+                android:layout_marginTop="128dp"
+                android:fontFamily="@font/alex_brush"
+                android:gravity="center"
+                android:text="Mood Swing"
+                android:textAllCaps="false"
+                android:textColor="@color/button_brown"
                 android:textSize="68sp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/textView2"
-                app:layout_constraintEnd_toEndOf="@+id/userEmailField" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textView15"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginTop="80dp"
-                android:fontFamily="sans-serif-light"
-                android:text="Mood"
-                android:textColor="#8F8F8F"
-                android:textSize="40sp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/userEmailField"
-                app:layout_constraintStart_toStartOf="@+id/userEmailField"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-thin"
+                android:text="LOGIN"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/loginComfirmBtn"
+                app:layout_constraintStart_toStartOf="@+id/loginComfirmBtn"
+                app:layout_constraintTop_toBottomOf="@+id/loginComfirmBtn" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
