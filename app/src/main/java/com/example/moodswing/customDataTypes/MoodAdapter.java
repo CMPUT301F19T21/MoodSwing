@@ -34,6 +34,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView dateText;
         TextView timeText;
         ImageView moodImage;
+        ImageView locationImage;
         CardView moodHistoryCard;
 
         public MyViewHolder(View view){
@@ -42,6 +43,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
             this.dateText = view.findViewById(R.id.moodDetail_dateText);
             this.timeText = view.findViewById(R.id.moodDetail_timeText);
             this.moodImage = view.findViewById(R.id.moodIcon_placeHolder);
+            this.locationImage = view.findViewById(R.id.location_moodListCard);
             this.moodHistoryCard = view.findViewById(R.id.moodhistory_card);
 
         }
@@ -69,12 +71,18 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView dateText = holder.dateText;
         TextView timeText = holder.timeText;
         ImageView moodImage = holder.moodImage;
+        ImageView locationImage = holder.locationImage;
 
         MoodEvent moodEvent = moods.get(position);
 
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTime()));
         printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
+        if (moodEvent.getLatitude() == null) {
+            locationImage.setImageResource(R.drawable.ic_location_off_grey_24dp);
+        }else{
+            locationImage.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
+        }
 
         holder.moodHistoryCard.setOnClickListener(new View.OnClickListener() {
             @Override

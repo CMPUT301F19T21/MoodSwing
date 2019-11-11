@@ -45,6 +45,7 @@ public class MoodDetailFragment extends Fragment{
     private FloatingActionButton editButton;
     private FloatingActionButton backButton;
     private ImageView moodImage;
+    private ImageView locationImg;
 
     private int moodPosition;
 
@@ -81,6 +82,7 @@ public class MoodDetailFragment extends Fragment{
         backButton = root.findViewById(R.id.detailedView_back);
         moodImage = root.findViewById(R.id.detailedView_moodImg);
         socialText = root.findViewById(R.id.moodDetail_SocialText);
+        locationImg = root.findViewById(R.id.moodDetail_locationImg);
 
         initialElements();
 
@@ -108,6 +110,12 @@ public class MoodDetailFragment extends Fragment{
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+        if (moodEvent.getLatitude() == null) {
+            locationImg.setImageResource(R.drawable.ic_location_off_grey_24dp);
+        }else{
+            locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
+        }
 
         return root;
     }

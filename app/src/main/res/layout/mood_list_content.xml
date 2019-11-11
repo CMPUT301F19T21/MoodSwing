@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="170dp">
+    android:layout_height="200dp">
 
     <ImageView
         android:id="@+id/moodIcon_placeHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="2dp"
         android:background="@android:color/transparent"
@@ -22,13 +23,12 @@
         android:id="@+id/moodhistory_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="2dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="4dp"
         app:cardBackgroundColor="@color/background_yellow_accent"
         app:cardCornerRadius="5dp"
-        app:cardElevation="6dp"
+        app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
         app:contentPadding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,13 +45,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="150dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="64dp"
-                android:layout_marginBottom="64dp"
                 android:fontFamily="sans-serif-light"
                 android:text="2010-02-27"
                 android:textColor="#8F8F8F"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/moodDetail_moodText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -83,7 +82,7 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
-                android:id="@+id/locationButton_moodListCard"
+                android:id="@+id/location_moodListCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
