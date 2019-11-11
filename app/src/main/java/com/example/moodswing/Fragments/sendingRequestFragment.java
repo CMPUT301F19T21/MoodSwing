@@ -1,11 +1,13 @@
 package com.example.moodswing.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +15,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
+import com.example.moodswing.RegisterActivity;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 
 /**
@@ -22,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * It will prompt the user for a username, and a request will be sent to that user to become their follower
  */
 public class sendingRequestFragment extends DialogFragment {
+    private static final String TAG = "sendingRequestFragment";
     private FirestoreUserDocCommunicator communicator;
     private EditText usernameEditText;
 
@@ -54,8 +60,7 @@ public class sendingRequestFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String username = usernameEditText.getText().toString();
-                communicator.sendFollowingRequest(username);
-                dismiss();
+                sendingRequest(username);
             }
         });
 
@@ -68,5 +73,34 @@ public class sendingRequestFragment extends DialogFragment {
 
         // other
         return view;
+    }
+
+    private void sendingRequest(String username){
+        if (username.isEmpty()) {
+            Toast.makeText(getContext(), "Sorry, username cannot be empty",
+                    Toast.LENGTH_SHORT).show();
+        }else{
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Query findUserColQuery = db
+                    .collection("users")
+                    .whereEqualTo("username", username)
+                    .limit(1);
+
+            findUserColQuery
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                Toast.makeText(getContext(), "Sorry, the username you entered doesn't exist",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                communicator.sendFollowingRequest(username);
+                                dismiss();
+                            }
+                        } else {
+                            Log.d(TAG, "Error while executing finding username query: ", task.getException());
+                        }
+                    });
+        }
     }
 }
