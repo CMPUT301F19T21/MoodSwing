@@ -73,7 +73,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
     @Override
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.selectmood_content, parent, false);
+                .inflate(R.layout.content_selectmood, parent, false);
         return new MyViewHolder(view);
     }
 

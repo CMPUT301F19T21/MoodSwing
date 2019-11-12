@@ -21,8 +21,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * The screen the user comes to after clicking on a moodEvent. shows the details of the moodEvent.
  */
@@ -66,7 +64,7 @@ public class MoodDetailFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.mood_details, container, false);
+        View root = inflater.inflate(R.layout.fragment_mood_details, container, false);
 
         // find view
         dateText = root.findViewById(R.id.moodDetail_dateText);

@@ -23,7 +23,7 @@ import java.util.Locale;
 import static android.app.Activity.RESULT_OK;
 
 
-public class MoodDetailFragment_following extends Fragment{
+public class MoodDetailFollowingFragment extends Fragment{
     private FirestoreUserDocCommunicator communicator;
     UserJar userJar;
     MoodEvent moodEvent;
@@ -43,10 +43,10 @@ public class MoodDetailFragment_following extends Fragment{
 
     private int userJarPosition;
 
-    public MoodDetailFragment_following(){}
+    public MoodDetailFollowingFragment(){}
 
 
-    public MoodDetailFragment_following(int userJarPosition) {
+    public MoodDetailFollowingFragment(int userJarPosition) {
         this.communicator = FirestoreUserDocCommunicator.getInstance();
         this.userJarPosition = userJarPosition;
         this.userJar = communicator.getUserJar(userJarPosition);
