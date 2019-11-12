@@ -37,12 +37,7 @@ import java.util.Calendar;
  * The screen for adding a new mood, accessed from the Home screen.
  */
 public class NewMoodActivity extends AppCompatActivity {
-////    private ArrayList<SocialSituationItem> mSocialList;
-////    private SpinnerAdapter spinnerAdapter;
-////    private Spinner socialSituationSpinner;
-////    private String socialSitToAdd;
 
-    private FirebaseFirestore db;
     private FloatingActionButton confirmButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
