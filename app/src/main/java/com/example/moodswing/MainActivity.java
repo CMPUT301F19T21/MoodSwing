@@ -6,26 +6,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
-import com.example.moodswing.Fragments.ManageRequestFragment;
-import com.example.moodswing.Fragments.MoodDetailFragment;
-import com.example.moodswing.Fragments.MoodDetailFragment_following;
-import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
+import com.example.moodswing.Fragments.MoodDetailFragment;
+import com.example.moodswing.Fragments.MoodDetailFragment_following;
 import com.example.moodswing.Fragments.profileFragment;
-import com.example.moodswing.customDataTypes.UserJar;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.transition.Slide;
 
 //This activity holds the following, profile, and Home fragments, and holds the functionality for
 // redirecting the user to other fragments

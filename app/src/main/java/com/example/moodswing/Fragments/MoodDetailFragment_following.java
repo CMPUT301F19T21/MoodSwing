@@ -1,9 +1,7 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.moodswing.EditMoodActivity;
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
-import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
-import com.example.moodswing.customDataTypes.TimeJar;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormatSymbols;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
@@ -120,6 +113,7 @@ public class MoodDetailFragment_following extends Fragment{
 
     private void setReasonText(){
         if (moodEvent.getReason() != null){
+            this.reasonText.setVisibility(View.VISIBLE);
             this.reasonText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getReason())));
         }else{
             this.reasonText.setVisibility(View.INVISIBLE);
@@ -133,14 +127,20 @@ public class MoodDetailFragment_following extends Fragment{
                 this.socialText.setVisibility(View.INVISIBLE);
                 this.socialIcon.setVisibility(View.INVISIBLE);
             case 1:
+                this.socialText.setVisibility(View.VISIBLE);
+                this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Alone");
                 this.socialIcon.setImageResource(R.drawable.ic_person_black_24dp);
                 break;
             case 2:
+                this.socialText.setVisibility(View.VISIBLE);
+                this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Company");
                 this.socialIcon.setImageResource(R.drawable.ic_people_black_24dp);
                 break;
             case 3:
+                this.socialText.setVisibility(View.VISIBLE);
+                this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Party");
                 this.socialIcon.setImageResource(R.drawable.ic_account_group);
         }

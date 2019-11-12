@@ -1,27 +1,18 @@
 package com.example.moodswing;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.Fragments.sendingRequestFragment;
-import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
-import com.example.moodswing.customDataTypes.MoodAdapter;
-import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.SimpleUserJarAdapter;
 import com.example.moodswing.customDataTypes.UserJar;
-import com.example.moodswing.customDataTypes.UserJarAdaptor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

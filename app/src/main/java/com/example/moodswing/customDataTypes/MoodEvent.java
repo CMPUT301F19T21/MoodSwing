@@ -1,10 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
 
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
-
 /**
  * This Class is the blueprint for a moodEvent object
  */
