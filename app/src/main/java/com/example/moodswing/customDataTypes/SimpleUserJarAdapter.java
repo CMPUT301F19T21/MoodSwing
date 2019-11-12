@@ -57,7 +57,7 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
     @Override
     public SimpleUserJarAdapter.MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.simple_user_jar_content_requests, parent, false);
+                .inflate(R.layout.content_simple_user_jar_requests, parent, false);
         return new SimpleUserJarAdapter.MyViewHolder(view);
     }
 

@@ -15,7 +15,7 @@ import com.example.moodswing.Fragments.EmptyNotificationFragment;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
-import com.example.moodswing.Fragments.MoodDetailFragment_following;
+import com.example.moodswing.Fragments.MoodDetailFollowingFragment;
 import com.example.moodswing.Fragments.profileFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation);
+        setContentView(R.layout.activity_main);
 
         communicator = FirestoreUserDocCommunicator.getInstance();
 
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     public void toDetailedView_following(int moodPosition) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_placeHolder, new MoodDetailFragment_following(moodPosition))
+                .replace(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(moodPosition))
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();

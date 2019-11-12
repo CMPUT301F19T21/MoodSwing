@@ -75,7 +75,7 @@ public class NewMoodActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_mood);
+        setContentView(R.layout.activity_add_mood);
 
         // find view
         confirmButton = findViewById(R.id.add_confirm);
