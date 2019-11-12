@@ -1,12 +1,5 @@
 package com.example.moodswing.customDataTypes;
 
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
-import java.text.DateFormatSymbols;
-import java.util.Date;
-
-
 /**
  * This class creates an Date object
  *      int year

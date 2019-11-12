@@ -1,13 +1,11 @@
 package com.example.moodswing.customDataTypes;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,10 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import io.opencensus.resource.Resource;
 
 
 /**

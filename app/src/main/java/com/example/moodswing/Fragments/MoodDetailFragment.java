@@ -1,9 +1,7 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +14,11 @@ import androidx.fragment.app.Fragment;
 import com.example.moodswing.EditMoodActivity;
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
-import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
-import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormatSymbols;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;

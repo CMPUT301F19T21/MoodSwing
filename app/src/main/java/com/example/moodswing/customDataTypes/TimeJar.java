@@ -1,9 +1,5 @@
 package com.example.moodswing.customDataTypes;
 
-import java.io.Serializable;
-import java.sql.Time;
-
-
 /**
  * This class creates an Time object
  *      int hr(24-hour clock)
