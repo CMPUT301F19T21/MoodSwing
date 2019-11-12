@@ -8,14 +8,6 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
-    <string-array name="socialSit">
-        <item>Select Social Situation</item>
-        <item>Alone</item>
-        <item>With One Person</item>
-        <item>With Two to Several</item>
-        <item>With A Crowd</item>
-    </string-array>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
