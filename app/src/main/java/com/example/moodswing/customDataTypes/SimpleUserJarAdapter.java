@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.Fragments.ManageRequestFragment;
+import com.example.moodswing.Fragments.UnfollowDialogFragment;
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.ManagementActivity;
 import com.example.moodswing.R;
@@ -79,6 +80,9 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
                 if (mode == 1){
                     new ManageRequestFragment(currentUserJar)
                             .show(((ManagementActivity)v.getContext()).getSupportFragmentManager(), "manage_request");
+                }else if (mode == 2) {
+                    new UnfollowDialogFragment(currentUserJar)
+                            .show(((ManagementActivity)v.getContext()).getSupportFragmentManager(), "unfollow");
                 }
             }
         });

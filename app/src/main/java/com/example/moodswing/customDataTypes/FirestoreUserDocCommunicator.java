@@ -31,6 +31,7 @@ import com.google.firebase.firestore.auth.User;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -662,7 +663,72 @@ public class FirestoreUserDocCommunicator{
     }
 
     public void unfollow(UserJar userJar){
-        //
+        // 从对方的permittedlist中移除自己
+        // 把对方从自己的followinglist中移除
+        // 把对方从自己的followingMoodList中移除
+
+        DocumentReference followingListUserDocRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("following")
+                .document(userJar.getUID());
+
+        DocumentReference followingMoodListUserDocRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("followingMoodList")
+                .document(userJar.getUID());
+
+
+        DocumentReference targetPermittedListUserJarDocRef = db
+                .collection("users")
+                .document(userJar.getUID())
+                .collection("permittedList")
+                .document(user.getUid());
+
+        targetPermittedListUserJarDocRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "find user's doc in target's permitted list successful");
+                        followingListUserDocRef
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "remove target from user's followingList successful");
+                                        followingMoodListUserDocRef
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "remove target from user's followingMoodList successful");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d(TAG, "failed in removing target from user's followingMoodList");
+                                                    }
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "failed in removing target from user's followingList");
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "failed in finding user's doc in target's permitted list");
+                    }
+                });
+
     }
 
     public DocumentReference getUserDocRef(){
