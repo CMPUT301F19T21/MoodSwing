@@ -122,7 +122,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                     holder.card.setCardBackgroundColor(Color.parseColor("#F5F5F5"));
                 }else if (selectedPosition == holder.getLayoutPosition()){
                     selectedPosition = null;
-                    holder.card.setElevation(12f);
+                    holder.card.setElevation(5f);
                     holder.card.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
                 }
             }
