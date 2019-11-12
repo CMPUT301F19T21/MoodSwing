@@ -20,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * The user profile. It will show the username of the user, have the logout button, and may eventually have functionality
  * related to the user such as change username, adding a profile picture
  */
-public class profileFragment extends DialogFragment {
+public class ProfileFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
     private TextView username;
     private FloatingActionButton logoutBtn;

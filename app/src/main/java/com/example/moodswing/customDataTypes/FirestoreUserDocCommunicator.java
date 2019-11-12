@@ -210,17 +210,11 @@ public class FirestoreUserDocCommunicator{
      * Initializes the mood events for the user into the local RecyclerView
      * @param moodList the view the moods are being appended to
      */
-    public void initMoodEventsList(final RecyclerView moodList){
+    public void initMoodEventsList(final RecyclerView moodList, Query moodEventsQuery){
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
 
-        Query moodEventColQuery = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .orderBy("timeStamp", Query.Direction.DESCENDING);
-
-        moodEventColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        moodEventsQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 moodAdapter.clearMoodEvents();
@@ -232,6 +226,14 @@ public class FirestoreUserDocCommunicator{
                 moodEvents = moodAdapter.getMoods();
             }
         });
+    }
+
+    public Query getBasicMoodEventsQuery(){
+        return db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .orderBy("timeStamp", Query.Direction.DESCENDING);
     }
 
     /**
