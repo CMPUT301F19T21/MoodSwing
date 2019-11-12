@@ -20,14 +20,14 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="900dp">
+                android:layout_height="wrap_content">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     app:cardBackgroundColor="@color/background_yellow_accent"
                     app:cardCornerRadius="10dp"
@@ -49,7 +49,7 @@
                             android:layout_alignParentTop="true"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="32dp"
-                            android:layout_marginTop="200dp"
+                            android:layout_marginTop="180dp"
                             android:layout_marginEnd="32dp"
                             android:background="#D5D5D5"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -73,18 +73,18 @@
                             app:layout_constraintTop_toBottomOf="@+id/addMood_separator2" />
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView_reason"
+                            android:id="@+id/addMood_reasonCard"
                             android:layout_width="0dp"
                             android:layout_height="70dp"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="24dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginEnd="8dp"
                             app:cardCornerRadius="6dp"
                             app:cardElevation="1dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView3">
+                            app:layout_constraintTop_toBottomOf="@+id/addMood_imageCard">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView6"
+                            android:id="@+id/addMood_timeDateCard"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
                             android:layout_marginStart="8dp"
@@ -201,17 +201,17 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView3"
+                            android:id="@+id/addMood_imageCard"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="24dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginEnd="8dp"
                             app:cardCornerRadius="6dp"
                             app:cardElevation="1dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView6">
+                            app:layout_constraintTop_toBottomOf="@+id/addMood_timeDateCard">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -232,7 +232,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView_socialSituation"
+                            android:id="@+id/addMood_socialSituationCard"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
@@ -339,12 +339,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="45dp"
                             android:layout_marginTop="64dp"
+                            android:layout_marginBottom="64dp"
                             android:clickable="true"
                             app:backgroundTint="@color/button_brown"
                             app:fabCustomSize="45dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView_socialSituation"
+                            app:layout_constraintTop_toBottomOf="@+id/addMood_socialSituationCard"
                             app:srcCompat="@drawable/ic_check_grey_24dp" />
 
                         <TextView
@@ -373,7 +375,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/cardView_reason" />
+                            app:layout_constraintTop_toBottomOf="@+id/addMood_reasonCard" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
