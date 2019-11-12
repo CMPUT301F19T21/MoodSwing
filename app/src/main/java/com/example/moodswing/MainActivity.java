@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
 import com.example.moodswing.Fragments.ManageRequestFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
+import com.example.moodswing.Fragments.MoodDetailFragment_following;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
@@ -135,12 +136,23 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the DetailedView fragment
      */
     public void toDetailedView(int moodPosition) {
-        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
-        fragTrans.replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition));
-        fragTrans.addToBackStack(null);
-        fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragTrans.commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition))
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
+
+    public void toDetailedView_following(int moodPosition) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_placeHolder, new MoodDetailFragment_following(moodPosition))
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+    }
+
 
     /**
      * The functionality for transitioning to the toFollowing fragment

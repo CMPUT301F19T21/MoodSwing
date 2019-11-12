@@ -276,6 +276,10 @@ public class FirestoreUserDocCommunicator{
         return moodEvents.get(position);
     }
 
+    public UserJar getUserJar(int position) {
+        return userJars.get(position);
+    }
+
     // following feature
 
     /**
