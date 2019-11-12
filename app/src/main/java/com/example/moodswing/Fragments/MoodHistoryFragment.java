@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * The first screen after logging in, part of mainActivity. User will see their own moodlist here
  */
-public class HomeFragment extends Fragment {
+public class MoodHistoryFragment extends Fragment {
     // communicator
     private FirestoreUserDocCommunicator communicator;
 
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
         moodList.setAdapter(moodListAdapter);
 
         // setup realTime listener
-        communicator.initMoodEventsList(moodList);
+        communicator.initMoodEventsList(moodList, communicator.getBasicMoodEventsQuery());
 
         // setup listeners
         MapButton.setOnClickListener(new View.OnClickListener() {

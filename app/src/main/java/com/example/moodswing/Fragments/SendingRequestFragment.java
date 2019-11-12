@@ -24,8 +24,8 @@ import com.google.firebase.firestore.Query;
  * The screen that is redirected to when the user presses the button in the following/follower management screen.
  * It will prompt the user for a username, and a request will be sent to that user to become their follower
  */
-public class sendingRequestFragment extends DialogFragment {
-    private static final String TAG = "sendingRequestFragment";
+public class SendingRequestFragment extends DialogFragment {
+    private static final String TAG = "SendingRequestFragment";
     private FirestoreUserDocCommunicator communicator;
     private EditText usernameEditText;
 
