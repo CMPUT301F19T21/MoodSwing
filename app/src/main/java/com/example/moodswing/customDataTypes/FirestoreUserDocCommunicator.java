@@ -276,6 +276,10 @@ public class FirestoreUserDocCommunicator{
         return moodEvents.get(position);
     }
 
+    public UserJar getUserJar(int position) {
+        return userJars.get(position);
+    }
+
     // following feature
 
     /**
@@ -492,32 +496,55 @@ public class FirestoreUserDocCommunicator{
      */
     private void pushRecentMoodEventToUser(String uid){
         // grab recentMoodEvent
-        MoodEvent mostRecentMoodEvent = moodEvents.get(0);
-
-        // construct UserJar
-        UserJar myUserJarWithMood = new UserJar();
-        myUserJarWithMood.setUsername(getUsername());
-        myUserJarWithMood.setUID(user.getUid());
-        myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
-
-        // send it to target
-        DocumentReference followingMoodListDoc = db
+        Query mostRecentMoodEventDocQuery = db
                 .collection("users")
-                .document(uid)
-                .collection("followingMoodList")
-                .document(user.getUid());
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
+                .limit(1);
 
-        followingMoodListDoc.set(myUserJarWithMood)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        mostRecentMoodEventDocQuery
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "sending mood to target uid, done");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "sending mood to target uid, failed");
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG,"successfully got most recent Mood");
+                            if (task.getResult().isEmpty()) {
+                                Log.d(TAG, "something is wrong in refreshRecentMoodToUser method");
+                                // this line should never be excuted.
+                            } else {
+                                MoodEvent mostRecentMoodEvent = task.getResult().toObjects(MoodEvent.class).get(0);
+                                // construct UserJar
+                                UserJar myUserJarWithMood = new UserJar();
+                                myUserJarWithMood.setUsername(getUsername());
+                                myUserJarWithMood.setUID(user.getUid());
+                                myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
+
+                                // send it to target
+                                DocumentReference followingMoodListDoc = db
+                                        .collection("users")
+                                        .document(uid)
+                                        .collection("followingMoodList")
+                                        .document(user.getUid());
+
+                                followingMoodListDoc.set(myUserJarWithMood)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "sending mood to target uid, done");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "sending mood to target uid, failed");
+                                            }
+                                        });
+                            }
+                        }else{
+                            Log.d(TAG,"get most recent Mood query failed");
+                        }
                     }
                 });
     }

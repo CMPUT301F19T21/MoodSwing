@@ -95,7 +95,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         holder.userJarCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // start detailed moodEvent (will be slightly modified version).
+                startDetailedViewActivity(holder.getLayoutPosition(),v);
             }
         });
 
@@ -109,7 +109,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
 
     private void startDetailedViewActivity (int cardPosition,View view){
         // cardPosition will be passed to detailed view
-        ((MainActivity) view.getContext()).toDetailedView(cardPosition);
+        ((MainActivity) view.getContext()).toDetailedView_following(cardPosition);
     }
 
     /**
