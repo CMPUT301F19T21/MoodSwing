@@ -113,6 +113,7 @@ public class MoodDetailFragment_following extends Fragment{
 
     private void setReasonText(){
         if (moodEvent.getReason() != null){
+            this.reasonText.setVisibility(View.VISIBLE);
             this.reasonText.setText(String.format(Locale.getDefault(), "\"%s\"",(moodEvent.getReason())));
         }else{
             this.reasonText.setVisibility(View.INVISIBLE);
@@ -126,14 +127,20 @@ public class MoodDetailFragment_following extends Fragment{
                 this.socialText.setVisibility(View.INVISIBLE);
                 this.socialIcon.setVisibility(View.INVISIBLE);
             case 1:
+                this.socialText.setVisibility(View.VISIBLE);
+                this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Alone");
                 this.socialIcon.setImageResource(R.drawable.ic_person_black_24dp);
                 break;
             case 2:
+                this.socialText.setVisibility(View.VISIBLE);
+                this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Company");
                 this.socialIcon.setImageResource(R.drawable.ic_people_black_24dp);
                 break;
             case 3:
+                this.socialText.setVisibility(View.VISIBLE);
+                this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Party");
                 this.socialIcon.setImageResource(R.drawable.ic_account_group);
         }
