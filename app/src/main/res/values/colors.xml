@@ -8,6 +8,6 @@
     <color name="color_button_lightGrey_pressed">#BEBEBE</color>
     <color name="background_yellow_accent">#FAF6F4</color>
 
-    <color name="background_grey">#D5D5D5</color>
+    <color name="background_grey">#DFDFDF</color>
     <color name="button_brown">#CCAC9F</color>
 </resources>

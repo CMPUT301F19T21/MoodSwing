@@ -10,13 +10,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:cardBackgroundColor="#F6F1E9"
-        app:cardCornerRadius="10dp"
+        android:layout_marginEnd="16dp"
+        app:cardBackgroundColor="@color/background_yellow_accent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,12 +27,12 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="Sign Up"
-                android:textColor="#B87373"
+                android:layout_marginTop="128dp"
+                android:fontFamily="@font/alex_brush"
+                android:text="Mood Swing"
+                android:textColor="@color/button_brown"
                 android:textSize="68sp"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/regEmail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -45,72 +42,98 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                app:backgroundTint="#B87373"
+                app:backgroundTint="@color/button_brown"
                 app:fabCustomSize="45dp"
                 app:layout_constraintBottom_toTopOf="@+id/switchToLog"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/regPassword"
-                app:srcCompat="@drawable/ic_check_black_24dp" />
+                app:srcCompat="@drawable/ic_check_grey_24dp" />
 
             <EditText
                 android:id="@+id/regPassword"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="64dp"
                 android:background="@drawable/edittext_round"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:hint="Password"
                 android:inputType="textPassword"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/regUsername" />
 
             <EditText
                 android:id="@+id/regUsername"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginEnd="64dp"
                 android:background="@drawable/edittext_round"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:hint="username"
                 android:inputType="textPersonName"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/switchToLog"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/regEmail" />
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <EditText
                 android:id="@+id/regEmail"
 
 
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="36dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginEnd="64dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/edittext_round"
                 android:ems="10"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:hint="Email"
                 android:inputType="textPersonName"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/regUsername"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/switchToLog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="sans-serif-thin"
                 android:text="Already have an account? Login!"
+                android:textColor="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-thin"
+                android:text="SIGN UP"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/regButton"
+                app:layout_constraintStart_toStartOf="@+id/regButton"
+                app:layout_constraintTop_toBottomOf="@+id/regButton" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

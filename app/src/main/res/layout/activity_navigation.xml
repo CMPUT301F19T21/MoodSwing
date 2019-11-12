@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/background_grey">
 
     <FrameLayout
@@ -16,11 +17,24 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/notification_center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigationBar"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_placeHolder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notificationBar">
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/notificationBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:background="@android:color/transparent"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,12 +62,12 @@
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:soundEffectsEnabled="true"
-                    app:backgroundTint="@color/colorAccent"
-                    app:fabCustomSize="30dp"
+                    app:backgroundTint="@color/button_brown"
+                    app:fabCustomSize="40dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_clear_pink_24dp" />
+                    app:srcCompat="@drawable/ic_clear_black_24dp" />
 
                 <TextView
                     android:id="@+id/notificationBar_text"
@@ -61,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:text="You have new following request"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/notificationBar_close_button"
                     app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +89,7 @@
     <FrameLayout
         android:id="@+id/navigationBar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@android:color/transparent"
@@ -98,7 +113,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/color_button_lightGrey"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/abril_fatface"
                     android:text="Home"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
@@ -122,7 +137,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/color_button_lightGrey_pressed"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/abril_fatface"
                     android:text="Following"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
@@ -134,7 +149,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:layout_width="80dp"
+            android:layout_width="85dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             app:cardBackgroundColor="#646464"

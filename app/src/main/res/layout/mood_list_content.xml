@@ -3,34 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
-
-    <ImageView
-        android:id="@+id/moodIcon_placeHolder"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="2dp"
-        android:background="@android:color/transparent"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mood2" />
+    android:layout_height="190dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/moodhistory_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:cardBackgroundColor="@color/background_yellow_accent"
         app:cardCornerRadius="5dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:contentPadding="5dp"
+        app:contentPadding="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,30 +27,42 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/moodIcon_placeHolder"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@android:color/transparent"
+                android:elevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mood2" />
+
             <TextView
                 android:id="@+id/moodDetail_dateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="150dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="64dp"
                 android:fontFamily="sans-serif-light"
                 android:text="2010-02-27"
-                android:textColor="#8F8F8F"
+                android:textColor="@color/colorPrimary"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/moodIcon_placeHolder"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/moodDetail_timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-light"
                 android:text="2:34 PM"
-                android:textColor="#8F8F8F"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
                 android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/moodDetail_dateText"
                 app:layout_constraintStart_toStartOf="@+id/moodDetail_dateText"
                 app:layout_constraintTop_toBottomOf="@+id/moodDetail_dateText" />
 
@@ -72,11 +71,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="4dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="end"
                 android:text="EMOTIONAL"
-                android:textColor="#8F8F8F"
+                android:textColor="@color/colorPrimary"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

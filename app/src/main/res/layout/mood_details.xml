@@ -158,21 +158,19 @@
         android:id="@+id/moodDetail_SocialText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-light"
         android:text="Alone"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/moodDetail_socialSitIcon"
-        app:layout_constraintStart_toEndOf="@+id/moodDetail_socialSitIcon"
-        app:layout_constraintTop_toTopOf="@+id/moodDetail_socialSitIcon" />
+        app:layout_constraintBottom_toBottomOf="@+id/moodDetail_moodText"
+        app:layout_constraintStart_toStartOf="@+id/moodDetail_locationText" />
 
     <ImageView
         android:id="@+id/moodDetail_socialSitIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/separator"
-        app:layout_constraintStart_toStartOf="@+id/moodDetail_locationText"
+        app:layout_constraintBottom_toTopOf="@+id/moodDetail_SocialText"
+        app:layout_constraintEnd_toEndOf="@+id/moodDetail_SocialText"
+        app:layout_constraintStart_toStartOf="@+id/moodDetail_SocialText"
         app:srcCompat="@drawable/ic_account_group" />
 </androidx.constraintlayout.widget.ConstraintLayout>

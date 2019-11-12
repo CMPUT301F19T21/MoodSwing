@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.example.moodswing.Fragments.EmptyNotificationFragment;
 import com.example.moodswing.Fragments.ManageRequestFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
@@ -13,8 +14,13 @@ import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.HomeFragment;
 import com.example.moodswing.Fragments.profileFragment;
 import com.example.moodswing.customDataTypes.UserJar;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
@@ -95,7 +101,14 @@ public class MainActivity extends AppCompatActivity {
         notificationBar_closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notificationBar.setVisibility(View.GONE);
+                notificationBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        notificationBar_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ManagementActivity.class));
             }
         });
 
@@ -103,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         communicator.setAutoDisplayViewForNewRequest(notificationBar);
         toMoodHistory(); // default view -> moodHistory
+        displayEmptyNotificationIfEmpty();
     }
 
     /**
@@ -148,8 +162,13 @@ public class MainActivity extends AppCompatActivity {
         new profileFragment().show(getSupportFragmentManager(), "profile");
     }
 
-    public void openManageRequestFragment(UserJar userJar) {
-        new ManageRequestFragment(userJar).show(getSupportFragmentManager(), "manage_request");
+    public void displayEmptyNotification(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack("EmptyNotification")
+                .replace(R.id.notification_center, new EmptyNotificationFragment())
+                .commit();
     }
     /**
      * Signs the user out, used when logoutBtn is clicked
@@ -159,6 +178,21 @@ public class MainActivity extends AppCompatActivity {
         finishAffinity();
         startActivity(new Intent(this, LoginActivity.class));
     }
+
+    private void displayEmptyNotificationIfEmpty(){
+        DocumentReference userDocRef = communicator.getUserDocRef();
+        userDocRef.collection("MoodEvents")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult().isEmpty()){
+                            displayEmptyNotification();
+                        }
+                    }
+                });
+    }
+
 
 }
 

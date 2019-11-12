@@ -164,11 +164,11 @@ public class MoodDetailFragment extends Fragment{
                 this.socialIcon.setImageResource(R.drawable.ic_person_black_24dp);
                 break;
             case 2:
-                this.socialText.setText("With one person");
+                this.socialText.setText("Company");
                 this.socialIcon.setImageResource(R.drawable.ic_people_black_24dp);
                 break;
             case 3:
-                this.socialText.setText("With two more people");
+                this.socialText.setText("Party");
                 this.socialIcon.setImageResource(R.drawable.ic_account_group);
         }
     }
