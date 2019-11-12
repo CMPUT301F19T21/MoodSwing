@@ -58,7 +58,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mood_list_content, parent, false);
+                .inflate(R.layout.content_mood_list, parent, false);
         return new MyViewHolder(view);
     }
 

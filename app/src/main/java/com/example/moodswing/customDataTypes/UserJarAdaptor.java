@@ -65,7 +65,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.mood_list_content_following, parent, false);
+                .inflate(R.layout.content_mood_list_following, parent, false);
         return new MyViewHolder(view);
     }
 

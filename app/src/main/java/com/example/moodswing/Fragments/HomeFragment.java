@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // inflate fragment layout
-        View root = inflater.inflate(R.layout.mood_history_screen, container, false);
+        View root = inflater.inflate(R.layout.fragment_mood_history, container, false);
         // note: write your code after this msg
 
         // init
