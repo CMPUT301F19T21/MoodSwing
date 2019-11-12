@@ -648,7 +648,7 @@ public class FirestoreUserDocCommunicator{
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots.isEmpty()){
-                    notificationBar.setVisibility(View.GONE);
+                    notificationBar.setVisibility(View.INVISIBLE);
                     requestCount = 0;
                 }else{
                     Integer currentRequestCount = queryDocumentSnapshots.size();
@@ -663,6 +663,12 @@ public class FirestoreUserDocCommunicator{
 
     public void unfollow(UserJar userJar){
         //
+    }
+
+    public DocumentReference getUserDocRef(){
+        return db
+                .collection("users")
+                .document(user.getUid());
     }
 
 
