@@ -24,6 +24,7 @@ public class ManagementActivity extends AppCompatActivity {
 
     // UI elements
     private FloatingActionButton sendRequestButton;
+    private FloatingActionButton backBtn;
 
     // request recyclerView related
     private RecyclerView.LayoutManager recyclerViewLayoutManager_request;
@@ -50,6 +51,7 @@ public class ManagementActivity extends AppCompatActivity {
         communicator = FirestoreUserDocCommunicator.getInstance();
 
         sendRequestButton = findViewById(R.id.request_button);
+        backBtn = findViewById(R.id.request_backBtn);
         requestList = findViewById(R.id.management_request);
         followingList = findViewById(R.id.managment_following);
 
@@ -81,6 +83,13 @@ public class ManagementActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new sendingRequestFragment().show(getSupportFragmentManager(), "request");
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
