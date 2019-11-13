@@ -89,7 +89,7 @@ public class FollowingFragment extends Fragment {
     }
 
     public void refreshMoodList(){
-        communicator.initMoodEventsList(userJarList, communicator.getFollowingFilterList());
+        communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());
     }
 
     public void filterButtonPressed(){
