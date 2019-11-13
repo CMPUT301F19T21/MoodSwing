@@ -13,10 +13,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
 import com.example.moodswing.Fragments.FollowingFragment;
-import com.example.moodswing.Fragments.HomeFragment;
-import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.Fragments.MoodDetailFollowingFragment;
-import com.example.moodswing.Fragments.profileFragment;
+import com.example.moodswing.Fragments.MoodDetailFragment;
+import com.example.moodswing.Fragments.MoodHistoryFragment;
+import com.example.moodswing.Fragments.ProfileFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
-                .replace(R.id.fragment_placeHolder, new HomeFragment())
+                .replace(R.id.fragment_placeHolder, new MoodHistoryFragment())
                 .commit();
     }
     /**
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the Profile fragment
      */
     public void openProfileFragment(){
-        new profileFragment().show(getSupportFragmentManager(), "profile");
+        new ProfileFragment().show(getSupportFragmentManager(), "profile");
     }
 
     public void displayEmptyNotification(){

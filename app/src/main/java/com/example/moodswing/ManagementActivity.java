@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moodswing.Fragments.sendingRequestFragment;
+import com.example.moodswing.Fragments.SendingRequestFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.SimpleUserJarAdapter;
 import com.example.moodswing.customDataTypes.UserJar;
@@ -82,7 +82,7 @@ public class ManagementActivity extends AppCompatActivity {
         sendRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new sendingRequestFragment().show(getSupportFragmentManager(), "request");
+                new SendingRequestFragment().show(getSupportFragmentManager(), "request");
             }
         });
 
