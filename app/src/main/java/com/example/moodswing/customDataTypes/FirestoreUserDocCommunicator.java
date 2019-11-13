@@ -23,6 +23,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -46,6 +47,9 @@ public class FirestoreUserDocCommunicator{
     // other
     private Integer requestCount;
 
+    // for filter
+    private ArrayList<Integer> moodTypeFilterList_moodHistory;
+    private ArrayList<Integer> moodTypeFilterList_following;
 
     protected FirestoreUserDocCommunicator(){
         // init db
@@ -57,6 +61,10 @@ public class FirestoreUserDocCommunicator{
 
         // init requestCount to 0
         this.requestCount = 0;
+
+        // init filter
+        moodTypeFilterList_moodHistory = new ArrayList<>();
+        moodTypeFilterList_following = new ArrayList<>();
     }
 
     private boolean ifLogin(){
@@ -210,30 +218,31 @@ public class FirestoreUserDocCommunicator{
      * Initializes the mood events for the user into the local RecyclerView
      * @param moodList the view the moods are being appended to
      */
-    public void initMoodEventsList(final RecyclerView moodList, Query moodEventsQuery){
+    public void initMoodEventsList(final RecyclerView moodList, ArrayList<Integer> unwanttedMoodTypes){
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
-
+        Query moodEventsQuery = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .orderBy("timeStamp", Query.Direction.DESCENDING);
         moodEventsQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 moodAdapter.clearMoodEvents();
                 for (QueryDocumentSnapshot moodEventDoc : queryDocumentSnapshots){
                     MoodEvent moodEvent = moodEventDoc.toObject(MoodEvent.class);
-                    moodAdapter.addToMoods(moodEvent);
+                    if (unwanttedMoodTypes.contains(moodEvent.getMoodType())){
+                        continue;
+                        // do nothing, continue the loop
+                    }else{
+                        moodAdapter.addToMoods(moodEvent);
+                    }
                 }
                 moodAdapter.notifyDataSetChanged();
                 moodEvents = moodAdapter.getMoods();
             }
         });
-    }
-
-    public Query getBasicMoodEventsQuery(){
-        return db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .orderBy("timeStamp", Query.Direction.DESCENDING);
     }
 
     /**
@@ -573,7 +582,7 @@ public class FirestoreUserDocCommunicator{
      * Gets all the users from firestore that the current user is following and populates the local user's following list with them
      * @param userJarList A view of all users the current user is following
      */
-    public void initFollowingList(final RecyclerView userJarList){
+    public void initFollowingList(final RecyclerView userJarList, ArrayList<Integer> unwanttedMoodTypes){
         @NonNull
         UserJarAdaptor userJarAdaptor = (UserJarAdaptor) userJarList.getAdapter();
 
@@ -589,7 +598,11 @@ public class FirestoreUserDocCommunicator{
                 userJarAdaptor.clearUserJars();
                 for (QueryDocumentSnapshot userJarDoc : queryDocumentSnapshots){
                     UserJar userJar = userJarDoc.toObject(UserJar.class);
-                    userJarAdaptor.addToUserJars(userJar);
+                    if (unwanttedMoodTypes.contains(userJar.getMoodEvent().getMoodType())){
+                        continue;
+                    }else{
+                        userJarAdaptor.addToUserJars(userJar);
+                    }
                 }
                 userJarAdaptor.notifyDataSetChanged();
                 userJars = userJarAdaptor.getUserJars();
@@ -753,6 +766,14 @@ public class FirestoreUserDocCommunicator{
         return db
                 .collection("users")
                 .document(user.getUid());
+    }
+
+    public ArrayList<Integer> getMoodHistoryFilterList(){
+        return this.moodTypeFilterList_moodHistory;
+    }
+
+    public ArrayList<Integer> getFollowingFilterList(){
+        return this.moodTypeFilterList_following;
     }
 
 

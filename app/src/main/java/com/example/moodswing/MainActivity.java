@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
-                .replace(R.id.fragment_placeHolder, new MoodHistoryFragment())
+                .replace(R.id.fragment_placeHolder, new MoodHistoryFragment(), "MoodHistoryFragment")
                 .commit();
     }
     /**
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
-                .replace(R.id.fragment_placeHolder, new FollowingFragment())
+                .replace(R.id.fragment_placeHolder, new FollowingFragment(),"FollowingFragment")
                 .commit();
     }
 

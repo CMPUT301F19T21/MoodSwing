@@ -1,6 +1,7 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,11 +59,17 @@ public class FollowingFragment extends Fragment {
         userJarList.setLayoutManager(recyclerViewLayoutManager);
         userJarList.setAdapter(userJarAdaptor);
 
+        // setup button state
+        if (communicator.getFollowingFilterList().isEmpty()){
+            filterButtonPopped();
+        }else{
+            filterButtonPressed();
+        }
+
         // setup realtime listener
-        communicator.initFollowingList(userJarList);
+        communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());
 
         //setup listeners
-
         managementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +77,28 @@ public class FollowingFragment extends Fragment {
             }
         });
 
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FilterFragment(2).show(getActivity().getSupportFragmentManager(), "filter frag");
+            }
+        });
+
 
         return root;
+    }
+
+    public void refreshMoodList(){
+        communicator.initMoodEventsList(userJarList, communicator.getFollowingFilterList());
+    }
+
+    public void filterButtonPressed(){
+        filterButton.setCompatElevation(0f);
+        filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+    }
+
+    public void filterButtonPopped(){
+        filterButton.setCompatElevation(12f);
+        filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
     }
 }

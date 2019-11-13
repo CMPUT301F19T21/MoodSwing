@@ -44,7 +44,6 @@ public class MoodHistoryFragment extends Fragment {
 
     // other
     private boolean deleteEnabled;
-
     /**
      * initializes the UI buttons and navigation on the Home screen(the one right after logging in),
      * the mood history and adapters,and swipe-delete functionality
@@ -72,7 +71,14 @@ public class MoodHistoryFragment extends Fragment {
         moodList.setAdapter(moodListAdapter);
 
         // setup realTime listener
-        communicator.initMoodEventsList(moodList, communicator.getBasicMoodEventsQuery());
+        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
+
+        // setup button state
+        if (communicator.getMoodHistoryFilterList().isEmpty()){
+            filterButtonPopped();
+        }else{
+            filterButtonPressed();
+        }
 
         // setup listeners
         MapButton.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +114,7 @@ public class MoodHistoryFragment extends Fragment {
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new FilterFragment().show(getFragmentManager(), "FILTER_MOOD");
+                new FilterFragment(1).show(getActivity().getSupportFragmentManager(), "filter frag");
             }
         });
 
@@ -132,5 +138,20 @@ public class MoodHistoryFragment extends Fragment {
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(moodList);
 
         return root;
+    }
+
+    public void refreshMoodList(){
+        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
+    }
+
+    public void filterButtonPressed(){
+        filterButton.setCompatElevation(0f);
+        filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+    }
+
+    public void filterButtonPopped(){
+        filterButton.setCompatElevation(12f);
+        filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
     }
 }
