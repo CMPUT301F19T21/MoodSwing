@@ -44,8 +44,6 @@ public class MoodHistoryFragment extends Fragment {
 
     // other
     private boolean deleteEnabled;
-    private ArrayList<Integer> moodTypesForFilterOut;
-
     /**
      * initializes the UI buttons and navigation on the Home screen(the one right after logging in),
      * the mood history and adapters,and swipe-delete functionality
@@ -64,7 +62,6 @@ public class MoodHistoryFragment extends Fragment {
         filterButton = root.findViewById(R.id.home_filterBtn);
         moodList = root.findViewById(R.id.mood_list);
         deleteEnabled = false;
-        moodTypesForFilterOut = new ArrayList<>();
 
         // construct recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
@@ -74,7 +71,7 @@ public class MoodHistoryFragment extends Fragment {
         moodList.setAdapter(moodListAdapter);
 
         // setup realTime listener
-        communicator.initMoodEventsList(moodList, moodTypesForFilterOut);
+        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
 
         // setup listeners
         MapButton.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +107,7 @@ public class MoodHistoryFragment extends Fragment {
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FilterFragment(moodList, moodTypesForFilterOut).show(getActivity().getSupportFragmentManager(), "filter frag");
+                new FilterFragment(moodList, 1).show(getActivity().getSupportFragmentManager(), "filter frag");
             }
         });
 

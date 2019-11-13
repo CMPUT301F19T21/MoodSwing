@@ -59,7 +59,7 @@ public class FollowingFragment extends Fragment {
         userJarList.setAdapter(userJarAdaptor);
 
         // setup realtime listener
-        communicator.initFollowingList(userJarList);
+        communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());
 
         //setup listeners
 
@@ -67,6 +67,13 @@ public class FollowingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), ManagementActivity.class));
+            }
+        });
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FilterFragment(userJarList, 2).show(getActivity().getSupportFragmentManager(), "filter frag");
             }
         });
 
