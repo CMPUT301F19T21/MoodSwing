@@ -31,7 +31,6 @@ public class FilterFragment extends DialogFragment {
 
     // filter moodType List
     private ArrayList<Integer> filterList;
-    private RecyclerView moodListRecyclerView;
     private FirestoreUserDocCommunicator communicator;
     private Integer mode;
 
@@ -39,7 +38,7 @@ public class FilterFragment extends DialogFragment {
 
     public FilterFragment(){}
 
-    public FilterFragment(RecyclerView moodListRecyclerView, Integer mode){
+    public FilterFragment(Integer mode){
         // should always call filter fragment with this constructor, the empty one should never be used
         // the ArrayList<Integer> is passed by reference, so any change to it inside this fragment will also be changed inside Activity
 
@@ -47,14 +46,12 @@ public class FilterFragment extends DialogFragment {
             case 1:
                 // mode 1: moodHistory
                 this.communicator = FirestoreUserDocCommunicator.getInstance();
-                this.moodListRecyclerView = moodListRecyclerView;
                 this.mode = mode;
                 this.filterList = communicator.getMoodHistoryFilterList();
                 break;
             case 2:
                 // mode 2: followingMoodList
                 this.communicator = FirestoreUserDocCommunicator.getInstance();
-                this.moodListRecyclerView = moodListRecyclerView;
                 this.mode = mode;
                 this.filterList = communicator.getFollowingFilterList();
                 break;
@@ -91,10 +88,7 @@ public class FilterFragment extends DialogFragment {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // do something
-                // 1. remove all types from the list
-                // 2. pop all buttons
-                // 3. refresh recyclerView
+                resetFilter();
             }
         });
 
@@ -102,6 +96,37 @@ public class FilterFragment extends DialogFragment {
         setUpFilterBtnListeners();
 
         return view;
+    }
+
+    private void resetFilter(){
+        // using a for loop
+        // by doing this way, can potentially reduce UI refresh time if we have a huge number of moodTypes
+        // (by doing this way, only change UI when needed)
+        if (!(filterList.isEmpty())) {
+            for (Integer moodType : filterList) {
+                switch (moodType) {
+                    case 1:
+                        happyBtn.setCompatElevation(12f);
+                        happyBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
+                        break;
+                    case 2:
+                        sadBtn.setCompatElevation(12f);
+                        sadBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
+                        break;
+                    case 3:
+                        angryBtn.setCompatElevation(12f);
+                        angryBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
+                        break;
+                    case 4:
+                        emotionalBtn.setCompatElevation(12f);
+                        emotionalBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
+                        break;
+                }
+            }
+            filterList.clear();
+            refreshMoodList();
+            changeFilterButtonState();
+        }
     }
 
     private void loadBtnState(){
@@ -129,13 +154,42 @@ public class FilterFragment extends DialogFragment {
         }
     }
 
+    private void changeFilterButtonState(){
+        if (filterList.isEmpty()){
+            popFilterButton();
+        }else{
+            pressFilterButton();
+        }
+    }
+
     private void refreshMoodList() {
         switch (mode){
             case 1:
-                communicator.initMoodEventsList(moodListRecyclerView, filterList);
+                ((MoodHistoryFragment)getFragmentManager().findFragmentByTag("MoodHistoryFragment")).refreshMoodList();
                 break;
             case 2:
-                communicator.initFollowingList(moodListRecyclerView, filterList);
+                ((FollowingFragment)getFragmentManager().findFragmentByTag("FollowingFragment")).refreshMoodList();
+                break;
+        }
+    }
+
+    private void pressFilterButton(){
+        switch (mode){
+            case 1:
+                ((MoodHistoryFragment)getFragmentManager().findFragmentByTag("MoodHistoryFragment")).filterButtonPressed();
+                break;
+            case 2:
+                ((FollowingFragment)getFragmentManager().findFragmentByTag("FollowingFragment")).filterButtonPressed();
+                break;
+        }
+    }
+    private void popFilterButton(){
+        switch (mode){
+            case 1:
+                ((MoodHistoryFragment)getFragmentManager().findFragmentByTag("MoodHistoryFragment")).filterButtonPopped();
+                break;
+            case 2:
+                ((FollowingFragment)getFragmentManager().findFragmentByTag("FollowingFragment")).filterButtonPopped();
                 break;
         }
     }
@@ -152,6 +206,7 @@ public class FilterFragment extends DialogFragment {
                     // remove
                     filterList.remove(filterList.indexOf(1));
                     refreshMoodList();
+                    changeFilterButtonState();
                 }else{
                     // press down
                     happyBtn.setCompatElevation(0f);
@@ -159,6 +214,7 @@ public class FilterFragment extends DialogFragment {
                     // add
                     filterList.add(1);
                     refreshMoodList();
+                    changeFilterButtonState();
                 }
             }
         });
@@ -173,6 +229,7 @@ public class FilterFragment extends DialogFragment {
                     // remove
                     filterList.remove(filterList.indexOf(2));
                     refreshMoodList();
+                    changeFilterButtonState();
                 }else{
                     // press down
                     sadBtn.setCompatElevation(0f);
@@ -180,6 +237,7 @@ public class FilterFragment extends DialogFragment {
                     // add
                     filterList.add(2);
                     refreshMoodList();
+                    changeFilterButtonState();
                 }
             }
         });
@@ -194,6 +252,7 @@ public class FilterFragment extends DialogFragment {
                     // remove
                     filterList.remove(filterList.indexOf(3));
                     refreshMoodList();
+                    changeFilterButtonState();
                 }else{
                     // press down
                     angryBtn.setCompatElevation(0f);
@@ -201,6 +260,7 @@ public class FilterFragment extends DialogFragment {
                     // add
                     filterList.add(3);
                     refreshMoodList();
+                    changeFilterButtonState();
                 }
             }
         });
@@ -215,6 +275,7 @@ public class FilterFragment extends DialogFragment {
                     // remove
                     filterList.remove(filterList.indexOf(4));
                     refreshMoodList();
+                    changeFilterButtonState();
                 }else{
                     // press down
                     emotionalBtn.setCompatElevation(0f);
@@ -222,6 +283,7 @@ public class FilterFragment extends DialogFragment {
                     // add
                     filterList.add(4);
                     refreshMoodList();
+                    changeFilterButtonState();
                 }
             }
         });

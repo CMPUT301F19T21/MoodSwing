@@ -73,6 +73,13 @@ public class MoodHistoryFragment extends Fragment {
         // setup realTime listener
         communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
 
+        // setup button state
+        if (communicator.getMoodHistoryFilterList().isEmpty()){
+            filterButtonPopped();
+        }else{
+            filterButtonPressed();
+        }
+
         // setup listeners
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +114,7 @@ public class MoodHistoryFragment extends Fragment {
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FilterFragment(moodList, 1).show(getActivity().getSupportFragmentManager(), "filter frag");
+                new FilterFragment(1).show(getActivity().getSupportFragmentManager(), "filter frag");
             }
         });
 
@@ -131,5 +138,20 @@ public class MoodHistoryFragment extends Fragment {
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(moodList);
 
         return root;
+    }
+
+    public void refreshMoodList(){
+        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
+    }
+
+    public void filterButtonPressed(){
+        filterButton.setCompatElevation(0f);
+        filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+    }
+
+    public void filterButtonPopped(){
+        filterButton.setCompatElevation(12f);
+        filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
     }
 }
