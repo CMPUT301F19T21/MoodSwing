@@ -28,6 +28,7 @@ public class EditMoodActivity extends AppCompatActivity {
     MoodEvent moodEvent;
 
     private FloatingActionButton confirmButton;
+    private FloatingActionButton closeBtn;
     private EditText reasonEditText;
 
     private RecyclerView moodSelectList;
@@ -50,6 +51,7 @@ public class EditMoodActivity extends AppCompatActivity {
 
         // find view
         confirmButton = findViewById(R.id.editMood_add_confirm);
+        closeBtn = findViewById(R.id.editMood_close);
         reasonEditText = findViewById(R.id.editMood_reason_EditView);
 
         moodSelectList = findViewById(R.id.editMood_moodSelect_recycler);
@@ -85,6 +87,13 @@ public class EditMoodActivity extends AppCompatActivity {
                 }else{
                     // prompt user to select a mood
                 }
+            }
+        });
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
