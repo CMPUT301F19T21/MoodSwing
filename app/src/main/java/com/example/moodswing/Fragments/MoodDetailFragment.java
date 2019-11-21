@@ -99,7 +99,7 @@ public class MoodDetailFragment extends Fragment{
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                ((MainActivity)getActivity()).toMoodHistory();
             }
         });
 
