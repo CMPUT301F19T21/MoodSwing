@@ -131,14 +131,36 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the MoodHistory fragment
      */
     public void toMoodHistory(){
-//        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
-//        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
+        moodHistoryBtn.setColorFilter(getResources().getColor(R.color.nav_button_darkGrey));
+        followingBtn.setColorFilter(getResources().getColor(R.color.nav_button_light));
+        followingBtn.setScaleX(1.0f);
+        followingBtn.setScaleY(1.0f);
+        moodHistoryBtn.setScaleX(1.4f);
+        moodHistoryBtn.setScaleY(1.4f);
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
                 .replace(R.id.fragment_placeHolder, new MoodHistoryFragment(), "MoodHistoryFragment")
                 .commit();
     }
+
+    /**
+     * The functionality for transitioning to the toFollowing fragment
+     */
+    public void toFollowing() {
+        followingBtn.setColorFilter(getResources().getColor(R.color.nav_button_darkGrey));
+        moodHistoryBtn.setColorFilter(getResources().getColor(R.color.nav_button_light));
+        followingBtn.setScaleX(1.4f);
+        followingBtn.setScaleY(1.4f);
+        moodHistoryBtn.setScaleX(1.0f);
+        moodHistoryBtn.setScaleY(1.0f);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
+                .replace(R.id.fragment_placeHolder, new FollowingFragment(),"FollowingFragment")
+                .commit();
+    }
+
     /**
      * The functionality for transitioning to the DetailedView fragment
      */
@@ -167,18 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * The functionality for transitioning to the toFollowing fragment
-     */
-    public void toFollowing() {
-//        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
-//        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
-                .replace(R.id.fragment_placeHolder, new FollowingFragment(),"FollowingFragment")
-                .commit();
-    }
+
 
     /**
      * The functionality for transitioning to the Profile fragment

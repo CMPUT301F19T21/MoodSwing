@@ -8,6 +8,8 @@
     <color name="color_button_lightGrey_pressed">#BEBEBE</color>
     <color name="background_yellow_accent">#FAF6F4</color>
     <color name="card_background_lightYellow">#FAF8F7</color>
+    <color name="nav_button_darkGrey">#707070</color>
+    <color name="nav_button_light">#DADADA</color>
 
     <color name="background_grey">#DFDFDF</color>
     <color name="button_brown">#CCAC9F</color>
