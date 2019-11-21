@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
@@ -80,7 +81,7 @@ public class MoodDetailFollowingFragment extends Fragment{
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).toMoodHistory();
+                closeFrag();
             }
         });
 
@@ -91,6 +92,14 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
 
         return root;
+    }
+
+    private void closeFrag(){
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .remove(this)
+                .commit();
     }
 
     @Override
