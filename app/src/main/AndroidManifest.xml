@@ -15,13 +15,17 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".EditMoodActivity" />
-        <activity android:name=".Fragments.MoodDetailFragment" />
-        <activity android:name=".NewMoodActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".EditMoodActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewMoodActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".GoogleMapActivity" />
-        <activity android:name=".ManagementActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".ManagementActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
