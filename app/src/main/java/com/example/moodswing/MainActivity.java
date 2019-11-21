@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private int currentScreenPointer;
     private boolean ifDisplayNotification;
 
-    private Button moodHistoryBtn;
-    private Button followingBtn;
+    private ImageButton moodHistoryBtn;
+    private ImageButton followingBtn;
     private FloatingActionButton profileBtn;
     private FrameLayout notificationBar;
     private CardView notificationBar_card;
@@ -114,15 +115,15 @@ public class MainActivity extends AppCompatActivity {
 
         communicator.setAutoDisplayViewForNewRequest(notificationBar);
         toMoodHistory(); // default view -> moodHistory
-        displayEmptyNotificationIfEmpty();
+//        displayEmptyNotificationIfEmpty();
     }
 
     /**
      * The functionality for transitioning to the MoodHistory fragment
      */
     public void toMoodHistory(){
-        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
-        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
+//        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
+//        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
@@ -155,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the toFollowing fragment
      */
     public void toFollowing() {
-        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
-        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
+//        followingBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey));
+//        moodHistoryBtn.setBackgroundColor(getResources().getColor(R.color.color_button_lightGrey_pressed));
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
@@ -171,14 +172,14 @@ public class MainActivity extends AppCompatActivity {
         new ProfileFragment().show(getSupportFragmentManager(), "profile");
     }
 
-    public void displayEmptyNotification(){
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack("EmptyNotification")
-                .replace(R.id.notification_center, new EmptyNotificationFragment())
-                .commit();
-    }
+//    public void displayEmptyNotification(){
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                .addToBackStack("EmptyNotification")
+//                .replace(R.id.notification_center, new EmptyNotificationFragment())
+//                .commit();
+//    }
     /**
      * Signs the user out, used when logoutBtn is clicked
      */
@@ -188,19 +189,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    private void displayEmptyNotificationIfEmpty(){
-        DocumentReference userDocRef = communicator.getUserDocRef();
-        userDocRef.collection("MoodEvents")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.getResult().isEmpty()){
-                            displayEmptyNotification();
-                        }
-                    }
-                });
-    }
+//    private void displayEmptyNotificationIfEmpty(){
+//        DocumentReference userDocRef = communicator.getUserDocRef();
+//        userDocRef.collection("MoodEvents")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.getResult().isEmpty()){
+//                            displayEmptyNotification();
+//                        }
+//                    }
+//                });
+//    }
 
 
 }

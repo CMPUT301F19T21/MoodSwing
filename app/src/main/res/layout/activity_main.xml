@@ -2,38 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/background_grey">
-
-    <FrameLayout
-        android:id="@+id/fragment_placeHolder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteY="675dp">
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/notification_center"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigationBar"
-        app:layout_constraintEnd_toEndOf="@+id/fragment_placeHolder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationBar">
-
-    </FrameLayout>
+    android:background="@color/background_grey"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/notificationBar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@android:color/transparent"
+        android:elevation="7dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,9 +23,9 @@
             android:id="@+id/notificationBar_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/background_yellow_accent"
+            app:cardBackgroundColor="@color/cardview_dark_background"
             app:cardCornerRadius="5dp"
-            app:cardElevation="4dp"
+            app:cardElevation="5dp"
             app:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,6 +54,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:text="You have new following request"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/notificationBar_close_button"
@@ -86,87 +66,63 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/navigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@android:color/transparent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/nav_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:src="@drawable/ic_person_white_24dp"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:elevation="1dp"
+        app:fabCustomSize="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.cardview.widget.CardView
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="14dp"
+        app:cardBackgroundColor="@color/background_yellow_accent"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/fragment_placeHolder"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_gravity="bottom"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="10dp">
+            android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
-                <Button
-                    android:id="@+id/nav_homeBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_button_lightGrey"
-                    android:fontFamily="@font/abril_fatface"
-                    android:text="Home"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/space"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/nav_homeBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_profile"
+        app:layout_constraintEnd_toStartOf="@+id/nav_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nav_profile"
+        app:srcCompat="@drawable/ic_home_black_24dp" />
 
-                <Space
-                    android:id="@+id/space"
-                    android:layout_width="70dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <Button
-                    android:id="@+id/nav_followingBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/color_button_lightGrey_pressed"
-                    android:fontFamily="@font/abril_fatface"
-                    android:text="Following"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/space"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="85dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            app:cardBackgroundColor="#646464"
-            app:cardCornerRadius="2dp"
-            app:cardElevation="10dp">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/nav_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:src="@drawable/ic_person_white_24dp"
-                app:backgroundTint="#D5D5D5"
-                app:fabCustomSize="40dp" />
-        </androidx.cardview.widget.CardView>
-
-    </FrameLayout>
-
+    <ImageButton
+        android:id="@+id/nav_followingBtn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/nav_profile"
+        app:layout_constraintTop_toTopOf="@+id/nav_profile"
+        app:srcCompat="@drawable/ic_people_black_24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
