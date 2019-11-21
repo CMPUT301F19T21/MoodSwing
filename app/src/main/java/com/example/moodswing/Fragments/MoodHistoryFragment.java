@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.GoogleMapActivity;
+import com.example.moodswing.MainActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
@@ -114,7 +115,7 @@ public class MoodHistoryFragment extends Fragment {
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FilterFragment(1).show(getActivity().getSupportFragmentManager(), "filter frag");
+                ((MainActivity) getActivity()).openFilterFragment(1);
             }
         });
 

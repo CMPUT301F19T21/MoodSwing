@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
+import com.example.moodswing.Fragments.FilterFragment;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.MoodDetailFollowingFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
@@ -153,6 +154,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(moodPosition))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+    }
+
+    public void openFilterFragment(int mode) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }

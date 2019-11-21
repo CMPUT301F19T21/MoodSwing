@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="#33000000"
+    android:clickable="true"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:cardBackgroundColor="@color/background_yellow_accent"
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
@@ -29,7 +32,7 @@
                 android:layout_marginStart="16dp"
                 android:clickable="true"
                 app:backgroundTint="@color/color_button_lightGrey"
-                app:fabCustomSize="35dp"
+                app:fabCustomSize="40dp"
                 app:layout_constraintBottom_toBottomOf="@+id/filter_back"
                 app:layout_constraintEnd_toStartOf="@+id/filter_back"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -44,7 +47,7 @@
                 android:layout_marginBottom="24dp"
                 android:clickable="true"
                 app:backgroundTint="@color/color_button_lightGrey"
-                app:fabCustomSize="35dp"
+                app:fabCustomSize="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -65,19 +68,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/filter_happyBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:backgroundTint="@android:color/white"
-                app:fabCustomSize="45dp"
-                app:layout_constraintBottom_toBottomOf="@+id/filter_sadBtn"
-                app:layout_constraintEnd_toStartOf="@+id/filter_sadBtn"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/mood1" />
-
             <View
                 android:id="@+id/filter_separator"
                 android:layout_width="match_parent"
@@ -92,95 +82,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/filter_sadBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:backgroundTint="@android:color/white"
-                app:fabCustomSize="45dp"
-                app:layout_constraintBottom_toBottomOf="@+id/filter_angryBtn"
-                app:layout_constraintEnd_toStartOf="@+id/filter_angryBtn"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/filter_happyBtn"
-                app:srcCompat="@drawable/mood2" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/filter_angryBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:backgroundTint="@android:color/white"
-                app:fabCustomSize="45dp"
-                app:layout_constraintBottom_toBottomOf="@+id/filter_emotionalBtn"
-                app:layout_constraintEnd_toStartOf="@+id/filter_emotionalBtn"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/filter_sadBtn"
-                app:srcCompat="@drawable/mood3" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/filter_emotionalBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recylerView_filterFrag"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
                 android:layout_marginTop="16dp"
-                android:clickable="true"
-                app:backgroundTint="@android:color/white"
-                app:fabCustomSize="45dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/filter_angryBtn"
-                app:layout_constraintTop_toBottomOf="@+id/filter_text"
-                app:srcCompat="@drawable/mood4" />
-
-            <TextView
-                android:id="@+id/filter_happyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-light"
-                android:text="HAPPY"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="@+id/filter_happyBtn"
-                app:layout_constraintStart_toStartOf="@+id/filter_happyBtn"
-                app:layout_constraintTop_toBottomOf="@+id/filter_happyBtn" />
-
-            <TextView
-                android:id="@+id/filter_sadText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-light"
-                android:text="SAD"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="@+id/filter_sadBtn"
-                app:layout_constraintStart_toStartOf="@+id/filter_sadBtn"
-                app:layout_constraintTop_toBottomOf="@+id/filter_sadBtn" />
-
-            <TextView
-                android:id="@+id/filter_emotionalText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:fontFamily="sans-serif-light"
-                android:text="EMOTIONAL"
-                android:textSize="10sp"
                 app:layout_constraintBottom_toTopOf="@+id/filter_separator"
-                app:layout_constraintEnd_toEndOf="@+id/filter_emotionalBtn"
-                app:layout_constraintStart_toStartOf="@+id/filter_emotionalBtn"
-                app:layout_constraintTop_toBottomOf="@+id/filter_emotionalBtn" />
-
-            <TextView
-                android:id="@+id/filter_angryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-light"
-                android:text="ANGRY"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="@+id/filter_angryBtn"
-                app:layout_constraintStart_toStartOf="@+id/filter_angryBtn"
-                app:layout_constraintTop_toBottomOf="@+id/filter_angryBtn" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_text" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

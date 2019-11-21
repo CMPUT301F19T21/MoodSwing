@@ -14,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@color/card_background_lightYellow"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="8dp"
         app:cardUseCompatPadding="true"
         app:contentPadding="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
