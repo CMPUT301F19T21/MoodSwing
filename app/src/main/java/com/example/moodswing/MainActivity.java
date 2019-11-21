@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeHolder, new MoodHistoryFragment(), "MoodHistoryFragment")
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.fragment_placeHolder, new FollowingFragment(), "FollowingFragment")
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .add(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition),"moodHistoryDetailedFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public void toDetailedView_following(int moodPosition) {
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .add(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(moodPosition),"followingDetailedFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     public void openFilterFragment(int mode) {
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /**
@@ -215,16 +215,16 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeHolder, new EmptyNotificationFragment(), "EmptyMoodHistoryNotification")
-                .commit();
+                .replace(R.id.fragment_placeHolder, new EmptyNotificationFragment())
+                .commitAllowingStateLoss();
     }
 
     public void toFollowingEmptyFragment(){
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeHolder, new EmptyNotificationFollowingFragment(), "EmptyFollowingNotification")
-                .commit();
+                .replace(R.id.fragment_placeHolder, new EmptyNotificationFollowingFragment())
+                .commitAllowingStateLoss();
     }
 
     /**
