@@ -131,15 +131,15 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the MoodHistory fragment
      */
     public void toMoodHistory(){
-        moodHistoryBtn.setColorFilter(getResources().getColor(R.color.nav_button_darkGrey));
-        followingBtn.setColorFilter(getResources().getColor(R.color.nav_button_light));
+        moodHistoryBtn.setColorFilter(getResources().getColor(R.color.nav_button_light));
+        followingBtn.setColorFilter(getResources().getColor(R.color.nav_button_darkGrey));
         followingBtn.setScaleX(1.0f);
         followingBtn.setScaleY(1.0f);
         moodHistoryBtn.setScaleX(1.4f);
         moodHistoryBtn.setScaleY(1.4f);
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.fragment_placeHolder, new MoodHistoryFragment(), "MoodHistoryFragment")
                 .commit();
     }
@@ -148,15 +148,15 @@ public class MainActivity extends AppCompatActivity {
      * The functionality for transitioning to the toFollowing fragment
      */
     public void toFollowing() {
-        followingBtn.setColorFilter(getResources().getColor(R.color.nav_button_darkGrey));
-        moodHistoryBtn.setColorFilter(getResources().getColor(R.color.nav_button_light));
+        followingBtn.setColorFilter(getResources().getColor(R.color.nav_button_light));
+        moodHistoryBtn.setColorFilter(getResources().getColor(R.color.nav_button_darkGrey));
         followingBtn.setScaleX(1.4f);
         followingBtn.setScaleY(1.4f);
         moodHistoryBtn.setScaleX(1.0f);
         moodHistoryBtn.setScaleY(1.0f);
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(R.anim.nav_default_pop_enter_anim, R.anim.nav_default_pop_exit_anim)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.fragment_placeHolder, new FollowingFragment(),"FollowingFragment")
                 .commit();
     }
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     public void toDetailedView(int moodPosition) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition))
+                .add(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition),"moodHistoryDetailedFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     public void toDetailedView_following(int moodPosition) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(moodPosition))
+                .add(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(moodPosition),"followingDetailedFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
