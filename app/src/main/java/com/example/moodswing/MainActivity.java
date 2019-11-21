@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.moodswing.Fragments.EmptyNotificationFollowingFragment;
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
 import com.example.moodswing.Fragments.FilterFragment;
 import com.example.moodswing.Fragments.FollowingFragment;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int FOLLOWING_SCREEN = 2;
 
     private int currentScreenPointer;
-    private boolean ifDisplayNotification;
 
     private ImageButton moodHistoryBtn;
     private ImageButton followingBtn;
@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout notificationBar;
     private CardView notificationBar_card;
     private FloatingActionButton notificationBar_closeBtn;
+
+    private Boolean moodHistoryIsEmpty;
+    private Boolean moodFollowingIsEmpty;
 
 
     /**
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         communicator = FirestoreUserDocCommunicator.getInstance();
+        moodHistoryIsEmpty = null;      // init to default value - true
+        moodFollowingIsEmpty = null;    //
 
 
         // link all elements
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         // other action that need to be init
         communicator.setAutoDisplayViewForNewRequest(notificationBar);
         toMoodHistory();
-//        initEmptyNotificationOverLay();
+        initEmptyListener();
     }
 
     @Override
@@ -137,11 +142,17 @@ public class MainActivity extends AppCompatActivity {
         followingBtn.setScaleY(1.0f);
         moodHistoryBtn.setScaleX(1.4f);
         moodHistoryBtn.setScaleY(1.4f);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeHolder, new MoodHistoryFragment(), "MoodHistoryFragment")
-                .commit();
+        currentScreenPointer = MOOD_HISTORY_SCREEN;
+        if ((moodHistoryIsEmpty != null) && (moodHistoryIsEmpty)){
+            toMoodHistoryEmptyFragment();
+        }else {
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeHolder, new MoodHistoryFragment(), "MoodHistoryFragment")
+                    .commit();
+        }
     }
 
     /**
@@ -154,11 +165,16 @@ public class MainActivity extends AppCompatActivity {
         followingBtn.setScaleY(1.4f);
         moodHistoryBtn.setScaleX(1.0f);
         moodHistoryBtn.setScaleY(1.0f);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_placeHolder, new FollowingFragment(),"FollowingFragment")
-                .commit();
+        currentScreenPointer = FOLLOWING_SCREEN;
+        if ((moodHistoryIsEmpty != null) && (moodFollowingIsEmpty)){
+            toFollowingEmptyFragment();
+        }else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_placeHolder, new FollowingFragment(), "FollowingFragment")
+                    .commit();
+        }
     }
 
     /**
@@ -188,9 +204,6 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-
-
-
     /**
      * The functionality for transitioning to the Profile fragment
      */
@@ -198,23 +211,22 @@ public class MainActivity extends AppCompatActivity {
         new ProfileFragment().show(getSupportFragmentManager(), "profile");
     }
 
-//    public void displayEmptyNotification(){
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .replace(R.id.fragment_notification_overlay, new EmptyNotificationFragment(), "EmptyNotification")
-//                .commit();
-//    }
-//
-//    public void clearNotificationOverlay(){
-//        Fragment emptyNotificationFrag = getSupportFragmentManager().findFragmentByTag("EmptyNotification");
-//        if (emptyNotificationFrag != null){
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .remove(emptyNotificationFrag)
-//                    .commit();
-//        }
-//    }
+    public void toMoodHistoryEmptyFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_placeHolder, new EmptyNotificationFragment(), "EmptyMoodHistoryNotification")
+                .commit();
+    }
+
+    public void toFollowingEmptyFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_placeHolder, new EmptyNotificationFollowingFragment(), "EmptyFollowingNotification")
+                .commit();
+    }
+
     /**
      * Signs the user out, used when logoutBtn is clicked
      */
@@ -224,21 +236,60 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-//    private void initEmptyNotificationOverLay(){
-//        // fun feature, just for fun, need better implementation
-//        DocumentReference userDocRef = communicator.getUserDocRef();
-//        userDocRef.collection("MoodEvents")
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                        if (queryDocumentSnapshots.isEmpty()){
-//                            displayEmptyNotification();
-//                        }else{
-//                            clearNotificationOverlay();
-//                        }
-//                    }
-//                });
-//    }
+    private void initEmptyListener(){
+        // fun feature, just for fun, need better implementation
+        DocumentReference userDocRef = communicator.getUserDocRef();
+        userDocRef.collection("MoodEvents")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (queryDocumentSnapshots != null){
+                            if (queryDocumentSnapshots.isEmpty()){
+                                if ((moodHistoryIsEmpty == null)||(!moodHistoryIsEmpty)){
+                                    moodHistoryIsEmpty = true;
+                                    if (currentScreenPointer == MOOD_HISTORY_SCREEN){
+                                        // trigger a instant lock
+                                        toMoodHistoryEmptyFragment();
+                                    }
+                                }
+                            }else{
+                                if ((moodHistoryIsEmpty == null)||(moodHistoryIsEmpty)){
+                                    moodHistoryIsEmpty = false;
+                                    if (currentScreenPointer == MOOD_HISTORY_SCREEN) {
+                                        // trigger un lock
+                                        toMoodHistory();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+        userDocRef.collection("followingMoodList")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (queryDocumentSnapshots != null){
+                            if (queryDocumentSnapshots.isEmpty()){
+                                if ((moodFollowingIsEmpty == null)||(!moodFollowingIsEmpty)){
+                                    moodFollowingIsEmpty = true;
+                                    if (currentScreenPointer == FOLLOWING_SCREEN){
+                                        // trigger a instant lock
+                                        toFollowingEmptyFragment();
+                                    }
+                                }
+                            }else{
+                                if ((moodFollowingIsEmpty == null)||(moodFollowingIsEmpty)){
+                                    moodFollowingIsEmpty = false;
+                                    if (currentScreenPointer == FOLLOWING_SCREEN) {
+                                        // trigger un lock
+                                        toFollowing();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
 
 
 }
