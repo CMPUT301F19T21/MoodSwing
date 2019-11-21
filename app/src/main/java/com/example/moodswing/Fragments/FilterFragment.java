@@ -10,29 +10,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.SelectMoodAdapter;
+import com.example.moodswing.customDataTypes.SelectMoodFilterAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class FilterFragment extends DialogFragment {
+public class FilterFragment extends Fragment {
     private FloatingActionButton backBtn;
     private FloatingActionButton resetBtn;
 
-    // filter buttons
-    private FloatingActionButton happyBtn;
-    private FloatingActionButton sadBtn;
-    private FloatingActionButton angryBtn;
-    private FloatingActionButton emotionalBtn;
+    // filter recyclerView
+    private RecyclerView moodSelectList;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private SelectMoodAdapter moodSelectAdapter;
 
     // filter moodType List
     private ArrayList<Integer> filterList;
     private FirestoreUserDocCommunicator communicator;
     private Integer mode;
+
+    // Fragment itself
+    private FilterFragment filterFragment; // a reference to itself
 
 
 
@@ -41,7 +48,7 @@ public class FilterFragment extends DialogFragment {
     public FilterFragment(Integer mode){
         // should always call filter fragment with this constructor, the empty one should never be used
         // the ArrayList<Integer> is passed by reference, so any change to it inside this fragment will also be changed inside Activity
-
+        this.filterFragment = this;
         switch (mode) {
             case 1:
                 // mode 1: moodHistory
@@ -58,103 +65,62 @@ public class FilterFragment extends DialogFragment {
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
-        getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         // link elements
         backBtn = view.findViewById(R.id.filter_back);
         resetBtn = view.findViewById(R.id.filter_reset);
 
-        happyBtn = view.findViewById(R.id.filter_happyBtn);
-        sadBtn = view.findViewById(R.id.filter_sadBtn);
-        angryBtn = view.findViewById(R.id.filter_angryBtn);
-        emotionalBtn = view.findViewById(R.id.filter_emotionalBtn);
+        moodSelectList = view.findViewById(R.id.recylerView_filterFrag);
+        // recyclerView
+        recyclerViewLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        moodSelectAdapter = new SelectMoodFilterAdapter(filterList, filterFragment);
+        moodSelectList.setLayoutManager(recyclerViewLayoutManager);
+        moodSelectList.setAdapter(moodSelectAdapter);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                closeFragment();
             }
         });
 
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetFilter();
+                filterList.clear();
+                moodSelectAdapter = new SelectMoodFilterAdapter(filterList, filterFragment);
+                moodSelectList.setAdapter(moodSelectAdapter);
+                refreshMoodList();
+                changeFilterButtonState();
             }
         });
 
-        loadBtnState();
-        setUpFilterBtnListeners();
+        moodSelectList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshMoodList();
+                changeFilterButtonState();
+            }
+        });
 
         return view;
     }
 
-    private void resetFilter(){
-        // using a for loop
-        // by doing this way, can potentially reduce UI refresh time if we have a huge number of moodTypes
-        // (by doing this way, only change UI when needed)
-        if (!(filterList.isEmpty())) {
-            for (Integer moodType : filterList) {
-                switch (moodType) {
-                    case 1:
-                        happyBtn.setCompatElevation(12f);
-                        happyBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                        break;
-                    case 2:
-                        sadBtn.setCompatElevation(12f);
-                        sadBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                        break;
-                    case 3:
-                        angryBtn.setCompatElevation(12f);
-                        angryBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                        break;
-                    case 4:
-                        emotionalBtn.setCompatElevation(12f);
-                        emotionalBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                        break;
-                }
-            }
-            filterList.clear();
-            refreshMoodList();
-            changeFilterButtonState();
-        }
+    private void closeFragment(){
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .remove(this)
+                .commit();
     }
 
-    private void loadBtnState(){
-        if (!(filterList.isEmpty())){
-            for (Integer moodType : filterList){
-                switch (moodType){
-                    case 1:
-                        happyBtn.setCompatElevation(0f);
-                        happyBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                        break;
-                    case 2:
-                        sadBtn.setCompatElevation(0f);
-                        sadBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                        break;
-                    case 3:
-                        angryBtn.setCompatElevation(0f);
-                        angryBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                        break;
-                    case 4:
-                        emotionalBtn.setCompatElevation(0f);
-                        emotionalBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                        break;
-                }
-            }
-        }
-    }
-
-    private void changeFilterButtonState(){
+    public void changeFilterButtonState(){
         if (filterList.isEmpty()){
             popFilterButton();
         }else{
@@ -162,7 +128,7 @@ public class FilterFragment extends DialogFragment {
         }
     }
 
-    private void refreshMoodList() {
+    public void refreshMoodList() {
         switch (mode){
             case 1:
                 ((MoodHistoryFragment)getFragmentManager().findFragmentByTag("MoodHistoryFragment")).refreshMoodList();
@@ -192,100 +158,5 @@ public class FilterFragment extends DialogFragment {
                 ((FollowingFragment)getFragmentManager().findFragmentByTag("FollowingFragment")).filterButtonPopped();
                 break;
         }
-    }
-
-    private void setUpFilterBtnListeners(){
-
-        happyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filterList.contains(1)){
-                    // pop up
-                    happyBtn.setCompatElevation(12f);
-                    happyBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                    // remove
-                    filterList.remove(filterList.indexOf(1));
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }else{
-                    // press down
-                    happyBtn.setCompatElevation(0f);
-                    happyBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                    // add
-                    filterList.add(1);
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }
-            }
-        });
-
-        sadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filterList.contains(2)){
-                    // pop up
-                    sadBtn.setCompatElevation(12f);
-                    sadBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                    // remove
-                    filterList.remove(filterList.indexOf(2));
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }else{
-                    // press down
-                    sadBtn.setCompatElevation(0f);
-                    sadBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                    // add
-                    filterList.add(2);
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }
-            }
-        });
-
-        angryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filterList.contains(3)){
-                    // pop up
-                    angryBtn.setCompatElevation(12f);
-                    angryBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                    // remove
-                    filterList.remove(filterList.indexOf(3));
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }else{
-                    // press down
-                    angryBtn.setCompatElevation(0f);
-                    angryBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                    // add
-                    filterList.add(3);
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }
-            }
-        });
-
-        emotionalBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filterList.contains(4)){
-                    // pop up
-                    emotionalBtn.setCompatElevation(12f);
-                    emotionalBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(android.R.color.white)));
-                    // remove
-                    filterList.remove(filterList.indexOf(4));
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }else{
-                    // press down
-                    emotionalBtn.setCompatElevation(0f);
-                    emotionalBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
-                    // add
-                    filterList.add(4);
-                    refreshMoodList();
-                    changeFilterButtonState();
-                }
-            }
-        });
     }
 }

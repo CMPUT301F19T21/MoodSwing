@@ -129,6 +129,11 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         });
     }
 
+    // useful for its subclass
+    public ArrayList<Integer> getMoodTypes() {
+        return moodTypes;
+    }
+
     @Override
     public int getItemCount() {
         return moodTypes.size();

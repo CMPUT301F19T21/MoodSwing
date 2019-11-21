@@ -8,11 +8,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
+import com.example.moodswing.Fragments.FilterFragment;
 import com.example.moodswing.Fragments.FollowingFragment;
 import com.example.moodswing.Fragments.MoodDetailFollowingFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
@@ -23,6 +26,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 //This activity holds the following, profile, and Home fragments, and holds the functionality for
@@ -112,10 +117,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // other action that need to be init
-
         communicator.setAutoDisplayViewForNewRequest(notificationBar);
-        toMoodHistory(); // default view -> moodHistory
-//        displayEmptyNotificationIfEmpty();
+        toMoodHistory();
+//        initEmptyNotificationOverLay();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     /**
@@ -137,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition))
-                .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
@@ -146,7 +154,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(moodPosition))
-                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+    }
+
+    public void openFilterFragment(int mode) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
@@ -176,9 +191,18 @@ public class MainActivity extends AppCompatActivity {
 //        getSupportFragmentManager()
 //                .beginTransaction()
 //                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .addToBackStack("EmptyNotification")
-//                .replace(R.id.notification_center, new EmptyNotificationFragment())
+//                .replace(R.id.fragment_notification_overlay, new EmptyNotificationFragment(), "EmptyNotification")
 //                .commit();
+//    }
+//
+//    public void clearNotificationOverlay(){
+//        Fragment emptyNotificationFrag = getSupportFragmentManager().findFragmentByTag("EmptyNotification");
+//        if (emptyNotificationFrag != null){
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .remove(emptyNotificationFrag)
+//                    .commit();
+//        }
 //    }
     /**
      * Signs the user out, used when logoutBtn is clicked
@@ -189,15 +213,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-//    private void displayEmptyNotificationIfEmpty(){
+//    private void initEmptyNotificationOverLay(){
+//        // fun feature, just for fun, need better implementation
 //        DocumentReference userDocRef = communicator.getUserDocRef();
 //        userDocRef.collection("MoodEvents")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
 //                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.getResult().isEmpty()){
+//                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                        if (queryDocumentSnapshots.isEmpty()){
 //                            displayEmptyNotification();
+//                        }else{
+//                            clearNotificationOverlay();
 //                        }
 //                    }
 //                });
