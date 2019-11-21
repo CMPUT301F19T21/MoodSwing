@@ -10,7 +10,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/emptyNotifcation_addBtn"
+        android:id="@+id/emptyNotifcation_Btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -25,7 +25,7 @@
         tools:layout_conversion_absoluteWidth="45dp" />
 
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/emptyNotification_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -35,9 +35,9 @@
         android:text="CLICK TO ADD FIRST MOOD EVENT"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/emptyNotifcation_addBtn"
-        app:layout_constraintStart_toStartOf="@+id/emptyNotifcation_addBtn"
-        app:layout_constraintTop_toBottomOf="@+id/emptyNotifcation_addBtn"
+        app:layout_constraintEnd_toEndOf="@+id/emptyNotifcation_Btn"
+        app:layout_constraintStart_toStartOf="@+id/emptyNotifcation_Btn"
+        app:layout_constraintTop_toBottomOf="@+id/emptyNotifcation_Btn"
         tools:layout_conversion_absoluteHeight="67dp"
         tools:layout_conversion_absoluteWidth="213dp" />
 
