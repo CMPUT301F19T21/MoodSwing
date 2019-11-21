@@ -102,6 +102,14 @@
             android:layout_height="match_parent">
 
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_notification_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
     </androidx.cardview.widget.CardView>
 
     <ImageButton

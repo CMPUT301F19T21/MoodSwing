@@ -4,66 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="@color/background_yellow_accent"
+    android:clickable="true"
     tools:context=".Fragments.EmptyNotificationFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="64dp"
-        app:cardBackgroundColor="@color/background_yellow_accent"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="10dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/emptyNotifcation_addBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_add_black_24dp"
+        app:backgroundTint="@color/button_brown"
+        app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="45dp"
+        tools:layout_conversion_absoluteWidth="45dp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_conversion_absoluteHeight="722dp"
-            tools:layout_conversion_absoluteWidth="402dp"
-            tools:layout_editor_absoluteX="5dp"
-            tools:layout_editor_absoluteY="5dp">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/emptyNotifcation_backBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:src="@drawable/ic_clear_black_24dp"
-                app:backgroundTint="@color/button_brown"
-                app:fabCustomSize="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_conversion_absoluteHeight="45dp"
-                tools:layout_conversion_absoluteWidth="45dp" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:text="Empty Mood History, Please add a moodEvent to start."
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_conversion_absoluteHeight="67dp"
-                tools:layout_conversion_absoluteWidth="213dp"
-                tools:layout_editor_absoluteX="99dp"
-                tools:layout_editor_absoluteY="333dp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:text="CLICK TO ADD FIRST MOOD EVENT"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/emptyNotifcation_addBtn"
+        app:layout_constraintStart_toStartOf="@+id/emptyNotifcation_addBtn"
+        app:layout_constraintTop_toBottomOf="@+id/emptyNotifcation_addBtn"
+        tools:layout_conversion_absoluteHeight="67dp"
+        tools:layout_conversion_absoluteWidth="213dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
