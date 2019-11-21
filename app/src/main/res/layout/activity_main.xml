@@ -27,10 +27,10 @@
                 android:hapticFeedbackEnabled="true"
                 android:scaleX="1"
                 android:scaleY="1"
-                app:layout_constraintBottom_toBottomOf="@+id/nav_profile"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/nav_profile"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/nav_profile"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2"
                 app:srcCompat="@drawable/ic_home_black_24dp" />
 
             <ImageButton
@@ -41,13 +41,14 @@
                 android:hapticFeedbackEnabled="true"
                 android:scaleX="1"
                 android:scaleY="1"
-                app:layout_constraintBottom_toBottomOf="@+id/nav_profile"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/nav_profile"
-                app:layout_constraintTop_toTopOf="@+id/nav_profile"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2"
                 app:srcCompat="@drawable/ic_people_black_24dp" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
@@ -83,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="14dp"
                 android:clickable="true"
                 android:src="@drawable/ic_person_white_24dp"
                 app:backgroundTint="@color/colorPrimaryDark"
