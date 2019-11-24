@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -75,7 +76,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private boolean ifLocationEnabled;
     private Integer socialSituation;
 
-    private String cameraFilePath;
+    private String currentPhotoPath;
 
     /**
      * All the fields for creating a new mood are created and the current date/time are generated.
@@ -188,10 +189,22 @@ public class NewMoodActivity extends AppCompatActivity {
         addNewImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new ImageFragment().show(getSupportFragmentManager(),"image");
             }
         });
+    }
+
+    public void pickFromGallery(){
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        startActivityForResult(intent,0);
+    }
+
+    public void takePhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, 1);
     }
 
 
@@ -205,8 +218,29 @@ public class NewMoodActivity extends AppCompatActivity {
                     Uri selectedImage = data.getData();
                     addNewImageButton.setImageURI(selectedImage);
                     break;
+                case 1:
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    addNewImageButton.setImageBitmap(imageBitmap);
+
             }
 
+    }
+
+    private File Saveimage() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     private void setSocialSituationBtns(){
