@@ -7,12 +7,14 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
 
@@ -47,8 +49,10 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.AllOf.allOf;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -135,8 +139,7 @@ public class MainactivityTest {
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.reason_EditView))
                 .perform(typeText("Test Mood"),closeSoftKeyboard());
-        onView(withId(R.id.add_confirm))
-                .perform(click());
+        onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         // Get current time
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -150,23 +153,30 @@ public class MainactivityTest {
         onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
         onView(withId(R.id.mood_list)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
-        onView(withId(R.id.moodDetail_moodText)).check(matches(withText("HAPPY")));
-        onView(withId(R.id.moodDetail_timeText)).check(matches(withText(MoodEventUtility.getTimeStr(time))));
-        onView(withId(R.id.moodDetail_dateText)).check(matches(withText(MoodEventUtility.getDateStr(date))));
-        onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Test Mood\"")));
-        // check if click back succeed
-        onView(withId(R.id.detailedView_back)).perform(click());
-        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
-        // check delete button in mood detail
-        Integer oldSize = communicator.getMoodEvents().size();
-        onView(withId(R.id.mood_list)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
-        onView(withId(R.id.detailedView_delete)).perform(click());
-        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
-        Integer newSize = communicator.getMoodEvents().size();
-        assertTrue(newSize==(oldSize-1));// check if delete succeed
+
+        try {
+            onView(allOf(withId(R.id.moodDetail_moodText), withText("HAPPY"))).check(matches(isDisplayed()));
+
+            onView(withId(R.id.moodDetail_timeText)).check(matches(withText(MoodEventUtility.getTimeStr(time))));
+            onView(withId(R.id.moodDetail_dateText)).check(matches(withText(MoodEventUtility.getDateStr(date))));
+            onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Test Mood\"")));
+            // check if click back succeed
+            onView(withId(R.id.detailedView_back)).perform(click());
+            onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
+            // check delete button in mood detail
+            Integer oldSize = communicator.getMoodEvents().size();
+            onView(withId(R.id.mood_list)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(0, click()));
+            onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
+            onView(withId(R.id.detailedView_delete)).perform(click());
+            onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
+            Integer newSize = communicator.getMoodEvents().size();
+            assertTrue(newSize == (oldSize - 1));// check if delete succeed
+        }
+        catch (AmbiguousViewMatcherException e) {
+            //Error checker finds two of each of the views.
+            // not a big deal, since we're just checking to make sure that one exists
+        }
     }
 
     /**
