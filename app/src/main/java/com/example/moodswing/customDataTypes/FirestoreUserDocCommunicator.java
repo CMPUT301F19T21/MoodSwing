@@ -1,5 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
@@ -7,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +24,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,6 +49,8 @@ public class FirestoreUserDocCommunicator{
     private ArrayList<UserJar> userJars;
     // reference
 
+    private FirebaseStorage storage;
+
     // other
     private Integer requestCount;
 
@@ -65,6 +72,8 @@ public class FirestoreUserDocCommunicator{
         // init filter
         moodTypeFilterList_moodHistory = new ArrayList<>();
         moodTypeFilterList_following = new ArrayList<>();
+
+        storage = FirebaseStorage.getInstance();
     }
 
     private boolean ifLogin(){
@@ -792,6 +801,44 @@ public class FirestoreUserDocCommunicator{
 
     public void deleteUser() {
         //
+    }
+
+
+    public void addPhoto(String id, Uri filePath) {
+
+        StorageReference storageRef = storage.getReference();
+
+        StorageReference storageName = storageRef.child(getUsername() + "/" + id);
+
+        UploadTask uploadTask = storageName.putFile(filePath);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+            }
+        });
+
+
+    }
+
+    //firebase database string implementation of adding photo. don't think i'll use it
+
+    public void addPhotoString(MoodEvent moodEvent, String image) {
+        DocumentReference moodEventRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(moodEvent.getUniqueID())
+                .collection("pictures")
+                .document("picture");
+        moodEventRef.set(image);
+
+
     }
 
 
