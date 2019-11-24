@@ -38,6 +38,7 @@ import static androidx.core.util.Preconditions.checkNotNull;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -75,7 +76,7 @@ public class MainactivityTest {
         onView(withId(R.id.nav_profile)).perform(click());
         onView(withId(R.id.profile_LogOut)).perform(click());}
         onView(withId(R.id.userEmailField))
-                .perform(typeText("test@123.com"),closeSoftKeyboard());
+                .perform(typeText("test@mail.com"),closeSoftKeyboard());
         onView(withId(R.id.passField))
                 .perform(typeText("123456"),closeSoftKeyboard());
         onView(withId(R.id.loginComfirmBtn)).perform(click());
@@ -100,8 +101,7 @@ public class MainactivityTest {
         onView(withId(R.id.reason_EditView))
                 .perform(typeText("Test Mood"),closeSoftKeyboard());
         Integer oldSize = communicator.getMoodEvents().size();
-        onView(withId(R.id.add_confirm))
-        .perform(click());
+        onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         // check if item correct added
         onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
         Integer newSize = communicator.getMoodEvents().size();
