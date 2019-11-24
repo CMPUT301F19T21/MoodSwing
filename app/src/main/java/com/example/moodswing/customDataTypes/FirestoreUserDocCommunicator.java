@@ -804,11 +804,11 @@ public class FirestoreUserDocCommunicator{
     }
 
 
-    public void addPhoto(MoodEvent moodEvent, Uri filePath) {
+    public void addPhoto(Uri filePath) {
 
         StorageReference storageRef = storage.getReference();
 
-        StorageReference storageName = storageRef.child(getUsername() + "/" + moodEvent.getUniqueID());
+        StorageReference storageName = storageRef.child(getUsername() + "/" + generateMoodID());
 
         UploadTask uploadTask = storageName.putFile(filePath);
 
