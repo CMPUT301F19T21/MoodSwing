@@ -85,7 +85,7 @@ public class MoodHistoryFragment extends Fragment {
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), GoogleMapActivity.class));
+                ((MainActivity) getActivity()).openMapFragment();
             }
         });
         addButton.setOnClickListener(new View.OnClickListener() {

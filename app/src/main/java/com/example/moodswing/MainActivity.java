@@ -18,6 +18,7 @@ import com.example.moodswing.Fragments.EmptyNotificationFollowingFragment;
 import com.example.moodswing.Fragments.EmptyNotificationFragment;
 import com.example.moodswing.Fragments.FilterFragment;
 import com.example.moodswing.Fragments.FollowingFragment;
+import com.example.moodswing.Fragments.MapFragment;
 import com.example.moodswing.Fragments.MoodDetailFollowingFragment;
 import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.Fragments.MoodHistoryFragment;
@@ -199,8 +200,17 @@ public class MainActivity extends AppCompatActivity {
     public void openFilterFragment(int mode) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
+
+                .commitAllowingStateLoss();
+    }
+
+    public void openMapFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(),"filterFrag")
                 .commitAllowingStateLoss();
     }
 
@@ -290,7 +300,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 }
 
