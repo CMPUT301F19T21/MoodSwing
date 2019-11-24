@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moodswing.Fragments.ImageFragment;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.LocationToAddressTask;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
@@ -344,33 +345,8 @@ public class NewMoodActivity extends AppCompatActivity {
     }
 
     private void getAddress(){
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        if (currentLocation != null){
-            try {
-                List<Address> firstAddressList = geocoder.getFromLocation(currentLocation.getLatitude(),currentLocation.getLongitude(),1);
-                if (firstAddressList != null){
-                    if (firstAddressList.isEmpty()){
-                        // error
-                    }else{
-                        //
-                        Address address = firstAddressList.get(0);
-                        String thoroughfare = address.getThoroughfare();
-                        if (thoroughfare == null){
-                            geoLocationText.setText("nowhere!");
-                        }else{
-                            geoLocationText.setText(thoroughfare);
-                        }
-                    }
-                }else {
-                    // error
-                }
-            } catch (Exception e) {
-                // display error msg
-                e.printStackTrace();
-            }
-        }else{
-            //
-        }
+        LocationToAddressTask task = new LocationToAddressTask(this,currentLocation, geoLocationText);
+        task.execute();
     }
 
     private void locationBtnPop() {
