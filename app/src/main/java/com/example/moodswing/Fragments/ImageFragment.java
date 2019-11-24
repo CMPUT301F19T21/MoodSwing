@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.moodswing.MainActivity;
+import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 
@@ -40,21 +41,21 @@ public class ImageFragment extends DialogFragment {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
                 dismiss();
-                startActivityForResult(takePictureIntent, 1);
+                NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                callingActivity.takePhoto();
+
             }
         });
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //select photo from gallery
-                Intent intent=new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                String[] mimeTypes = {"image/jpeg", "image/png"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
                 dismiss();
-                startActivityForResult(intent,0);
+                NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                callingActivity.pickFromGallery();
+
 
             }
         });
