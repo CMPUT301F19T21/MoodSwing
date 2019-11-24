@@ -38,6 +38,7 @@ import static androidx.core.util.Preconditions.checkNotNull;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -75,7 +76,7 @@ public class MainactivityTest {
         onView(withId(R.id.nav_profile)).perform(click());
         onView(withId(R.id.profile_LogOut)).perform(click());}
         onView(withId(R.id.userEmailField))
-                .perform(typeText("test@123.com"),closeSoftKeyboard());
+                .perform(typeText("test@mail.com"),closeSoftKeyboard());
         onView(withId(R.id.passField))
                 .perform(typeText("123456"),closeSoftKeyboard());
         onView(withId(R.id.loginComfirmBtn)).perform(click());
@@ -92,21 +93,28 @@ public class MainactivityTest {
     @Test
     public void CheckAddMood() throws InterruptedException {
         // check add mood activity
-        onView(withId(R.id.home_add))
-                .perform(click());
-        intended(hasComponent(NewMoodActivity.class.getName()));
-        onView(withId(R.id.moodSelect_recycler)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(2, click()));
-        onView(withId(R.id.reason_EditView))
-                .perform(typeText("Test Mood"),closeSoftKeyboard());
-        Integer oldSize = communicator.getMoodEvents().size();
-        onView(withId(R.id.add_confirm))
-        .perform(click());
-        // check if item correct added
-        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
-        Integer newSize = communicator.getMoodEvents().size();
-        assertTrue(newSize==(oldSize+1));
-        assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
+
+        try {
+            onView(withText("CLICK TO ADD FIRST MOOD EVENT")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+            //view is displayed logic
+        } catch (NoMatchingViewException e) {
+            //view not displayed logic
+            onView(withId(R.id.home_add))
+                    .perform(click());
+        }
+            intended(hasComponent(NewMoodActivity.class.getName()));
+            onView(withId(R.id.moodSelect_recycler)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(2, click()));
+            onView(withId(R.id.reason_EditView))
+                    .perform(typeText("Test Mood"), closeSoftKeyboard());
+            Integer oldSize = communicator.getMoodEvents().size();
+            onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
+            // check if item correct added
+            onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
+            Integer newSize = communicator.getMoodEvents().size();
+            assertTrue(newSize == (oldSize + 1));
+            assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
 
 
     }
