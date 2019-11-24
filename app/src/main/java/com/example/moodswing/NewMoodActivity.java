@@ -1,21 +1,30 @@
 package com.example.moodswing;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.Fragments.ImageFragment;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
@@ -28,7 +37,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 // The screen for adding a new mood, accessed from the Home screen.
 
@@ -61,6 +74,8 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private boolean ifLocationEnabled;
     private Integer socialSituation;
+
+    private String cameraFilePath;
 
     /**
      * All the fields for creating a new mood are created and the current date/time are generated.
@@ -136,7 +151,7 @@ public class NewMoodActivity extends AppCompatActivity {
         });
 
         setSocialSituationBtns();
-
+        PickImage();
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +182,31 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void PickImage(){
+        addNewImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new ImageFragment().show(getSupportFragmentManager(),"image");
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode){
+                case 0:
+                    //data.getData returns the content URI for the selected Image
+                    Uri selectedImage = data.getData();
+                    addNewImageButton.setImageURI(selectedImage);
+                    break;
+            }
+
     }
 
     private void setSocialSituationBtns(){
