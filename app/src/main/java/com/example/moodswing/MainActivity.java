@@ -200,16 +200,17 @@ public class MainActivity extends AppCompatActivity {
     public void openFilterFragment(int mode) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_fullScreenOverlay, new FilterFragment(mode),"filterFrag")
+
                 .commitAllowingStateLoss();
     }
 
     public void openMapFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(),"filterFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(),"filterFrag")
                 .commitAllowingStateLoss();
     }
 

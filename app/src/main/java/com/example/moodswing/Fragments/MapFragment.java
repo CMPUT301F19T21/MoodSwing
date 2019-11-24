@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -21,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
-    private MapView mapView;
+    private SupportMapFragment mapFrag;
     private GoogleMap map;
 
     @Nullable
@@ -30,12 +32,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View root = inflater.inflate(R.layout.fragment_maps, container, false);
 
         // find views
-        mapView = root.findViewById(R.id.map);
         backBtn = root.findViewById(R.id.map_backBtn);
+//        mapFragHolder = root.findViewById(R.id.map_placeHolder)
+        // set up map
 
-        // set up mapView
-        mapView.getMapAsync(this);
-        mapView.onCreate(null); // i dont think we need saved bundle state, can cause a bug? i dont think so
+        mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFrag.getMapAsync(this);
 
         // set listeners
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -44,54 +46,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 closeFrag();
             }
         });
-
-
         return root;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-
-
     private void closeFrag(){
+        getChildFragmentManager()
+                .beginTransaction()
+                .remove(mapFrag)
+                .commit();
+
         getFragmentManager()
                 .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .remove(this)
-                .commitAllowingStateLoss();
+                .commit();
     }
 
     /**
