@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.MainActivity;
+import com.example.moodswing.MapsActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
@@ -85,7 +86,7 @@ public class MoodHistoryFragment extends Fragment {
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), GoogleMapActivity.class));
+                startActivity(new Intent(getActivity(), MapsActivity.class));
             }
         });
         addButton.setOnClickListener(new View.OnClickListener() {
