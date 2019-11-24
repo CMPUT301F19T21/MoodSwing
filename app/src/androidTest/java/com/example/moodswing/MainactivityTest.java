@@ -93,20 +93,28 @@ public class MainactivityTest {
     @Test
     public void CheckAddMood() throws InterruptedException {
         // check add mood activity
-        onView(withId(R.id.home_add))
-                .perform(click());
-        intended(hasComponent(NewMoodActivity.class.getName()));
-        onView(withId(R.id.moodSelect_recycler)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(2, click()));
-        onView(withId(R.id.reason_EditView))
-                .perform(typeText("Test Mood"),closeSoftKeyboard());
-        Integer oldSize = communicator.getMoodEvents().size();
-        onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
-        // check if item correct added
-        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
-        Integer newSize = communicator.getMoodEvents().size();
-        assertTrue(newSize==(oldSize+1));
-        assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
+
+        try {
+            onView(withText("CLICK TO ADD FIRST MOOD EVENT")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+            //view is displayed logic
+        } catch (NoMatchingViewException e) {
+            //view not displayed logic
+            onView(withId(R.id.home_add))
+                    .perform(click());
+        }
+            intended(hasComponent(NewMoodActivity.class.getName()));
+            onView(withId(R.id.moodSelect_recycler)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(2, click()));
+            onView(withId(R.id.reason_EditView))
+                    .perform(typeText("Test Mood"), closeSoftKeyboard());
+            Integer oldSize = communicator.getMoodEvents().size();
+            onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
+            // check if item correct added
+            onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
+            Integer newSize = communicator.getMoodEvents().size();
+            assertTrue(newSize == (oldSize + 1));
+            assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
 
 
     }
