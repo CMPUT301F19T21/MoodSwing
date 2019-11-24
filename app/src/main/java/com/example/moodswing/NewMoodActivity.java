@@ -202,10 +202,6 @@ public class NewMoodActivity extends AppCompatActivity {
         startActivityForResult(intent,0);
     }
 
-    public void takePhoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(takePictureIntent, 1);
-    }
 
 
     @Override
@@ -214,20 +210,42 @@ public class NewMoodActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode){
                 case 0:
-                    //data.getData returns the content URI for the selected Image
+                    //show image comes form fallery
                     Uri selectedImage = data.getData();
                     addNewImageButton.setImageURI(selectedImage);
                     break;
                 case 1:
-                    Bundle extras = data.getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    addNewImageButton.setImageBitmap(imageBitmap);
+                    // Showing the image from camera
+                    Uri image = Uri.parse(currentPhotoPath);
+                    addNewImageButton.setImageURI(image);
 
             }
 
     }
+    public void takeimage() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.moodswing.provider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 1);
+            }
+        }
+    }
 
-    private File Saveimage() throws IOException {
+    private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
