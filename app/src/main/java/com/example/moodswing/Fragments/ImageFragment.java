@@ -44,7 +44,7 @@ public class ImageFragment extends DialogFragment {
 
                 dismiss();
                 NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                callingActivity.takePhoto();
+                callingActivity.takeimage();
 
             }
         });
