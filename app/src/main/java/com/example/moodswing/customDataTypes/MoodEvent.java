@@ -18,6 +18,8 @@ public class MoodEvent {
     private Double Latitude;
     private Double Longitude;
 
+    private String uniquePictureID;
+
     public MoodEvent() {
     }
 
@@ -89,5 +91,13 @@ public class MoodEvent {
 
     public void setLongitude(Double longitude) {
         Longitude = longitude;
+    }
+
+    public String getUniquePictureID() {
+        return uniquePictureID;
+    }
+
+    public void setUniquePictureID(String uniquePictureID) {
+        this.uniquePictureID = uniquePictureID;
     }
 }
