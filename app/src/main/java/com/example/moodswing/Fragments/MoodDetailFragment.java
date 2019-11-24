@@ -1,6 +1,8 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,13 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.protobuf.DescriptorProtos;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,6 +41,7 @@ public class MoodDetailFragment extends Fragment{
     private TextView moodText;
     private TextView reasonText;
     private TextView socialText;
+    private TextView locationText;
 
     private FloatingActionButton delButton;
     private FloatingActionButton editButton;
@@ -79,6 +87,7 @@ public class MoodDetailFragment extends Fragment{
         socialText = root.findViewById(R.id.moodDetail_SocialText);
         locationImg = root.findViewById(R.id.moodDetail_locationImg);
         socialIcon = root.findViewById(R.id.moodDetail_socialSitIcon);
+        locationText = root.findViewById(R.id.moodDetail_locationText);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,10 +143,12 @@ public class MoodDetailFragment extends Fragment{
         setMoodImage(moodEvent.getMoodType());
         setReasonText();
         setSocialSituation();
+        locationText.setText("");
         if (moodEvent.getLatitude() == null) {
             locationImg.setImageResource(R.drawable.ic_location_off_grey_24dp);
         }else{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
+            setLocationStrFromLocation();
         }
     }
 
@@ -173,6 +184,46 @@ public class MoodDetailFragment extends Fragment{
                 this.socialIcon.setVisibility(View.VISIBLE);
                 this.socialText.setText("Party");
                 this.socialIcon.setImageResource(R.drawable.ic_account_group);
+        }
+    }
+
+    private void setLocationStrFromLocation(){
+        communicator.getAsynchronousTask()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        updateLocationStr();
+                    }
+                });
+    }
+
+    private void updateLocationStr(){
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        if (moodEvent.getLatitude() != null){
+            try {
+                List<Address> firstAddressList = geocoder.getFromLocation(moodEvent.getLatitude(),moodEvent.getLongitude(),1);
+                if (firstAddressList != null){
+                    if (firstAddressList.isEmpty()){
+                        // error
+                    }else{
+                        //
+                        Address address = firstAddressList.get(0);
+                        String thoroughfare = address.getThoroughfare();
+                        if (thoroughfare == null){
+                            locationText.setText("nowhere!");
+                        }else{
+                            locationText.setText(thoroughfare);
+                        }
+                    }
+                }else {
+                    // error
+                }
+            } catch (Exception e) {
+                // display error msg
+                e.printStackTrace();
+            }
+        }else{
+            //
         }
     }
 

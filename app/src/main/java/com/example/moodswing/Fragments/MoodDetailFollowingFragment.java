@@ -1,6 +1,8 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,12 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.UserJar;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
@@ -35,6 +41,7 @@ public class MoodDetailFollowingFragment extends Fragment{
     private TextView moodText;
     private TextView reasonText;
     private TextView socialText;
+    private TextView locationText;
 
     private TextView usernameText;
 
@@ -73,6 +80,7 @@ public class MoodDetailFollowingFragment extends Fragment{
         socialText = root.findViewById(R.id.moodDetail_following_SocialText);
         locationImg = root.findViewById(R.id.moodDetail_following_locationImg);
         socialIcon = root.findViewById(R.id.moodDetail_following_socialSitIcon);
+        locationText = root.findViewById(R.id.moodDetail_following_locationText);
 
         usernameText = root.findViewById(R.id.moodDetail_following_username);
 
@@ -85,11 +93,7 @@ public class MoodDetailFollowingFragment extends Fragment{
             }
         });
 
-        if (userJar.getMoodEvent().getLatitude() == null) {
-            locationImg.setImageResource(R.drawable.ic_location_off_grey_24dp);
-        }else{
-            locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
-        }
+
 
         return root;
     }
@@ -119,6 +123,53 @@ public class MoodDetailFollowingFragment extends Fragment{
         setReasonText();
         setSocialSituation();
         usernameText.setText(userJar.getUsername());
+        locationText.setText("");
+        if (userJar.getMoodEvent().getLatitude() == null) {
+            locationImg.setImageResource(R.drawable.ic_location_off_grey_24dp);
+        }else{
+            locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
+            setLocationStrFromLocation();
+        }
+    }
+
+    private void setLocationStrFromLocation(){
+        communicator.getAsynchronousTask()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        updateLocationStr();
+                    }
+                });
+    }
+
+    private void updateLocationStr(){
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        if (moodEvent.getLatitude() != null){
+            try {
+                List<Address> firstAddressList = geocoder.getFromLocation(moodEvent.getLatitude(),moodEvent.getLongitude(),1);
+                if (firstAddressList != null){
+                    if (firstAddressList.isEmpty()){
+                        // error
+                    }else{
+                        //
+                        Address address = firstAddressList.get(0);
+                        String thoroughfare = address.getThoroughfare();
+                        if (thoroughfare == null){
+                            locationText.setText("nowhere!");
+                        }else{
+                            locationText.setText(thoroughfare);
+                        }
+                    }
+                }else {
+                    // error
+                }
+            } catch (Exception e) {
+                // display error msg
+                e.printStackTrace();
+            }
+        }else{
+            //
+        }
     }
 
     private void setReasonText(){

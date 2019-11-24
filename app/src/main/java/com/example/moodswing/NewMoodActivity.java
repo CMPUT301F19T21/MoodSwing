@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Telephony;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ComponentActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +33,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moodswing.Fragments.ImageFragment;
 import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
-import com.example.moodswing.customDataTypes.LocationToAddressTask;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
@@ -43,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.File;
 import java.io.IOException;
@@ -176,8 +178,10 @@ public class NewMoodActivity extends AppCompatActivity {
                     }
 
                     if (ifLocationEnabled) {
-                        moodEvent.setLatitude(latitude);
-                        moodEvent.setLongitude(longitude);
+                        if (currentLocation != null){
+                            moodEvent.setLatitude(currentLocation.getLatitude());
+                            moodEvent.setLongitude(currentLocation.getLongitude());
+                        }
                     }
                     else {
                         moodEvent.setLatitude(null);
@@ -345,8 +349,43 @@ public class NewMoodActivity extends AppCompatActivity {
     }
 
     private void getAddress(){
-        LocationToAddressTask task = new LocationToAddressTask(this,currentLocation, geoLocationText);
-        task.execute();
+        communicator.getAsynchronousTask()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        updateLocationStr();
+                    }
+                });
+    }
+
+    private void updateLocationStr(){
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        if (currentLocation != null){
+            try {
+                List<Address> firstAddressList = geocoder.getFromLocation(currentLocation.getLatitude(),currentLocation.getLongitude(),1);
+                if (firstAddressList != null){
+                    if (firstAddressList.isEmpty()){
+                        // error
+                    }else{
+                        //
+                        Address address = firstAddressList.get(0);
+                        String thoroughfare = address.getThoroughfare();
+                        if (thoroughfare == null){
+                            geoLocationText.setText("nowhere!");
+                        }else{
+                            geoLocationText.setText(thoroughfare);
+                        }
+                    }
+                }else {
+                    // error
+                }
+            } catch (Exception e) {
+                // display error msg
+                e.printStackTrace();
+            }
+        }else{
+            //
+        }
     }
 
     private void locationBtnPop() {

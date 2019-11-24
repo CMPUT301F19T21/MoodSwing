@@ -840,7 +840,10 @@ public class FirestoreUserDocCommunicator{
 
 
     }
-
-
-
+    public Task<DocumentSnapshot> getAsynchronousTask(){
+        return db
+                .collection("users")
+                .document(user.getUid())
+                .get();
+    }
 }
