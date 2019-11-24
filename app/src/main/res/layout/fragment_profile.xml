@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="300dp"
         android:layout_height="200dp"
-        app:cardBackgroundColor="#F6F1E9"
+        app:cardBackgroundColor="@color/background_yellow_accent"
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,27 +27,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:layout_marginRight="24dp"
                 android:clickable="true"
                 app:backgroundTint="@color/color_button_lightGrey"
                 app:fabCustomSize="40dp"
                 app:layout_constraintBottom_toBottomOf="@+id/profile_back"
                 app:layout_constraintEnd_toStartOf="@+id/profile_back"
-                app:srcCompat="@drawable/ic_undo_black_24dp" />
+                app:srcCompat="@drawable/ic_power_settings_new_black_24dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/profile_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
                 android:clickable="true"
                 app:backgroundTint="@color/color_button_lightGrey"
                 app:fabCustomSize="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_clear_black_24dp" />
+                app:srcCompat="@drawable/ic_arrow_back_grey_24dp" />
 
             <TextView
                 android:id="@+id/textView5"

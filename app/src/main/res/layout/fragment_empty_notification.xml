@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_yellow_accent"
+    android:clickable="true"
+    tools:context=".Fragments.EmptyNotificationFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/emptyNotifcation_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_add_black_24dp"
+        app:backgroundTint="@color/button_brown"
+        app:fabCustomSize="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="45dp"
+        tools:layout_conversion_absoluteWidth="45dp" />
+
+    <TextView
+        android:id="@+id/emptyNotification_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:text="CLICK TO ADD FIRST MOOD EVENT"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/emptyNotifcation_Btn"
+        app:layout_constraintStart_toStartOf="@+id/emptyNotifcation_Btn"
+        app:layout_constraintTop_toBottomOf="@+id/emptyNotifcation_Btn"
+        tools:layout_conversion_absoluteHeight="67dp"
+        tools:layout_conversion_absoluteWidth="213dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

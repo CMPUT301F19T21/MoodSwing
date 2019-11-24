@@ -1,49 +1,52 @@
 package com.example.moodswing;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.location.Location;
 import android.os.Bundle;
-
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
-import com.example.moodswing.customDataTypes.DateJar;
-import com.example.moodswing.customDataTypes.SocialSituationItem;
-import com.example.moodswing.customDataTypes.SpinnerAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 
+// The screen for adding a new mood, accessed from the Home screen.
+
+/**
+ * The screen for adding a new mood, accessed from the Home screen.
+ */
 public class NewMoodActivity extends AppCompatActivity {
-////    private ArrayList<SocialSituationItem> mSocialList;
-////    private SpinnerAdapter spinnerAdapter;
-////    private Spinner socialSituationSpinner;
-////    private String socialSitToAdd;
 
     private FloatingActionButton confirmButton;
-    private ImageView locationCheckButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
+    private FloatingActionButton locationButton;
+    private Location currentLocation;
+    private FloatingActionButton social_aloneBtn;
+    private FloatingActionButton social_oneBtn;
+    private FloatingActionButton social_twoMoreBtn;
 
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -52,11 +55,21 @@ public class NewMoodActivity extends AppCompatActivity {
     private FirestoreUserDocCommunicator communicator;
     private MoodEvent moodEvent;
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private static final int REQUEST_CODE = 101;
+    private Double latitude, longitude;
 
+    private boolean ifLocationEnabled;
+    private Integer socialSituation;
+
+    /**
+     * All the fields for creating a new mood are created and the current date/time are generated.
+     * All redirect button functionality is handled here too.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_mood);
+        setContentView(R.layout.activity_add_mood);
 
         // find view
         confirmButton = findViewById(R.id.add_confirm);
@@ -65,6 +78,11 @@ public class NewMoodActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.add_date);
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
+        locationButton = findViewById(R.id.moodhistory_locationButton);
+
+        social_aloneBtn = findViewById(R.id.addMood_aloneBtn);
+        social_oneBtn = findViewById(R.id.addMood_oneAnotherBtn);
+        social_twoMoreBtn = findViewById(R.id.addMood_twoMoreBtn);
 
 
         // recyclerView
@@ -76,11 +94,13 @@ public class NewMoodActivity extends AppCompatActivity {
         // init communicator
         communicator = FirestoreUserDocCommunicator.getInstance();
         moodEvent = new MoodEvent();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        ifLocationEnabled = false;
 
         // set up current date and time
         Calendar calendar = Calendar.getInstance();
 
-            // set date and time
+        // set date and time
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
@@ -90,13 +110,32 @@ public class NewMoodActivity extends AppCompatActivity {
         DateJar date = new DateJar(year,month,day);
         TimeJar time = new TimeJar(hr,min);
 
-
         moodEvent.setDate(date);
         moodEvent.setTime(time);
         moodEvent.setTimeStamp(UTC);
-            // set date and time for display
+        // set date and time for display
         dateTextView.setText(MoodEventUtility.getDateStr(date));
         timeTextView.setText(MoodEventUtility.getTimeStr(time));
+
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ifLocationEnabled){
+                    // turn off
+                    ifLocationEnabled = false;
+                    locationButton.setCompatElevation(12f);
+                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    ifLocationEnabled = true;
+//                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(NewMoodActivity.this);
+                    fetchLastLocation();
+                    locationButton.setCompatElevation(0f);
+                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+                }
+            }
+        });
+
+        setSocialSituationBtns();
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,11 +144,21 @@ public class NewMoodActivity extends AppCompatActivity {
                     // do upload
                     moodEvent.setUniqueID(communicator.generateMoodID());
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
+                    moodEvent.setSocialSituation(socialSituation);
 
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
                     }else{
                         moodEvent.setReason(reasonEditText.getText().toString());
+                    }
+
+                    if (ifLocationEnabled) {
+                        moodEvent.setLatitude(latitude);
+                        moodEvent.setLongitude(longitude);
+                    }
+                    else {
+                        moodEvent.setLatitude(null);
+                        moodEvent.setLongitude(null);
                     }
                     communicator.addMoodEvent(moodEvent);
                     finish();
@@ -119,97 +168,112 @@ public class NewMoodActivity extends AppCompatActivity {
             }
         });
     }
-}
 
-////        ArrayList<Integer> viewColors = new ArrayList<>();
-////        viewColors.add(1);
-////        viewColors.add(2);
-////        viewColors.add(3);
-////        viewColors.add(4);
-////
-////        ArrayList<String> animalNames = new ArrayList<>();
-////        animalNames.add("Happy");
-////        animalNames.add("Angry");
-////        animalNames.add("Emotional");
-////        animalNames.add("Sad");
-//
-//
-//        RecyclerView recyclerView = findViewById(R.id.addRecyclerView);
-//        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(NewMoodActivity.this, LinearLayoutManager.HORIZONTAL, false);
-//        recyclerView.setLayoutManager(horizontalLayoutManager);
-////        adapter = new SelectMoodAdapter(this, viewColors, animalNames);
-////        adapter.setClickListener(NewMoodActivity.this);
-////        recyclerView.setAdapter(adapter);
-//
-//
-//        //Setting the date
-//        //month indexed 1 month behind for some reason
-//        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-//        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-//        int year = Calendar.getInstance().get(Calendar.YEAR);
-//        Log.v("dateCheck", "year:" + year + " day:" + day + " month:" + month);
-//        date = new DateJar(year, month, day);
-//
-//
-//
-//
-//        mSocialList = new ArrayList<>();
-//        mSocialList.add(new SocialSituationItem("Select Social Situation", 0));
-//        mSocialList.add(new SocialSituationItem("Alone", R.drawable.aloneicon));
-//        mSocialList.add(new SocialSituationItem("With One Person", R.drawable.onepersonicon));
-//        mSocialList.add(new SocialSituationItem("With 2-7 People", R.drawable.twoplusicon));
-//        mSocialList.add(new SocialSituationItem("With a Crowd", R.drawable.crowdicon));
-//
-//        socialSituationSpinner = findViewById(R.id.SituationSpinner);
-//        spinnerAdapter = new SpinnerAdapter(this, mSocialList);
-//        socialSituationSpinner.setAdapter(spinnerAdapter);
-//
-//        socialSituationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                SocialSituationItem current = (SocialSituationItem) adapterView.getItemAtPosition(i);
-//                socialSitToAdd = current.getSituation();
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-//
-//
-//
-//
-//        confirmButton = (ImageButton) findViewById(R.id.confirmNewMood);
-//        confirmButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                int hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-//                int minutes = Calendar.getInstance().get(Calendar.MINUTE);
-//                time = new TimeJar(hours, minutes);
-//                Log.v("SOMETHING", moodState + "");
-//                Log.v("dateCheck", "hours: " + hours + "minutes:" + minutes);
-//
-//
-//                reasonTextView = findViewById(R.id.reasonText);
-//                reason = reasonTextView.getText().toString();
-//                Log.v("dateCheck", reason);
-//                Log.v("dateCheck", socialSitToAdd);
-//
-//                String[] temparray = reason.split(" ");
-//                if (temparray.length <= 3) {
-////
-////
-//////                        moodObj = new MoodEvent(moodState, date, time);
-//////                        Log.v("SOMETHING", moodObj.getDate().toString());
-//////                        returnIntent = new Intent();
-//////                        returnIntent.putExtra("result", moodObj);
-//////                        setResult(Activity.RESULT_OK, returnIntent);
-//                        finish();
-////
-//                }
-//                }
-//            });
-//        }
+    private void setSocialSituationBtns(){
+        socialSituation = 0;
+
+        social_aloneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (socialSituation != 1) {
+                    // press this button
+                    socialSituation = 1;
+                    social_aloneBtn.setCompatElevation(0f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+                    // unpress other button
+                    social_oneBtn.setCompatElevation(12f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    social_twoMoreBtn.setCompatElevation(12f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    socialSituation = 0;
+                    social_aloneBtn.setCompatElevation(12f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }
+            }
+        });
+
+        social_oneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (socialSituation != 2) {
+                    // press this button
+                    socialSituation = 2;
+                    social_oneBtn.setCompatElevation(0f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+                    // unpress other button
+                    social_aloneBtn.setCompatElevation(12f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    social_twoMoreBtn.setCompatElevation(12f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    socialSituation = 0;
+                    social_oneBtn.setCompatElevation(12f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }
+            }
+        });
+
+        social_twoMoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (socialSituation != 3) {
+                    // press this button
+                    socialSituation = 3;
+                    social_twoMoreBtn.setCompatElevation(0f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+
+                    // unpress other button
+                    social_oneBtn.setCompatElevation(12f);
+                    social_oneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    social_aloneBtn.setCompatElevation(12f);
+                    social_aloneBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }else{
+                    socialSituation = 0;
+                    social_twoMoreBtn.setCompatElevation(12f);
+                    social_twoMoreBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                }
+            }
+        });
+    }
+
+    /**
+     * This method gets the latitude and longitude that the google maps API found, and
+     * assigns the value to our fields
+     */
+    private void fetchLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    currentLocation = location;
+                    latitude = currentLocation.getLatitude();
+                    longitude = currentLocation.getLongitude();
+                }
+            }
+        });
+    }
+
+    /**
+     *a utility method  for permission, see fetchLastLocation for functionality
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fetchLastLocation();
+                }
+                break;
+        }
+    }
+
+}

@@ -1,10 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
 
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
-
 /**
  * This Class is the blueprint for a moodEvent object
  */
@@ -18,7 +14,9 @@ public class MoodEvent {
 
     // optional fields
     private String reason;
-    private String socialSituation;
+    private Integer socialSituation;
+    private Double Latitude;
+    private Double Longitude;
 
     public MoodEvent() {
     }
@@ -71,9 +69,25 @@ public class MoodEvent {
         this.reason = reason;
     }
 
-    public void setSocialSituation(String socialSituation) {this.socialSituation = socialSituation;}
+    public void setSocialSituation(Integer socialSituation) {this.socialSituation = socialSituation;}
 
-    public String getSocialSituation() {
+    public Integer getSocialSituation() {
         return socialSituation;
+    }
+
+    public Double getLatitude() {
+        return Latitude;
+    }
+
+    public Double getLongitude() {
+        return Longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        Latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        Longitude = longitude;
     }
 }

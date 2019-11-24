@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C6C6C6">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/editMood_selectMoodCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardBackgroundColor="@color/background_yellow_accent"
+                    app:cardCornerRadius="8dp"
+                    app:contentPadding="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/editMood_moodSelect_recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="24dp"
+                            android:elevation="10dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/editMood_selectMood_text">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                        <TextView
+                            android:id="@+id/editMood_selectMood_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="16dp"
+                            android:fontFamily="sans-serif-thin"
+                            android:text="SELECT A NEW MOOD"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/editMood_infoCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="@color/background_yellow_accent"
+                    app:cardCornerRadius="8dp"
+                    app:contentPadding="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editMood_selectMoodCard">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/editMood_textView14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="16dp"
+                            android:fontFamily="sans-serif-thin"
+                            android:text="EDIT OTHER FIELDS"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/editMood_cardView_reason"
+                            android:layout_width="0dp"
+                            android:layout_height="70dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="6dp"
+                            app:cardElevation="1dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/editMood_textView14">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+
+                                <EditText
+                                    android:id="@+id/editMood_reason_EditView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:background="@drawable/edittext_round"
+                                    android:ems="10"
+                                    android:fontFamily="sans-serif-light"
+                                    android:gravity="center"
+                                    android:hint="Enter a reason here (optional)"
+                                    android:inputType="textPersonName"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:textColorHint="@color/colorPrimary"
+                                    android:textSize="14sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/editMood_imageCard"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="6dp"
+                            app:cardElevation="1dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/editMood_cardView_reason">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/editMood_add_newImage"
+                                    android:layout_width="100dp"
+                                    android:layout_height="75dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="16dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_add_circle_black_24dp" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/editMood_cardView_socialSituation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="6dp"
+                            app:cardElevation="1dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/editMood_imageCard">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/editMood_oneAnotherBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="45dp"
+                                    app:layout_constraintEnd_toStartOf="@+id/editMood_twoMoreBtn"
+                                    app:layout_constraintStart_toEndOf="@+id/editMood_aloneBtn"
+                                    app:layout_constraintTop_toTopOf="@+id/editMood_twoMoreBtn"
+                                    app:srcCompat="@drawable/ic_people_black_24dp" />
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/editMood_twoMoreBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="24dp"
+                                    android:layout_marginEnd="32dp"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="45dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_account_group" />
+
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                    android:id="@+id/editMood_aloneBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="32dp"
+                                    android:layout_marginTop="24dp"
+                                    android:clickable="true"
+                                    app:backgroundTint="@color/color_button_lightGrey"
+                                    app:fabCustomSize="45dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_person_black_24dp" />
+
+                                <TextView
+                                    android:id="@+id/editMood_textView11"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Alone"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@+id/editMood_aloneBtn"
+                                    app:layout_constraintStart_toStartOf="@+id/editMood_aloneBtn"
+                                    app:layout_constraintTop_toBottomOf="@+id/editMood_aloneBtn" />
+
+                                <TextView
+                                    android:id="@+id/editMood_textView12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Company"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/editMood_textView11"
+                                    app:layout_constraintEnd_toEndOf="@+id/editMood_oneAnotherBtn"
+                                    app:layout_constraintStart_toStartOf="@+id/editMood_oneAnotherBtn"
+                                    app:layout_constraintTop_toBottomOf="@+id/editMood_oneAnotherBtn" />
+
+                                <TextView
+                                    android:id="@+id/editMood_textView13"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:fontFamily="sans-serif-light"
+                                    android:text="Party"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/editMood_textView11"
+                                    app:layout_constraintEnd_toEndOf="@+id/editMood_twoMoreBtn"
+                                    app:layout_constraintStart_toStartOf="@+id/editMood_twoMoreBtn"
+                                    app:layout_constraintTop_toBottomOf="@+id/editMood_twoMoreBtn" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/editMood_add_confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginBottom="24dp"
+                            android:clickable="true"
+                            app:backgroundTint="@color/button_brown"
+                            app:fabCustomSize="45dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/editMood_close"
+                            app:layout_constraintTop_toBottomOf="@+id/editMood_cardView_socialSituation"
+                            app:srcCompat="@drawable/ic_check_grey_24dp" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/editMood_close"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            app:backgroundTint="@color/button_brown"
+                            app:fabCustomSize="45dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/editMood_add_confirm"
+                            app:layout_constraintEnd_toStartOf="@+id/editMood_add_confirm"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:srcCompat="@drawable/ic_clear_black_24dp" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

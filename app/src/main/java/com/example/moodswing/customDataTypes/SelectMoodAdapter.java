@@ -1,13 +1,11 @@
 package com.example.moodswing.customDataTypes;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,10 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moodswing.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-import io.opencensus.resource.Resource;
+
+/**
+ * this class is an adapter for selecting the mood
+ */
 
 public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.MyViewHolder> {
 
@@ -54,7 +53,10 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         }
     }
 
-    public  SelectMoodAdapter() {
+    /**
+     * initializes an array of numbers that correspond to each mood in the view, sets the one selected to null
+     */
+    public SelectMoodAdapter() {
         selectedPosition = null;
         moodTypes = new ArrayList<>();
         for (int i = 1; i < 5; i++){
@@ -62,14 +64,23 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         }
     }
 
+    public SelectMoodAdapter(int moodType) {
+        this();
+        this.selectedPosition = getSelectedPosition(moodType);
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.selectmood_content, parent, false);
+                .inflate(R.layout.content_selectmood, parent, false);
         return new MyViewHolder(view);
     }
 
+    /**
+     * Sets the viewable card on screen to have the mood text(ie HAPPY), and the
+     * associated picture(ie. a happy face)
+     */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         TextView moodTypeText= holder.moodTypeText;
@@ -94,6 +105,13 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
         }
+        // preSelect
+        if (selectedPosition != null) {
+            if (selectedPosition == position){
+                holder.card.setElevation(2f);
+                holder.card.setCardBackgroundColor(Color.parseColor("#F5F5F5"));
+            }
+        }
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,11 +122,16 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                     holder.card.setCardBackgroundColor(Color.parseColor("#F5F5F5"));
                 }else if (selectedPosition == holder.getLayoutPosition()){
                     selectedPosition = null;
-                    holder.card.setElevation(12f);
+                    holder.card.setElevation(5f);
                     holder.card.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
                 }
             }
         });
+    }
+
+    // useful for its subclass
+    public ArrayList<Integer> getMoodTypes() {
+        return moodTypes;
     }
 
     @Override
@@ -116,11 +139,19 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         return moodTypes.size();
     }
 
+    /**
+     * returns the selected mood
+     * @return the selected mood
+     */
     public Integer getSelectedMoodType(){
         if (selectedPosition != null) {
             return moodTypes.get(selectedPosition);
         }else{
             return null;
         }
+    }
+
+    private Integer getSelectedPosition(int moodType){
+        return moodTypes.indexOf(moodType);
     }
 }

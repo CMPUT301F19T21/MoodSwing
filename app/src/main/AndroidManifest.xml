@@ -13,13 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity android:name=".EditMoodActivity" />
-        <activity android:name=".Fragments.MoodDetailFragment" />
-        <activity android:name=".NewMoodActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EditMoodActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".NewMoodActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".GoogleMapActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".ManagementActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +42,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

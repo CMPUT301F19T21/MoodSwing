@@ -6,5 +6,11 @@
     <color name="ColorAccent_memo">#60F3EBDC</color>
     <color name="color_button_lightGrey">#E7E7E7</color>
     <color name="color_button_lightGrey_pressed">#BEBEBE</color>
-    <color name="background_yellow_accent">#F6F1E9</color>
+    <color name="background_yellow_accent">#FAF6F4</color>
+    <color name="card_background_lightYellow">#FAF8F7</color>
+    <color name="nav_button_darkGrey">#707070</color>
+    <color name="nav_button_light">#DADADA</color>
+
+    <color name="background_grey">#DFDFDF</color>
+    <color name="button_brown">#CCAC9F</color>
 </resources>
