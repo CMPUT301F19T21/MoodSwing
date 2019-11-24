@@ -77,6 +77,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private Integer socialSituation;
 
     private String currentPhotoPath;
+    private Uri uploadImage;
 
     /**
      * All the fields for creating a new mood are created and the current date/time are generated.
@@ -177,6 +178,7 @@ public class NewMoodActivity extends AppCompatActivity {
                         moodEvent.setLongitude(null);
                     }
                     communicator.addMoodEvent(moodEvent);
+
                     finish();
                 }else{
                     // prompt user to select a mood
@@ -210,15 +212,19 @@ public class NewMoodActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode){
                 case 0:
-                    //show image comes form fallery
+                    //show image comes form gallery
                     Uri selectedImage = data.getData();
+                    if (selectedImage != null)
+                        uploadImage =  selectedImage;
                     addNewImageButton.setImageURI(selectedImage);
                     break;
                 case 1:
                     // Showing the image from camera
                     Uri image = Uri.parse(currentPhotoPath);
+                    if (image != null){
+                        uploadImage =  image;}
                     addNewImageButton.setImageURI(image);
-
+                    break;
             }
 
     }
