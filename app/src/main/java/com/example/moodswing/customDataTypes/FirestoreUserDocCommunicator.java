@@ -53,6 +53,7 @@ public class FirestoreUserDocCommunicator{
 
     // other
     private Integer requestCount;
+    private Uri Image;
 
     // for filter
     private ArrayList<Integer> moodTypeFilterList_moodHistory;
@@ -815,6 +816,7 @@ public class FirestoreUserDocCommunicator{
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
+                Log.d(TAG, "failed to upload image");
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -822,8 +824,24 @@ public class FirestoreUserDocCommunicator{
 
             }
         });
-
-
+    }
+    // not work yet
+    public Uri getPhoto(String id) {
+        StorageReference storageRef = storage.getReference();
+        StorageReference pathReference = storageRef.child(getUsername() + "/" + id);
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL
+                Image = uri;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        return Image;
     }
 
     //firebase database string implementation of adding photo. don't think i'll use it

@@ -168,7 +168,8 @@ public class NewMoodActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (moodSelectAdapter.getSelectedMoodType() != null) {
                     // do upload
-                    moodEvent.setUniqueID(communicator.generateMoodID());
+                    String moodId = communicator.generateMoodID();
+                    moodEvent.setUniqueID(moodId);
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                     moodEvent.setSocialSituation(socialSituation);
 
@@ -189,7 +190,8 @@ public class NewMoodActivity extends AppCompatActivity {
                         moodEvent.setLongitude(null);
                     }
                     communicator.addMoodEvent(moodEvent);
-
+                    if (uploadImage != null){
+                        communicator.addPhoto(moodId,uploadImage);}
                     finish();
                 }else{
                     // prompt user to select a mood
@@ -232,12 +234,15 @@ public class NewMoodActivity extends AppCompatActivity {
                 case 1:
                     // Showing the image from camera
                     Uri image = Uri.parse(currentPhotoPath);
-                    if (image != null){
-                        uploadImage =  image;}
+                    if (image != null) {
+                        uploadImage = image;
+                    }
                     addNewImageButton.setImageURI(image);
                     break;
             }
     }
+    // some bug can not upload image take from camera
+    // need find some way to save the image to local
     public void takeimage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -257,6 +262,7 @@ public class NewMoodActivity extends AppCompatActivity {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 1);
+
             }
         }
     }
