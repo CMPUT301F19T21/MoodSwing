@@ -39,12 +39,12 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_google_map);
+//        setContentView(R.layout.activity_google_map);
 
         /*
          * Creates a button that takes the user back to the previous page
          */
-        backButton = findViewById(R.id.backButton);
+//        backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onBackPressed();

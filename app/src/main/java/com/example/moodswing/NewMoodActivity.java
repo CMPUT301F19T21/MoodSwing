@@ -2,10 +2,13 @@ package com.example.moodswing;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +36,9 @@ import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,8 +46,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 // The screen for adding a new mood, accessed from the Home screen.
 
@@ -50,12 +58,13 @@ import java.util.Date;
  * The screen for adding a new mood, accessed from the Home screen.
  */
 public class NewMoodActivity extends AppCompatActivity {
-
+    private static final int LOCATION_REQUEST_CODE = 1;
     private FloatingActionButton confirmButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
+    private TextView geoLocationText;
     private FloatingActionButton locationButton;
     private Location currentLocation;
     private FloatingActionButton social_aloneBtn;
@@ -70,10 +79,11 @@ public class NewMoodActivity extends AppCompatActivity {
     private MoodEvent moodEvent;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private static final int REQUEST_CODE = 101;
+
     private Double latitude, longitude;
 
     private boolean ifLocationEnabled;
+    private boolean ifLocationGranted;
     private Integer socialSituation;
 
     private String currentPhotoPath;
@@ -95,6 +105,7 @@ public class NewMoodActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
         locationButton = findViewById(R.id.moodhistory_locationButton);
+        geoLocationText = findViewById(R.id.add_geoLocation);
 
         social_aloneBtn = findViewById(R.id.addMood_aloneBtn);
         social_oneBtn = findViewById(R.id.addMood_oneAnotherBtn);
@@ -110,8 +121,10 @@ public class NewMoodActivity extends AppCompatActivity {
         // init communicator
         communicator = FirestoreUserDocCommunicator.getInstance();
         moodEvent = new MoodEvent();
+        // init location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         ifLocationEnabled = false;
+        geoLocationText.setText("Location Off");
 
         // set up current date and time
         Calendar calendar = Calendar.getInstance();
@@ -138,19 +151,12 @@ public class NewMoodActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (ifLocationEnabled){
                     // turn off
-                    ifLocationEnabled = false;
-                    locationButton.setCompatElevation(12f);
-                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+                    locationBtnPop();
                 }else{
-                    ifLocationEnabled = true;
-//                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(NewMoodActivity.this);
-                    fetchLastLocation();
-                    locationButton.setCompatElevation(0f);
-                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+                    locationBtnPress();
+                    }
                 }
-            }
         });
-
         setSocialSituationBtns();
         PickImage();
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -222,9 +228,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     addNewImageButton.setImageBitmap(imageBitmap);
-
             }
-
     }
 
     private File Saveimage() throws IOException {
@@ -317,23 +321,77 @@ public class NewMoodActivity extends AppCompatActivity {
      * This method gets the latitude and longitude that the google maps API found, and
      * assigns the value to our fields
      */
-    private void fetchLastLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-            return;
-        }
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    currentLocation = location;
-                    latitude = currentLocation.getLatitude();
-                    longitude = currentLocation.getLongitude();
+    private void fetchCurrentLocation(){
+        fusedLocationProviderClient
+                .getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()){
+                            Location location = task.getResult();
+                            if (location == null){
+                                locationBtnPop();
+                            }else{
+                                currentLocation = location;
+                                getAddress();
+                            }
+                        }else {
+                            // display error msg
+                            locationBtnPop();
+                        }
+                    }
+                });
+    }
+
+    private void getAddress(){
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        if (currentLocation != null){
+            try {
+                List<Address> firstAddressList = geocoder.getFromLocation(currentLocation.getLatitude(),currentLocation.getLongitude(),1);
+                if (firstAddressList != null){
+                    if (firstAddressList.isEmpty()){
+                        // error
+                    }else{
+                        //
+                        Address address = firstAddressList.get(0);
+                        String thoroughfare = address.getThoroughfare();
+                        if (thoroughfare == null){
+                            geoLocationText.setText("nowhere!");
+                        }else{
+                            geoLocationText.setText(thoroughfare);
+                        }
+                    }
+                }else {
+                    // error
                 }
+            } catch (Exception e) {
+                // display error msg
+                e.printStackTrace();
             }
-        });
+        }else{
+            //
+        }
+    }
+
+    private void locationBtnPop() {
+        ifLocationEnabled = false;
+        locationButton.setCompatElevation(12f);
+        locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+        geoLocationText.setText("Location off");
+    }
+
+
+    private void locationBtnPress() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ifLocationEnabled = false;
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        } else {
+            // has location permission
+            ifLocationEnabled = true;
+            locationButton.setCompatElevation(0f);
+            locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+            fetchCurrentLocation();
+        }
     }
 
     /**
@@ -342,12 +400,17 @@ public class NewMoodActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE:
+            case LOCATION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLastLocation();
+                    ifLocationEnabled = true;
+                    locationButton.setCompatElevation(0f);
+                    locationButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
+                    fetchCurrentLocation();
+                }else{
+                    // prompt user cannot fetch location
+                    ifLocationEnabled = false;
                 }
                 break;
         }
     }
-
 }

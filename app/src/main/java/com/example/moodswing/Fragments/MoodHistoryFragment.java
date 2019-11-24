@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.MainActivity;
-import com.example.moodswing.MapsActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
