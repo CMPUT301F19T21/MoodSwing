@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.R;
+import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEvent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -21,11 +23,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
-    //hsc is opp
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,8 +81,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
+        String uid = firebaseDoc.getUsername();
+        for (MoodEvent moodEvent : moodEvents) {
+            if (moodEvent.getLatitude() != null) {
+                LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(latlng)
+                        .title(uid));
+            }
+        }
+        LatLng UofA = new LatLng(53.523220, -113.526321);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(UofA));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
+//        LatLng sydney = new LatLng(-34, 151);
+//        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//    }
     }
 }
