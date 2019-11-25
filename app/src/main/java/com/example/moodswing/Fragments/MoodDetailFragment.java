@@ -49,6 +49,7 @@ public class MoodDetailFragment extends Fragment{
     private ImageView moodImage;
     private ImageView locationImg;
     private ImageView socialIcon;
+    private ImageView imageView;
 
     private int moodPosition;
 
@@ -88,6 +89,7 @@ public class MoodDetailFragment extends Fragment{
         locationImg = root.findViewById(R.id.moodDetail_locationImg);
         socialIcon = root.findViewById(R.id.moodDetail_socialSitIcon);
         locationText = root.findViewById(R.id.moodDetail_locationText);
+        imageView = root.findViewById(R.id.moodDetail_following_image_place_holder);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +152,8 @@ public class MoodDetailFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
+        //communicator.getPhoto(moodEvent.getUniqueID(),getActivity());
+
     }
 
     private void setReasonText(){

@@ -1,13 +1,17 @@
 package com.example.moodswing.customDataTypes;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,12 +28,16 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 /**
  * This class Handles all the functionality related to firestore, a go-between for the app and firestore
@@ -53,7 +61,6 @@ public class FirestoreUserDocCommunicator{
 
     // other
     private Integer requestCount;
-    private Uri Image;
 
     // for filter
     private ArrayList<Integer> moodTypeFilterList_moodHistory;
@@ -825,26 +832,13 @@ public class FirestoreUserDocCommunicator{
             }
         });
     }
-    // not work yet
-    public Uri getPhoto(String id) {
-        StorageReference storageRef = storage.getReference();
-        StorageReference pathReference = storageRef.child(getUsername() + "/" + id);
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Got the download URL
-                Image = uri;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
-        return Image;
+    // retrieve image from firebase storage
+    public void getPhoto(String id, Context context) {
+
     }
 
-    //firebase database string implementation of adding photo. don't think i'll use it
+
+        //firebase database string implementation of adding photo. don't think i'll use it
 
     public void addPhotoString(MoodEvent moodEvent, String image) {
         DocumentReference moodEventRef = db
