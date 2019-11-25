@@ -233,16 +233,13 @@ public class NewMoodActivity extends AppCompatActivity {
                     break;
                 case 1:
                     // Showing the image from camera
-                    Uri image = Uri.parse(currentPhotoPath);
-                    if (image != null) {
-                        uploadImage = image;
-                    }
-                    addNewImageButton.setImageURI(image);
+                    addNewImageButton.setImageURI(uploadImage);
                     break;
             }
     }
-    // some bug can not upload image take from camera
-    // need find some way to save the image to local
+
+
+
     public void takeimage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -253,16 +250,16 @@ public class NewMoodActivity extends AppCompatActivity {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                ex.printStackTrace();
+                Log.d("error", "failed to create photo file");
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.moodswing.provider",
+                        "com.example.moodswing.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 1);
-
+                uploadImage = photoURI;
             }
         }
     }

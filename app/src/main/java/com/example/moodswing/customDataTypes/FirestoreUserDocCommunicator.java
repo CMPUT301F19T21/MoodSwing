@@ -817,7 +817,7 @@ public class FirestoreUserDocCommunicator{
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.d(TAG, "failed to upload image");
-            }
+        }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
