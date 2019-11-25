@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -161,6 +162,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     }
                 }
         });
+
         setSocialSituationBtns();
         PickImage();
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -234,6 +236,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 case 1:
                     // Showing the image from camera
                     addNewImageButton.setImageURI(uploadImage);
+
                     break;
             }
     }

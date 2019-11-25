@@ -32,6 +32,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -833,7 +834,26 @@ public class FirestoreUserDocCommunicator{
         });
     }
     // retrieve image from firebase storage
-    public void getPhoto(String id, Context context) {
+    public void getPhoto(String id, ImageView imageView) {
+        StorageReference storageRef = storage.getReference();
+
+        StorageReference storageName = storageRef.child(getUsername() + "/" + id);
+
+
+        storageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Log.d("testa",uri.toString());
+                Picasso.get().load(uri.toString()).into(imageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
 
     }
 

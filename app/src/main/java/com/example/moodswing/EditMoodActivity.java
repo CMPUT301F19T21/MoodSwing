@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private FloatingActionButton social_oneBtn;
     private FloatingActionButton social_twoMoreBtn;
     private Integer socialSituation;
+    private ImageView editImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class EditMoodActivity extends AppCompatActivity {
         confirmButton = findViewById(R.id.editMood_add_confirm);
         closeBtn = findViewById(R.id.editMood_close);
         reasonEditText = findViewById(R.id.editMood_reason_EditView);
-
+        editImage = findViewById(R.id.editMood_add_newImage);
         moodSelectList = findViewById(R.id.editMood_moodSelect_recycler);
 
 
@@ -67,9 +69,17 @@ public class EditMoodActivity extends AppCompatActivity {
         social_oneBtn = findViewById(R.id.editMood_oneAnotherBtn);
         social_twoMoreBtn = findViewById(R.id.editMood_twoMoreBtn);
 
+        communicator.getPhoto(moodEvent.getUniqueID(),editImage);
+
         setSocialSituationBtns();
         setReasonText();
 
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // delete old image and upload new image
+            }
+        });
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

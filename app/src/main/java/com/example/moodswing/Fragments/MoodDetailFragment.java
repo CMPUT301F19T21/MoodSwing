@@ -1,9 +1,13 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +28,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.protobuf.DescriptorProtos;
+import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,7 +54,7 @@ public class MoodDetailFragment extends Fragment{
     private ImageView moodImage;
     private ImageView locationImg;
     private ImageView socialIcon;
-    private ImageView imageView;
+    private ImageView photoImage;
 
     private int moodPosition;
 
@@ -89,7 +94,7 @@ public class MoodDetailFragment extends Fragment{
         locationImg = root.findViewById(R.id.moodDetail_locationImg);
         socialIcon = root.findViewById(R.id.moodDetail_socialSitIcon);
         locationText = root.findViewById(R.id.moodDetail_locationText);
-        imageView = root.findViewById(R.id.moodDetail_following_image_place_holder);
+        photoImage = root.findViewById(R.id.moodDetail_image_place_holder);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +157,9 @@ public class MoodDetailFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
-        //communicator.getPhoto(moodEvent.getUniqueID(),getActivity());
+        communicator.getPhoto(moodEvent.getUniqueID(),photoImage);
+
+
 
     }
 
@@ -255,5 +262,5 @@ public class MoodDetailFragment extends Fragment{
                 break;
         }
     }
-
 }
+
