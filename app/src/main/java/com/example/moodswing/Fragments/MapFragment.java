@@ -1,35 +1,53 @@
 package com.example.moodswing.Fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import java.util.Arrays;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.UserJar;
+import com.example.moodswing.customDataTypes.moodCluster;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.maps.android.clustering.ClusterManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
+    private ClusterManager<moodCluster>clusterManager;
+    private List<moodCluster>clusters = new ArrayList<>();
 
     @Nullable
     @Override
@@ -54,7 +72,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
-    private void closeFrag(){
+    private void closeFrag() {
         getChildFragmentManager()
                 .beginTransaction()
                 .remove(mapFrag)
@@ -80,6 +98,61 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
+        clusterManager = new ClusterManager<moodCluster>(getContext(), map);
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
+
+        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
+        String uid = firebaseDoc.getUsername();
+        for (MoodEvent moodEvent : moodEvents) {
+            if (moodEvent.getLatitude() != null) {
+                if (moodEvent.getMoodType() == 1) {
+                    LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
+                            .title(uid + " Was Happy!")
+                            .snippet("View Details"));
+                    clusters.add(new moodCluster(uid, latlng));
+                    clusterManager.addItems(clusters);
+//                    clusterManager.cluster();
+                }
+                else if (moodEvent.getMoodType() == 2) {
+                    LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
+                            .title(uid + " Was Sad!")
+                            .snippet("View Details"));
+                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.addItems(clusters);
+//                    clusterManager.cluster();
+                }
+                else if (moodEvent.getMoodType() == 3) {
+                    LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
+                            .title(uid + " Was Angry!")
+                            .snippet("View Details"));
+                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.addItems(clusters);
+//                    clusterManager.cluster();
+                }
+                else {
+                    LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
+                            .title(uid + " Was Emotional!")
+                            .snippet("View Details"));
+                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.addItems(clusters);
+//                    clusterManager.cluster();
+                }
+            }
+        }
+        LatLng UofA = new LatLng(53.523220, -113.526321);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(UofA));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
+
 
 //        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
 //        ArrayList<UserJar> userJars = firebaseDoc.getUserJars();
@@ -91,23 +164,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //                        .title(uid));
 //            }
 //        }
-
-        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
-        String uid = firebaseDoc.getUsername();
-        for (MoodEvent moodEvent : moodEvents) {
-            if (moodEvent.getLatitude() != null) {
-                LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(latlng)
-                        .title(uid));
-            }
-        }
-        LatLng UofA = new LatLng(53.523220, -113.526321);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(UofA));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
-//        LatLng sydney = new LatLng(-34, 151);
-//        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-//    }
     }
 }

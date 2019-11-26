@@ -24,6 +24,8 @@ import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.Fragments.MoodHistoryFragment;
 import com.example.moodswing.Fragments.ProfileFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
