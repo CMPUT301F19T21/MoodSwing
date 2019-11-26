@@ -160,7 +160,6 @@ public class MoodDetailFragment extends Fragment{
         communicator.getPhoto(moodEvent.getUniqueID(),photoImage);
 
 
-
     }
 
     private void setReasonText(){

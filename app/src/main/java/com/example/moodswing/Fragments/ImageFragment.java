@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.moodswing.EditMoodActivity;
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
@@ -21,10 +22,13 @@ public class ImageFragment extends DialogFragment {
     TextView gallery;
     TextView camera;
     TextView cancel;
+    String activity;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle args = getArguments();
+        if (args != null)
+            activity = args.getString("activity");
     }
     @Nullable
     @Override
@@ -43,9 +47,14 @@ public class ImageFragment extends DialogFragment {
             public void onClick(View v) {
 
                 dismiss();
-                NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                callingActivity.takeimage();
-
+                if (activity == "Edit"){
+                    EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
+                    callingActivity.takeimage();
+                }
+                if (activity == "New") {
+                    NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                    callingActivity.takeimage();
+                }
             }
         });
         gallery.setOnClickListener(new View.OnClickListener() {
@@ -53,9 +62,14 @@ public class ImageFragment extends DialogFragment {
             public void onClick(View v) {
                 //select photo from gallery
                 dismiss();
-                NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                callingActivity.pickFromGallery();
-
+                if (activity == "Edit"){
+                    EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
+                    callingActivity.pickFromGallery();
+                }
+                if (activity == "New") {
+                    NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                    callingActivity.pickFromGallery();
+                }
 
             }
         });

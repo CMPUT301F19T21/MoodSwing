@@ -54,6 +54,7 @@ public class FirestoreUserDocCommunicator{
 
     private static FirestoreUserDocCommunicator instance = null;
 
+    private int position;
     private ArrayList<MoodEvent> moodEvents;
     private ArrayList<UserJar> userJars;
     // reference
@@ -261,6 +262,7 @@ public class FirestoreUserDocCommunicator{
                 }
                 moodAdapter.notifyDataSetChanged();
                 moodEvents = moodAdapter.getMoods();
+
             }
         });
     }
@@ -293,6 +295,7 @@ public class FirestoreUserDocCommunicator{
     }
 
     public MoodEvent getMoodEvent(int position) {
+        this.position = position;
         return moodEvents.get(position);
     }
 
@@ -835,7 +838,7 @@ public class FirestoreUserDocCommunicator{
             }
         });
     }
-    // retrieve image from firebase storage
+    // retrieve image from firebase storage and set into imageView
     public void getPhoto(String id, ImageView imageView) {
         StorageReference storageRef = storage.getReference();
 

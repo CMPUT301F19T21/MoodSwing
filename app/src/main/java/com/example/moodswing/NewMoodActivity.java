@@ -193,7 +193,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     }
                     communicator.addMoodEvent(moodEvent);
                     if (uploadImage != null){
-                        communicator.addPhoto(moodId,uploadImage);}
+                        communicator.addPhoto(moodId,uploadImage);
+                    }
                     finish();
                 }else{
                     // prompt user to select a mood
@@ -206,7 +207,11 @@ public class NewMoodActivity extends AppCompatActivity {
         addNewImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ImageFragment().show(getSupportFragmentManager(),"image");
+                ImageFragment imageFragment = new ImageFragment();
+                Bundle args = new Bundle();
+                args.putString("activity","New");
+                imageFragment.setArguments(args);
+                imageFragment.show(getSupportFragmentManager(),"image");
             }
         });
     }
