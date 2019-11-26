@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -80,7 +81,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
 
-        // Add a marker in Sydney and move the camera
+//        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+//        ArrayList<UserJar> userJars = firebaseDoc.getUserJars();
+//        String uid = firebaseDoc.getUsername();
+//        for (UserJar userJar : userJars) {
+//            if (userJar.getMoodEvent().getLatitude() != null) {
+//                LatLng latlng = new LatLng(userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
+//                googleMap.addMarker(new MarkerOptions().position(latlng)
+//                        .title(uid));
+//            }
+//        }
+
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
         ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
         String uid = firebaseDoc.getUsername();
