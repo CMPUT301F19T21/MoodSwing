@@ -52,6 +52,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.AllOf.allOf;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -268,34 +269,97 @@ public class MainactivityTest {
      * Test follow function is work
      */
     //Test Following not complete since some function for following is not complete such as delete following
+    //For this test to work there must be a user with username 'usera' and password '123456'
     @Test
-    public void CheckFollowing(){
+    public void CheckFollowingAddReceive() throws InterruptedException{
         onView(withId(R.id.nav_followingBtn))
                 .perform(click());
         //check if in the following screen shows
-        onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
-        // check following manager
-        onView(withId(R.id.following_management))
-                .perform(click());
+        try {
+            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
+            onView(withId(R.id.following_management)).perform(click());
+        }
+        catch(NoMatchingViewException e) {
+            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+        }
+
         onView(withId(R.id.managment_following)).check(matches(isDisplayed()));//check if in the FollowingFragment
-        // check follow someone
         onView(withId(R.id.request_button))
                 .perform(click());
         onView(withId(R.id.requestFrag_requestEnter))
-                .perform(typeText("yinsong"),closeSoftKeyboard());
+                .perform(typeText("usera"),closeSoftKeyboard());
         onView(withId(R.id.requestFrag_confirm))
                 .perform(click());
-
-        // accept request
-/*
-        onView(withId(R.id.management_request))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.checkrequest_confirm))
+        onView(withId(R.id.request_backBtn))
                 .perform(click());
+        onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.profile_LogOut)).perform(click());
 
- */
-        //check if following shows
-        //
+        //checking that the request was given
+        onView(withId(R.id.userEmailField))
+                .perform(typeText("usera@mail.com"), closeSoftKeyboard());
+        onView(withId(R.id.passField))
+                .perform(typeText("123456"), closeSoftKeyboard());
+        onView(withId(R.id.loginComfirmBtn)).perform(click());
+
+        Thread.sleep(2000);
+
+        onView(withId(R.id.nav_followingBtn)).perform(click());
+        try {
+            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
+            onView(withId(R.id.following_management)).perform(click());
+        }
+        catch(NoMatchingViewException e) {
+            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+        }
+        //The sending user's username will be on the screen, otherwise error
+        onView(withId(R.id.management_request))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("user")), click()));
+        onView(withId(R.id.checkrequest_confirm)).perform(click());
+
+
+        //Checking the user is now following, then deleting so the test can be run in the future
+        onView(withId(R.id.request_backBtn)).perform(click());
+        onView(withId(R.id.nav_profile)).perform(click());
+        Thread.sleep(2000); // Without sleep, espresso won't wait for the view to change, not sure why
+        onView(withId(R.id.profile_LogOut)).perform(click());
+
+
+        onView(withId(R.id.userEmailField))
+                .perform(typeText("test@mail.com"),closeSoftKeyboard());
+        onView(withId(R.id.passField))
+                .perform(typeText("123456"),closeSoftKeyboard());
+        onView(withId(R.id.loginComfirmBtn)).perform(click());
+        Thread.sleep(2000);
+        onView(withId(R.id.nav_followingBtn)).perform(click());
+        try {
+            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
+            onView(withId(R.id.following_management)).perform(click());
+        }
+        catch(NoMatchingViewException e) {
+            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+        }
+
+        onView(withId(R.id.managment_following))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.unfollowFrag_confirm)).perform(click());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     /**
