@@ -73,6 +73,8 @@ public class FirestoreUserDocCommunicator{
         this.mAuth = FirebaseAuth.getInstance();
         this.user = mAuth.getCurrentUser();
         this.userDocSnapshot = null;
+        this.moodEvents = new ArrayList<>();
+        this.userJars = new ArrayList<>();
         this.getUserSnapShot();
 
         // init requestCount to 0
