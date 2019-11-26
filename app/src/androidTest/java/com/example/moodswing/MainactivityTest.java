@@ -268,9 +268,9 @@ public class MainactivityTest {
      * Test follow function is work
      */
     //Test Following not complete since some function for following is not complete such as delete following
-    //For this test to work there must be a user with username 'usera'
+    //For this test to work there must be a user with username 'usera' and password '123456'
     @Test
-    public void CheckFollowing(){
+    public void CheckFollowingAddReceive() throws InterruptedException{
         onView(withId(R.id.nav_followingBtn))
                 .perform(click());
         //check if in the following screen shows
@@ -290,19 +290,64 @@ public class MainactivityTest {
                 .perform(typeText("usera"),closeSoftKeyboard());
         onView(withId(R.id.requestFrag_confirm))
                 .perform(click());
+        onView(withId(R.id.request_backBtn))
+                .perform(click());
+        onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.profile_LogOut)).perform(click());
+
+        //checking that the request was given
+        onView(withId(R.id.userEmailField))
+                .perform(typeText("usera@mail.com"), closeSoftKeyboard());
+        onView(withId(R.id.passField))
+                .perform(typeText("123456"), closeSoftKeyboard());
+        onView(withId(R.id.loginComfirmBtn)).perform(click());
+
+        Thread.sleep(2000);
+
+        onView(withId(R.id.nav_followingBtn)).perform(click());
+        try {
+            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
+            onView(withId(R.id.following_management)).perform(click());
+        }
+        catch(NoMatchingViewException e) {
+            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+        }
+        //The sending user's username will be on the screen, otherwise error
+        onView(withId(R.id.management_request))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("user")), click()));
+        onView(withId(R.id.checkrequest_confirm)).perform(click());
+
+
+        //Checking the user is now following, then deleting so the test can be run in the future
+        onView(withId(R.id.request_backBtn)).perform(click());
+        onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.profile_LogOut)).perform(click());
+
+        onView(withId(R.id.userEmailField))
+                .perform(typeText("test@mail.com"),closeSoftKeyboard());
+        onView(withId(R.id.passField))
+                .perform(typeText("123456"),closeSoftKeyboard());
+        onView(withId(R.id.loginComfirmBtn)).perform(click());
+        Thread.sleep(2000);
+        onView(withId(R.id.nav_followingBtn)).perform(click());
+        try {
+            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
+            onView(withId(R.id.following_management)).perform(click());
+        }
+        catch(NoMatchingViewException e) {
+            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+        }
 
         
 
-        // accept request
-/*
-        onView(withId(R.id.management_request))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.checkrequest_confirm))
-                .perform(click());
 
- */
-        //check if following shows
-        //
+
+
+
+
+
     }
 
     /**
