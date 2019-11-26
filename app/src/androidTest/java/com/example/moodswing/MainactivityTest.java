@@ -271,7 +271,7 @@ public class MainactivityTest {
     //Test Following not complete since some function for following is not complete such as delete following
     //For this test to work there must be a user with username 'usera' and password '123456'
     @Test
-    public void CheckFollowingAddReceive() throws InterruptedException{
+    public void ACheckFollowingAddReceive() throws InterruptedException{
         onView(withId(R.id.nav_followingBtn))
                 .perform(click());
         //check if in the following screen shows
@@ -291,9 +291,13 @@ public class MainactivityTest {
                 .perform(typeText("usera"),closeSoftKeyboard());
         onView(withId(R.id.requestFrag_confirm))
                 .perform(click());
+        //espresso checking before screen comes up here, sleep to slow it down
+        Thread.sleep(2000);
         onView(withId(R.id.request_backBtn))
                 .perform(click());
+        Thread.sleep(2000);
         onView(withId(R.id.nav_profile)).perform(click());
+        Thread.sleep(2000);
         onView(withId(R.id.profile_LogOut)).perform(click());
 
         //checking that the request was given
@@ -346,18 +350,6 @@ public class MainactivityTest {
         onView(withId(R.id.managment_following))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.unfollowFrag_confirm)).perform(click());
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
