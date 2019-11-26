@@ -52,6 +52,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.AllOf.allOf;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -322,7 +323,9 @@ public class MainactivityTest {
         //Checking the user is now following, then deleting so the test can be run in the future
         onView(withId(R.id.request_backBtn)).perform(click());
         onView(withId(R.id.nav_profile)).perform(click());
+        Thread.sleep(2000); // Without sleep, espresso won't wait for the view to change, not sure why
         onView(withId(R.id.profile_LogOut)).perform(click());
+
 
         onView(withId(R.id.userEmailField))
                 .perform(typeText("test@mail.com"),closeSoftKeyboard());
@@ -340,7 +343,16 @@ public class MainactivityTest {
             onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
         }
 
-        
+        onView(withId(R.id.managment_following))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.unfollowFrag_confirm)).perform(click());
+
+
+
+
+
+
+
 
 
 
