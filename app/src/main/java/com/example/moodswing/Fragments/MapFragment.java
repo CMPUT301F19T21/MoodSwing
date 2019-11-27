@@ -1,6 +1,7 @@
 package com.example.moodswing.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
@@ -60,8 +62,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //displaying follwing's moods on the map
                 this.communicator = FirestoreUserDocCommunicator.getInstance();
                 this.mood = mood;
+//                this.moodList = communicator.getUserJars();
                 this.moodList = new ArrayList<>();
-                ArrayList<UserJar> userJars = communicator.getFollowingMoodEvents();
+                ArrayList<UserJar> userJars = communicator.getUserJars();
                 for (UserJar jar: userJars) {
                     moodList.add(jar.getMoodEvent());
                 }
@@ -119,14 +122,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
-        clusterManager = new ClusterManager<moodCluster>(getContext(), map);
-        map.setOnCameraIdleListener(clusterManager);
-        map.setOnMarkerClickListener(clusterManager);
+
 
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
         String uid = firebaseDoc.getUsername();
-        for (MoodEvent moodEvent : moodEvents) {
+        for (MoodEvent moodEvent : moodList) {
             if (moodEvent.getLatitude() != null) {
                 if (moodEvent.getMoodType() == 1) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -134,10 +134,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
                             .title(uid + " Was Happy!")
                             .snippet("View Details"));
-//                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.setRenderer(new HappyIconRenderer(getContext(), map, clusterManager));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
                 else if (moodEvent.getMoodType() == 2) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -145,10 +141,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
                             .title(uid + " Was Sad!")
                             .snippet("View Details"));
-//                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.setRenderer(new SadIconRenderer(getContext(), map, clusterManager));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
                 else if (moodEvent.getMoodType() == 3) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -156,10 +148,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
                             .title(uid + " Was Angry!")
                             .snippet("View Details"));
-//                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.setRenderer(new AngryIconRenderer(getContext(), map, clusterManager));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
                 else {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -167,10 +155,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
                             .title(uid + " Was Emotional!")
                             .snippet("View Details"));
-//                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.setRenderer(new EmotionalIconRenderer(getContext(), map, clusterManager));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
             }
         }
@@ -178,16 +162,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(UofA));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
 
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                switch(mood) {
+                    case 1:
+                        toDetailedView(0);
+                        break;
+                    case 2:
+                        toDetailedView(1);
+                        break;
+                    case 3:
+                        toDetailedView(2);
+                        break;
+                    case 4:
+                        toDetailedView(3);
+                        break;
+                    default:
+                        break;
+                }
+                //                for (MoodEvent moodEvent : moodEvents) {
+//                    if (moodEvent.getLatitude() != null) {
+//                        toDetailedView(0);
+//                    }
+//                }
+                return false;
+            }
+        });
 
-//        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-//        ArrayList<UserJar> userJars = firebaseDoc.getUserJars();
-//        String uid = firebaseDoc.getUsername();
-//        for (UserJar userJar : userJars) {
-//            if (userJar.getMoodEvent().getLatitude() != null) {
-//                LatLng latlng = new LatLng(userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
-//                googleMap.addMarker(new MarkerOptions().position(latlng)
-//                        .title(uid));
-//            }
-//        }
+    }
+    public void toDetailedView(int moodPosition) {
+        MoodDetailFragment frag = new MoodDetailFragment(moodPosition);
+        frag.setTargetFragment(this, 1);
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_placeHolder, frag,"moodHistoryDetailedFrag")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .hide(this)
+                .commitAllowingStateLoss();
     }
 }
