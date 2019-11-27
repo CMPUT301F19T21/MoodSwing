@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         moodHistoryBtn.setScaleX(1.0f);
         moodHistoryBtn.setScaleY(1.0f);
         currentScreenPointer = FOLLOWING_SCREEN;
-        if ((moodHistoryIsEmpty != null) && (moodFollowingIsEmpty)){
+        if ((moodFollowingIsEmpty != null) && (moodFollowingIsEmpty)){
             toFollowingEmptyFragment();
         }else {
             getSupportFragmentManager()
