@@ -1,26 +1,16 @@
 package com.example.moodswing.Fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import java.util.Arrays;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
@@ -33,11 +23,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +36,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
+    private Integer mood;
+    private ArrayList<MoodEvent> moodList;
     private ClusterManager<moodCluster>clusterManager;
+    private FirestoreUserDocCommunicator communicator;
+    private UserJar userJar;
     private List<moodCluster>clusters = new ArrayList<>();
+    private MapFragment mapFragment;
+    private String followingUid;
 
+    public MapFragment(){}
+
+    public MapFragment(Integer mood){
+        // should always call filter fragment with this constructor, the empty one should never be used
+        // the ArrayList<Integer> is passed by reference, so any change to it inside this fragment will also be changed inside Activity
+        this.mapFragment = this;
+        switch (mood) {
+            case 1:
+                //displaying my moods on the map
+                this.communicator = FirestoreUserDocCommunicator.getInstance();
+                this.mood = mood;
+                this.moodList = communicator.getMoodEvents();
+                break;
+            case 2:
+                //displaying follwing's moods on the map
+                this.communicator = FirestoreUserDocCommunicator.getInstance();
+                this.mood = mood;
+//                this.moodList = communicator.getUserJars();
+                this.moodList = new ArrayList<>();
+                ArrayList<UserJar> userJars = communicator.getUserJars();
+                for (UserJar jar: userJars) {
+                    moodList.add(jar.getMoodEvent());
+                }
+                break;
+            default:
+                break;
+        }
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,14 +122,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
-        clusterManager = new ClusterManager<moodCluster>(getContext(), map);
-        map.setOnCameraIdleListener(clusterManager);
-        map.setOnMarkerClickListener(clusterManager);
+
 
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-        ArrayList<MoodEvent> moodEvents = firebaseDoc.getMoodEvents();
         String uid = firebaseDoc.getUsername();
-        for (MoodEvent moodEvent : moodEvents) {
+        for (MoodEvent moodEvent : moodList) {
             if (moodEvent.getLatitude() != null) {
                 if (moodEvent.getMoodType() == 1) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -113,9 +134,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
                             .title(uid + " Was Happy!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
-                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
                 else if (moodEvent.getMoodType() == 2) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -123,9 +141,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
                             .title(uid + " Was Sad!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
                 else if (moodEvent.getMoodType() == 3) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -133,9 +148,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
                             .title(uid + " Was Angry!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
                 else {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
@@ -143,9 +155,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
                             .title(uid + " Was Emotional!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
-//                    clusterManager.addItems(clusters);
-//                    clusterManager.cluster();
                 }
             }
         }
@@ -153,16 +162,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(UofA));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
 
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                switch(mood) {
+                    case 1:
+                        toDetailedView(0);
+                        break;
+                    case 2:
+                        toDetailedView(1);
+                        break;
+                    case 3:
+                        toDetailedView(2);
+                        break;
+                    case 4:
+                        toDetailedView(3);
+                        break;
+                    default:
+                        break;
+                }
+                //                for (MoodEvent moodEvent : moodEvents) {
+//                    if (moodEvent.getLatitude() != null) {
+//                        toDetailedView(0);
+//                    }
+//                }
+                return false;
+            }
+        });
 
-//        FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-//        ArrayList<UserJar> userJars = firebaseDoc.getUserJars();
-//        String uid = firebaseDoc.getUsername();
-//        for (UserJar userJar : userJars) {
-//            if (userJar.getMoodEvent().getLatitude() != null) {
-//                LatLng latlng = new LatLng(userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
-//                googleMap.addMarker(new MarkerOptions().position(latlng)
-//                        .title(uid));
-//            }
-//        }
+    }
+    public void toDetailedView(int moodPosition) {
+        MoodDetailFragment frag = new MoodDetailFragment(moodPosition);
+        frag.setTargetFragment(this, 1);
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_placeHolder, frag,"moodHistoryDetailedFrag")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .hide(this)
+                .commitAllowingStateLoss();
     }
 }

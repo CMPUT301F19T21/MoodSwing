@@ -40,7 +40,6 @@
         <activity
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".GoogleMapActivity" />
         <activity
             android:name=".ManagementActivity"
             android:screenOrientation="portrait" />

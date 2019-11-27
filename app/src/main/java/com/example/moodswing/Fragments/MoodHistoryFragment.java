@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moodswing.GoogleMapActivity;
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
@@ -85,7 +84,7 @@ public class MoodHistoryFragment extends Fragment {
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).openMapFragment();
+                ((MainActivity) getActivity()).openMapFragment(1);
             }
         });
         addButton.setOnClickListener(new View.OnClickListener() {

@@ -883,4 +883,23 @@ public class FirestoreUserDocCommunicator{
                 .document(user.getUid())
                 .get();
     }
+    public ArrayList<UserJar> getFollowingMoodEvents() {
+        return userJars;
+    }
+
+//    public ArrayList<followingMoodList> getFollowingList() {
+//        return db
+//                .collection("users")
+//                .document(user.getUid())
+//                .collection("followingMoodList")
+//                .document("followingMoodList");
+//    }
+
+//    public Query getFollowingList() {
+//        return db
+//                .collection("users")
+//                .document(user.getUid())
+//                .collection("followingMoodList")
+//                .orderBy("moodEvent.timeStamp", Query.Direction.DESCENDING);
+//    }
 }

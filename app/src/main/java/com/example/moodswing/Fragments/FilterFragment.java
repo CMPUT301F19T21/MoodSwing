@@ -62,6 +62,8 @@ public class FilterFragment extends Fragment {
                 this.mode = mode;
                 this.filterList = communicator.getFollowingFilterList();
                 break;
+            default:
+                break;
         }
     }
 
