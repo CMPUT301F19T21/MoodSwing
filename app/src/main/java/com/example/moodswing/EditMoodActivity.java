@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,6 +112,15 @@ public class EditMoodActivity extends AppCompatActivity {
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
                     }else{
+                        if (reasonEditText.getText().toString().length() > 20) {
+                            Toast.makeText(getApplicationContext(), "More than 20 characters!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String[] splitStr = reasonEditText.getText().toString().trim().split("\\s+");
+                        if (splitStr.length > 3) {
+                            Toast.makeText(getApplicationContext(),"More than 3 words!",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
                     communicator.updateMoodEvent(moodEvent);
