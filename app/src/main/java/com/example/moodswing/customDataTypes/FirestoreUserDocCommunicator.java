@@ -805,18 +805,6 @@ public class FirestoreUserDocCommunicator{
         return moodEvents;
     }
 
-    public void editUserPassword() {
-        //
-    }
-
-    public void editUsername() {
-        //
-    }
-
-    public void deleteUser() {
-        //
-    }
-
 
     public void addPhoto(String id, Uri filePath) {
 
@@ -861,8 +849,6 @@ public class FirestoreUserDocCommunicator{
 
 
     }
-
-
         //firebase database string implementation of adding photo. don't think i'll use it
 
     public void addPhotoString(MoodEvent moodEvent, String image) {
@@ -886,20 +872,4 @@ public class FirestoreUserDocCommunicator{
     public ArrayList<UserJar> getFollowingMoodEvents() {
         return userJars;
     }
-
-//    public ArrayList<followingMoodList> getFollowingList() {
-//        return db
-//                .collection("users")
-//                .document(user.getUid())
-//                .collection("followingMoodList")
-//                .document("followingMoodList");
-//    }
-
-//    public Query getFollowingList() {
-//        return db
-//                .collection("users")
-//                .document(user.getUid())
-//                .collection("followingMoodList")
-//                .orderBy("moodEvent.timeStamp", Query.Direction.DESCENDING);
-//    }
 }

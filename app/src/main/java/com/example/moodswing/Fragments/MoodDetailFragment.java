@@ -130,7 +130,6 @@ public class MoodDetailFragment extends Fragment{
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .remove(this)
-                .show(getTargetFragment())
                 .commit();
     }
 
