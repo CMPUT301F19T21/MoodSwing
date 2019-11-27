@@ -18,9 +18,9 @@ public class SelectMoodFilterAdapter extends SelectMoodAdapter{
     private ArrayList<Integer> moodTypes;
     private FilterFragment filterFragment;
 
-    public SelectMoodFilterAdapter(){
-        super();
-    }
+//    public SelectMoodFilterAdapter(){
+//        super();
+//    }
     public SelectMoodFilterAdapter(ArrayList<Integer> filterList, FilterFragment filterFragment){
         super();
         this.filterList = filterList;

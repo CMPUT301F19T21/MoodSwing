@@ -85,9 +85,16 @@ public class FollowingFragment extends Fragment {
             }
         });
 
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).openMapFragment(2);
+            }
+        });
 
         return root;
     }
+
 
     public void refreshMoodList(){
         communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());

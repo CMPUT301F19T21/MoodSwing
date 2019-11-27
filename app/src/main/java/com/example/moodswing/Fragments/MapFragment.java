@@ -1,26 +1,15 @@
 package com.example.moodswing.Fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import java.util.Arrays;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
@@ -37,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +34,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
+    private Integer mood;
+    private ArrayList<MoodEvent> moodList;
     private ClusterManager<moodCluster>clusterManager;
+    private FirestoreUserDocCommunicator communicator;
+    private UserJar userJar;
     private List<moodCluster>clusters = new ArrayList<>();
+    private MapFragment mapFragment;
+    private String followingUid;
 
+    public MapFragment(){}
+
+    public MapFragment(Integer mood){
+        // should always call filter fragment with this constructor, the empty one should never be used
+        // the ArrayList<Integer> is passed by reference, so any change to it inside this fragment will also be changed inside Activity
+        this.mapFragment = this;
+        switch (mood) {
+            case 1:
+                //displaying my moods on the map
+                this.communicator = FirestoreUserDocCommunicator.getInstance();
+                this.mood = mood;
+                this.moodList = communicator.getMoodEvents();
+                break;
+            case 2:
+                //displaying follwing's moods on the map
+                this.communicator = FirestoreUserDocCommunicator.getInstance();
+                this.mood = mood;
+                this.moodList = new ArrayList<>();
+                ArrayList<UserJar> userJars = communicator.getFollowingMoodEvents();
+                for (UserJar jar: userJars) {
+                    moodList.add(jar.getMoodEvent());
+                }
+                break;
+            default:
+                break;
+        }
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,8 +134,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
                             .title(uid + " Was Happy!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
-                    clusterManager.addItems(clusters);
+//                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.setRenderer(new HappyIconRenderer(getContext(), map, clusterManager));
+//                    clusterManager.addItems(clusters);
 //                    clusterManager.cluster();
                 }
                 else if (moodEvent.getMoodType() == 2) {
@@ -123,7 +145,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
                             .title(uid + " Was Sad!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
+//                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.setRenderer(new SadIconRenderer(getContext(), map, clusterManager));
 //                    clusterManager.addItems(clusters);
 //                    clusterManager.cluster();
                 }
@@ -133,7 +156,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
                             .title(uid + " Was Angry!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
+//                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.setRenderer(new AngryIconRenderer(getContext(), map, clusterManager));
 //                    clusterManager.addItems(clusters);
 //                    clusterManager.cluster();
                 }
@@ -143,7 +167,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
                             .title(uid + " Was Emotional!")
                             .snippet("View Details"));
-                    clusters.add(new moodCluster(uid, latlng));
+//                    clusters.add(new moodCluster(uid, latlng));
+//                    clusterManager.setRenderer(new EmotionalIconRenderer(getContext(), map, clusterManager));
 //                    clusterManager.addItems(clusters);
 //                    clusterManager.cluster();
                 }
