@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     public void toDetailedView(int moodPosition) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition),"moodHistoryDetailedFrag")
+                .add(R.id.fragment_placeHolder, new MoodDetailFragment(moodPosition,1),"moodHistoryDetailedFrag")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commitAllowingStateLoss();
     }
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(mood),"filterFrag")
+                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(mood),"mapFrag")
                 .commitAllowingStateLoss();
     }
 
