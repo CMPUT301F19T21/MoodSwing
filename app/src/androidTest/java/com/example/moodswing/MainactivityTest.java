@@ -264,95 +264,7 @@ public class MainactivityTest {
         assertTrue(newSize==(oldSize-1));
     }
 
-    /**
-     * Check whether fragment correct switch
-     * Test follow function is work
-     */
-    //Test Following not complete since some function for following is not complete such as delete following
-    //For this test to work there must be a user with username 'usera' and password '123456'
-    @Test
-    public void ACheckFollowingAddReceive() throws InterruptedException{
-        onView(withId(R.id.nav_followingBtn))
-                .perform(click());
-        //check if in the following screen shows
-        try {
-            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
-            onView(withId(R.id.following_management)).perform(click());
-        }
-        catch(NoMatchingViewException e) {
-            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
-            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
-        }
 
-        onView(withId(R.id.managment_following)).check(matches(isDisplayed()));//check if in the FollowingFragment
-        onView(withId(R.id.request_button))
-                .perform(click());
-        onView(withId(R.id.requestFrag_requestEnter))
-                .perform(typeText("usera"),closeSoftKeyboard());
-        onView(withId(R.id.requestFrag_confirm))
-                .perform(click());
-        //espresso checking before screen comes up here, sleep to slow it down
-        Thread.sleep(2000);
-        onView(withId(R.id.request_backBtn))
-                .perform(click());
-        Thread.sleep(2000);
-        onView(withId(R.id.nav_profile)).perform(click());
-        Thread.sleep(2000);
-        onView(withId(R.id.profile_LogOut)).perform(click());
-
-        //checking that the request was given
-        onView(withId(R.id.userEmailField))
-                .perform(typeText("usera@mail.com"), closeSoftKeyboard());
-        onView(withId(R.id.passField))
-                .perform(typeText("123456"), closeSoftKeyboard());
-        onView(withId(R.id.loginComfirmBtn)).perform(click());
-
-        Thread.sleep(2000);
-
-        onView(withId(R.id.nav_followingBtn)).perform(click());
-        try {
-            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
-            onView(withId(R.id.following_management)).perform(click());
-        }
-        catch(NoMatchingViewException e) {
-            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
-            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
-        }
-        //The sending user's username will be on the screen, otherwise error
-        onView(withId(R.id.management_request))
-                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("user")), click()));
-        onView(withId(R.id.checkrequest_confirm)).perform(click());
-
-
-        //Checking the user is now following, then deleting so the test can be run in the future
-        onView(withId(R.id.request_backBtn)).perform(click());
-        onView(withId(R.id.nav_profile)).perform(click());
-        Thread.sleep(2000); // Without sleep, espresso won't wait for the view to change, not sure why
-        onView(withId(R.id.profile_LogOut)).perform(click());
-
-
-        onView(withId(R.id.userEmailField))
-                .perform(typeText("test@mail.com"),closeSoftKeyboard());
-        onView(withId(R.id.passField))
-                .perform(typeText("123456"),closeSoftKeyboard());
-        onView(withId(R.id.loginComfirmBtn)).perform(click());
-        Thread.sleep(2000);
-        onView(withId(R.id.nav_followingBtn)).perform(click());
-        try {
-            onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
-            onView(withId(R.id.following_management)).perform(click());
-        }
-        catch(NoMatchingViewException e) {
-            onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
-            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
-        }
-
-        onView(withId(R.id.managment_following))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.unfollowFrag_confirm)).perform(click());
-
-
-    }
 
     /**
      * Check whether fragment correct switch
@@ -377,6 +289,25 @@ public class MainactivityTest {
         // check current activity is login
 
     }
+
+    @Test
+    public void FilterTest() {
+        //We will assume there is at least 1 mood in the list with the happy emotion
+        onView(withId(R.id.home_add));
+        int before = communicator.getMoodHistoryFilterList().size();
+        onView(withId(R.id.home_filterBtn))
+                .perform(click());
+        onView(allOf(withId(R.id.moodType_Text), withText("HAPPY"))).perform(click());
+        onView(withId(R.id.filter_back)).perform(click());
+        int after = communicator.getMoodHistoryFilterList().size();
+
+
+        //1 mood added to filter list
+        assertTrue(after > before);
+
+
+    }
+
     @After
     public void cleanUp(){
         Intents.release();
