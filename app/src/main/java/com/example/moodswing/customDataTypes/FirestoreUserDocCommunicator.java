@@ -224,14 +224,10 @@ public class FirestoreUserDocCommunicator{
      * @param moodEvent The mood event to be deleted
      */
     public void removeMoodEvent(MoodEvent moodEvent){
-        // error code need to be created
-        int index = 0;
-        for (MoodEvent moodEvent1 : moodEvents){
-            if (moodEvent.getUniqueID() == moodEvent1.getUniqueID()){
-                moodEvents.remove(index);
-                index++;
-                break;
-            }
+
+        Integer moodPosition = getMoodPosition(moodEvent.getUniqueID());
+        if (moodPosition != null){
+            moodEvents.remove((int)moodPosition);
         }
 
         DocumentReference moodEventRef = db
@@ -321,6 +317,17 @@ public class FirestoreUserDocCommunicator{
 
     public UserJar getUserJar(int position) {
         return userJars.get(position);
+    }
+
+    public Integer getMoodPosition(String moodID){
+        int position = 0;
+        for (MoodEvent moodEvent : moodEvents) {
+            if(moodEvent.getUniqueID() == moodID) {
+                return position;
+            }
+            position ++;
+        }
+        return null;    // not found
     }
 
     // following feature
