@@ -23,20 +23,20 @@ public final class MoodEventUtility {
     }
 
     /**
-     * Gets a DateJar object and returns a string of the date stored
-     * @param date The DateJar object to be converted into a string
-     * @return Returns a string of the DateJar's date
+     * Gets Long UTC(universal coordinated time) and returns a string date
+     * @param utc the UTC object to be converted into a string
+     * @return Returns a string from UTC in Month,Day,Year format
      */
-    public static String getDateStr (DateJar date) {
-        String month = returnMonthStr(date.getMonth());
-        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
-        
+    public static String getDateStr (Long utc) {
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, yyyy");
+        return outputFormat.format(utc);
+
     }
 
     /**
-     * Gets a TimeJar object and returns a string of the time stored
+     * Gets Long UTC(universal coordinated time) and returns a string of the time stored
      * @param utc the UTC object to be converted into a string
-     * @return Returns a string of the TimeJar's time
+     * @return Returns a string from UTC in am/pm time
      */
     public static String getTimeStr (Long utc) {
 

@@ -85,7 +85,7 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         UserJar userJar = userJars.get(position);
         MoodEvent moodEvent = userJar.getMoodEvent();
 
-        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
+        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
         printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
         usernameTextView.setText(userJar.getUsername());

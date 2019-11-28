@@ -160,7 +160,7 @@ public class NewMoodActivity extends AppCompatActivity {
                                 moodEvent.setTimeStamp(UTC);
 
                                 // set date and time for display
-                                dateTextView.setText(MoodEventUtility.getDateStr(date));
+                                dateTextView.setText(MoodEventUtility.getDateStr(UTC));
                                 timeTextView.setText(MoodEventUtility.getTimeStr(UTC));
                             }
                         });
