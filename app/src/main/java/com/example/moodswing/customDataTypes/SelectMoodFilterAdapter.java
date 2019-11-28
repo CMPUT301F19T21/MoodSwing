@@ -60,6 +60,10 @@ public class SelectMoodFilterAdapter extends SelectMoodAdapter{
                 moodTypeText.setText("IN LOVE");
                 moodImage.setImageResource(R.drawable.mood6);
                 break;
+            case 7:
+                moodTypeText.setText("SCARED");
+                moodImage.setImageResource(R.drawable.mood7);
+                break;
         }
         // preSelect
         if (filterList.contains(super.getMoodTypes().get(position))){

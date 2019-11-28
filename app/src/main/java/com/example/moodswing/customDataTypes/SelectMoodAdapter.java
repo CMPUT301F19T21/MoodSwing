@@ -114,6 +114,10 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
                 moodTypeText.setText("IN LOVE");
                 moodImage.setImageResource(R.drawable.mood6);
                 break;
+            case 7:
+                moodTypeText.setText("SCARED");
+                moodImage.setImageResource(R.drawable.mood7);
+                break;
         }
         // preSelect
         if (selectedPosition != null) {
