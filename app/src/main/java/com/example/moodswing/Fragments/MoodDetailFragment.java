@@ -57,6 +57,7 @@ public class MoodDetailFragment extends Fragment{
     private ImageView photoImage;
 
     private int moodPosition;
+    private int mode;
 
     public MoodDetailFragment(){}
 
@@ -65,7 +66,8 @@ public class MoodDetailFragment extends Fragment{
      * (ie. 1=happy) to be displayed at the top of the screen
      * @param moodPosition
      */
-    public MoodDetailFragment(int moodPosition) {
+    public MoodDetailFragment(int moodPosition, int mode) {
+        this.mode = mode;
         this.communicator = FirestoreUserDocCommunicator.getInstance();
         this.moodPosition = moodPosition;
         this.moodEvent = communicator.getMoodEvent(moodPosition);
@@ -126,11 +128,22 @@ public class MoodDetailFragment extends Fragment{
     }
 
     private void closeFrag(){
-        getFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                .remove(this)
-                .commit();
+        if (mode == 1){
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .remove(this)
+                    .commit();
+        }else if (mode == 2){
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .remove(this)
+                    .remove(getParentFragment())
+                    .commit();
+        }
+
+
     }
 
     @Override
