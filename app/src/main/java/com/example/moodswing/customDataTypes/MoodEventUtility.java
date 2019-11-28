@@ -30,6 +30,7 @@ public final class MoodEventUtility {
     public static String getDateStr (DateJar date) {
         String month = returnMonthStr(date.getMonth());
         return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
+        
     }
 
     /**
