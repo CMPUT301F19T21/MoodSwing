@@ -9,6 +9,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,14 +19,18 @@ import org.junit.Test;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 
 
 public class FollowingTest {
@@ -71,9 +76,11 @@ public class FollowingTest {
 
     @Test
     public void CheckFollowingAddReceive() throws InterruptedException{
+
+
         onView(withId(R.id.nav_followingBtn))
                 .perform(click());
-        //check if in the following screen shows
+        //check which following screen is displayed
         try {
             onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
             onView(withId(R.id.following_management)).perform(click());
@@ -100,7 +107,7 @@ public class FollowingTest {
         Thread.sleep(2000);
         onView(withId(R.id.profile_LogOut)).perform(click());
 
-        //user B checks the request and accepts it
+        //user B login
         onView(withId(R.id.userEmailField))
                 .perform(typeText(followerb), closeSoftKeyboard());
         onView(withId(R.id.passField))
@@ -109,6 +116,24 @@ public class FollowingTest {
 
         Thread.sleep(2000);
 
+        //adding a mood
+        try {
+            onView(withText("CLICK TO ADD FIRST MOOD EVENT")).check(matches(isDisplayed()));
+            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+            //view is displayed logic
+        } catch (NoMatchingViewException e) {
+            //view not displayed logic
+            onView(withId(R.id.home_add))
+                    .perform(click());
+        }
+        onView(withId(R.id.moodSelect_recycler)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(2, click()));
+        onView(withId(R.id.reason_EditView))
+                .perform(typeText("Test Mood"), closeSoftKeyboard());
+        onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
+        Thread.sleep(2000);
+
+        //user B accepting the following request
         onView(withId(R.id.nav_followingBtn)).perform(click());
         try {
             onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
@@ -124,15 +149,13 @@ public class FollowingTest {
         onView(withId(R.id.checkrequest_confirm)).perform(click());
 
 
-
-        //Checking the user is now following, then deleting so the test can be run in the future
         onView(withId(R.id.request_backBtn)).perform(click());
         Thread.sleep(2000);
         onView(withId(R.id.nav_profile)).perform(click());
         Thread.sleep(2000); // Without sleep, espresso won't wait for the view to change, not sure why
         onView(withId(R.id.profile_LogOut)).perform(click());
 
-
+        //Checking the user is now following, then deleting so the test can be run in the future
         onView(withId(R.id.userEmailField))
                 .perform(typeText(followera),closeSoftKeyboard());
         onView(withId(R.id.passField))
@@ -142,13 +165,21 @@ public class FollowingTest {
         onView(withId(R.id.nav_followingBtn)).perform(click());
         try {
             onView(withId(R.id.following_list)).check(matches(isDisplayed()));//check if in the FollowingFragment
-            onView(withId(R.id.following_management)).perform(click());
         }
         catch(NoMatchingViewException e) {
             onView(withText("NO ONE IS SHARING THEIR MOOD CLICK TO FOLLOW PEOPLE")).check(matches(isDisplayed()));
-            onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
+            //the mood wasn't added successfully to the follower's view, fail test
+            fail();
         }
 
+        //Checking the right detailedView is visible
+        onView(withId(R.id.following_list)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.moodDetail_following_moodText)).check(matches(withText("ANGRY")));
+        onView(withId(R.id.detailedView_following_back)).perform(click());
+
+
+        onView(withId(R.id.following_management)).perform(click());
         onView(withId(R.id.managment_following))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.unfollowFrag_confirm)).perform(click());
