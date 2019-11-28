@@ -148,10 +148,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 14));
         }
 
-        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
-                toDetailedView(markerIdMapping.get(marker));
+            public boolean onMarkerClick(Marker marker) {
+                if (marker.isInfoWindowShown()){
+                    toDetailedView(markerIdMapping.get(marker));
+                    return true;
+                }else{
+                    marker.showInfoWindow();
+                    return false;
+                }
             }
         });
     }
@@ -171,8 +177,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was HAPPY")
-                        .snippet("Click to view Details"));
+                        .title("HAPPY")
+                        .snippet(username));
                 break;
             case 2:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm2);
@@ -180,9 +186,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was SAD")
-                        .snippet("Click to view Details"));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.moodm2))
+                        .title("SAD")
+                        .snippet(username));
                 break;
             case 3:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm3);
@@ -191,8 +197,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was ANGRY")
-                        .snippet("Click to view Details"));
+                        .title("ANGRY")
+                        .snippet(username));
                 break;
             case 4:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm4);
@@ -200,8 +206,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was EMOTIONAL")
-                        .snippet("Click to view Details"));
+                        .title("EMOTIONAL")
+                        .snippet(username));
                 break;
             case 5:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm5);
@@ -210,8 +216,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was HEART BROKEN")
-                        .snippet("Click to view Details"));
+                        .title("HEART BROKEN")
+                        .snippet(username));
                 break;
             case 6:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm6);
@@ -219,8 +225,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was IN LOVE")
-                        .snippet("Click to view Details"));
+                        .title("IN LOVE")
+                        .snippet(username));
                 break;
             case 7:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm7);
@@ -228,8 +234,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + " was SCARED")
-                        .snippet("Click to view Details"));
+                        .title("SCARED")
+                        .snippet(username));
                 break;
         }
         markerIdMapping.put(marker, moodEvent.getUniqueID());
