@@ -90,7 +90,7 @@ public class Registertest {
             Log.d("Loginerror", "interrupted thread.sleep");
         }
 
-        //Checking to see if we are still on RegisterActivity, taken username was rejected
+        //Checking to see if we are still on RegisterActivity(taken username was rejected)
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
 
 

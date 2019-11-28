@@ -83,6 +83,7 @@ public class FollowingTest {
             onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
         }
 
+        //user a sends request to user B to follow
         onView(withId(R.id.managment_following)).check(matches(isDisplayed()));//check if in the FollowingFragment
         onView(withId(R.id.request_button))
                 .perform(click());
@@ -99,7 +100,7 @@ public class FollowingTest {
         Thread.sleep(2000);
         onView(withId(R.id.profile_LogOut)).perform(click());
 
-        //checking that the request was given
+        //user B checks the request and accepts it
         onView(withId(R.id.userEmailField))
                 .perform(typeText(followerb), closeSoftKeyboard());
         onView(withId(R.id.passField))
@@ -121,6 +122,7 @@ public class FollowingTest {
         onView(withId(R.id.management_request))
                 .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(followeraUsername)), click()));
         onView(withId(R.id.checkrequest_confirm)).perform(click());
+
 
 
         //Checking the user is now following, then deleting so the test can be run in the future
@@ -147,7 +149,6 @@ public class FollowingTest {
             onView(withId(R.id.emptyNotifcation_Btn)).perform(click());
         }
 
-        //delete so test can be run again
         onView(withId(R.id.managment_following))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.unfollowFrag_confirm)).perform(click());
