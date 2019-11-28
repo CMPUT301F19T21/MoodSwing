@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +15,6 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.UserJar;
-import com.example.moodswing.customDataTypes.moodCluster;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,7 +29,6 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
@@ -44,7 +41,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
-
 
     private String id;
     private HashMap<Marker, String> markerIdMapping ;
@@ -146,31 +142,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood1))
-                        .title(username + "was HAPPY")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
+                        .title(username + " was HAPPY")
                         .snippet("Click to view Details"));
                 break;
             case 2:
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
-                        .title(username + "was SAD")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
+                        .title(username + " was SAD")
                         .snippet("Click to view Details"));
                 break;
             case 3:
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
-                        .title(username + "was ANGRY")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
+                        .title(username + " was ANGRY")
                         .snippet("Click to view Details"));
                 break;
             case 4:
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
-                        .title(username + "was EMOTIONAL")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
+                        .title(username + " was EMOTIONAL")
                         .snippet("Click to view Details"));
                 break;
         }
