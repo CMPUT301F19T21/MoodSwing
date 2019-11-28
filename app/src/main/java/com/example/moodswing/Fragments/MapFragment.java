@@ -155,7 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + "was HAPPY")
+                        .title(username + " was HAPPY")
                         .snippet("Click to view Details"));
                 break;
             case 2:
@@ -164,8 +164,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.moodm2))
-                        .title(username + "was SAD")
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                        .title(username + " was SAD")
                         .snippet("Click to view Details"));
                 break;
             case 3:
@@ -175,7 +175,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + "was ANGRY")
+                        .title(username + " was ANGRY")
                         .snippet("Click to view Details"));
                 break;
             case 4:
@@ -184,7 +184,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + "was EMOTIONAL")
+                        .title(username + " was EMOTIONAL")
                         .snippet("Click to view Details"));
                 break;
             case 5:
@@ -194,7 +194,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + "was HEART BROKEN")
+                        .title(username + " was HEART BROKEN")
                         .snippet("Click to view Details"));
                 break;
             case 6:
@@ -203,7 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + "was IN LOVE")
+                        .title(username + " was IN LOVE")
                         .snippet("Click to view Details"));
                 break;
             case 7:
@@ -212,7 +212,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title(username + "was SCARED")
+                        .title(username + " was SCARED")
                         .snippet("Click to view Details"));
                 break;
         }
