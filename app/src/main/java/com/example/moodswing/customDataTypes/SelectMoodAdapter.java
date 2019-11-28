@@ -15,6 +15,8 @@ import com.example.moodswing.R;
 
 import java.util.ArrayList;
 
+import static com.example.moodswing.customDataTypes.MoodEventUtility.TOTAL_MOOD_TYPE_COUNTS;
+
 
 /**
  * this class is an adapter for selecting the mood
@@ -59,7 +61,7 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
     public SelectMoodAdapter() {
         selectedPosition = null;
         moodTypes = new ArrayList<>();
-        for (int i = 1; i < 5; i++){
+        for (int i = 1; i <= TOTAL_MOOD_TYPE_COUNTS; i++){
             moodTypes.add(i);
         }
     }
@@ -103,6 +105,18 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
             case 4:
                 moodTypeText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
+                break;
+            case 5:
+                moodTypeText.setText("HEART BROKEN");
+                moodImage.setImageResource(R.drawable.mood5);
+                break;
+            case 6:
+                moodTypeText.setText("IN LOVE");
+                moodImage.setImageResource(R.drawable.mood6);
+                break;
+            case 7:
+                moodTypeText.setText("SCARED");
+                moodImage.setImageResource(R.drawable.mood7);
                 break;
         }
         // preSelect

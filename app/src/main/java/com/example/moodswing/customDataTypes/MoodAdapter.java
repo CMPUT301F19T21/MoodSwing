@@ -125,6 +125,18 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
                 moodText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
+            case 5:
+                moodText.setText("HEART BROKEN");
+                moodImage.setImageResource(R.drawable.mood5);
+                break;
+            case 6:
+                moodText.setText("IN LOVE");
+                moodImage.setImageResource(R.drawable.mood6);
+                break;
+            case 7:
+                moodText.setText("SCARED");
+                moodImage.setImageResource(R.drawable.mood7);
+                break;
         }
     }
 

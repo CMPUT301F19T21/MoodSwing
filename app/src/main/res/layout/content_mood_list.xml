@@ -90,7 +90,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/moodDetail_timeText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/moodIcon_placeHolder"
-                app:layout_constraintTop_toTopOf="@+id/moodDetail_moodText"
                 app:srcCompat="@drawable/ic_location_on_accent_red_24dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

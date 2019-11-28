@@ -34,6 +34,7 @@ public class SelectMoodFilterAdapter extends SelectMoodAdapter{
         ImageView moodImage= holder.moodImage;
         int moodType = moodTypes.get(position);
 
+
         switch (moodType){
             case 1:
                 moodTypeText.setText("HAPPY");
@@ -50,6 +51,18 @@ public class SelectMoodFilterAdapter extends SelectMoodAdapter{
             case 4:
                 moodTypeText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
+                break;
+            case 5:
+                moodTypeText.setText("HEART BROKEN");
+                moodImage.setImageResource(R.drawable.mood5);
+                break;
+            case 6:
+                moodTypeText.setText("IN LOVE");
+                moodImage.setImageResource(R.drawable.mood6);
+                break;
+            case 7:
+                moodTypeText.setText("SCARED");
+                moodImage.setImageResource(R.drawable.mood7);
                 break;
         }
         // preSelect
