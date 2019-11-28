@@ -154,14 +154,17 @@ public class NewMoodActivity extends AppCompatActivity {
                                 int year = calendar.get(Calendar.YEAR);
                                 int hr = calendar.get(Calendar.HOUR_OF_DAY);
                                 int min = calendar.get(Calendar.MINUTE);
+                                Long UTC1 = calendar.getTimeInMillis();
                                 Long UTC = calendar.getTimeInMillis();
+
                                 DateJar date = new DateJar(year,month,day);
                                 TimeJar time = new TimeJar(hr,min);
                                 Utc timeStamp = new Utc(UTC);
 
                                 moodEvent.setDate(date);
                                 moodEvent.setTime(time);
-                                moodEvent.setTimeStamp(Utc);
+                                moodEvent.setTimeStamp(UTC1);
+                                moodEvent.setUTCtime(timeStamp);
                                 // set date and time for display
                                 dateTextView.setText(MoodEventUtility.getDateStr(date));
                                 timeTextView.setText(MoodEventUtility.getTimeStr(time));

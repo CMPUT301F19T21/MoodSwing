@@ -6,7 +6,8 @@ package com.example.moodswing.customDataTypes;
  */
 public class MoodEvent {
     private String uniqueID; // this value is used to identify moodEvent
-    private Utc timeStamp;
+    private Long timeStamp;
+    private Utc UTCtime;
     // required fields
     private int moodType; // for this design im assuming each moodType has been assigned an unique int
     private DateJar date;
@@ -24,13 +25,15 @@ public class MoodEvent {
     public MoodEvent() {
     }
 
-    public Utc getTimeStamp(){
-        return timeStamp;
+    public Utc getUTCtime(){return UTCtime;}
+
+    public Long getTimeStamp(){return timeStamp;}
+
+    public void setUTCtime(Utc UTCtime) {
+        this.UTCtime = UTCtime;
     }
 
-
-
-    public void setTimeStamp(Utc timeStamp) {
+    public void setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;
     }
 
