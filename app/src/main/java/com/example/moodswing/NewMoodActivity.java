@@ -30,12 +30,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.Fragments.ImageFragment;
-import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
-import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -142,25 +140,14 @@ public class NewMoodActivity extends AppCompatActivity {
                                 // set up current date and time
                                 Calendar calendar = Calendar.getInstance();
 
-                                // set date and time
-                                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                                int month = calendar.get(Calendar.MONTH);
-                                int year = calendar.get(Calendar.YEAR);
-                                int hr = calendar.get(Calendar.HOUR_OF_DAY);
-                                int min = calendar.get(Calendar.MINUTE);
+                                // set UTC values in milliseconds
                                 Long UTC = calendar.getTimeInMillis();
 
-
-                                DateJar date = new DateJar(year,month,day);
-                                TimeJar time = new TimeJar(hr,min);
-
-
-                                moodEvent.setDate(date);
-                                moodEvent.setTime(time);
+                                // add to moodevent
                                 moodEvent.setTimeStamp(UTC);
 
                                 // set date and time for display
-                                dateTextView.setText(MoodEventUtility.getDateStr(date));
+                                dateTextView.setText(MoodEventUtility.getDateStr(UTC));
                                 timeTextView.setText(MoodEventUtility.getTimeStr(UTC));
                             }
                         });

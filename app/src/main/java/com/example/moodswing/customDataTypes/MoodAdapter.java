@@ -73,7 +73,7 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
 
         MoodEvent moodEvent = moods.get(position);
 
-        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
+        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
         printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
         if (moodEvent.getLatitude() == null) {

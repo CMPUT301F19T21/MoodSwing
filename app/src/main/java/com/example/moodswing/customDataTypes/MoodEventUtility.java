@@ -23,20 +23,20 @@ public final class MoodEventUtility {
     }
 
     /**
-     * Gets a DateJar object and returns a string of the date stored
-     * @param date The DateJar object to be converted into a string
-     * @return Returns a string of the DateJar's date
+     * Gets Long UTC(universal coordinated time) and returns a string date
+     * @param utc the UTC object to be converted into a string
+     * @return Returns a string from UTC in Month,Day,Year format
      */
-    public static String getDateStr (DateJar date) {
-        String month = returnMonthStr(date.getMonth());
-        return String.format(Locale.getDefault(), "%s %d, %d",month,date.getDay(),date.getYear());
-        
+    public static String getDateStr (Long utc) {
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, yyyy");
+        return outputFormat.format(utc);
+
     }
 
     /**
-     * Gets a TimeJar object and returns a string of the time stored
+     * Gets Long UTC(universal coordinated time) and returns a string of the time stored
      * @param utc the UTC object to be converted into a string
-     * @return Returns a string of the TimeJar's time
+     * @return Returns a string from UTC in am/pm time
      */
     public static String getTimeStr (Long utc) {
 
@@ -68,51 +68,4 @@ public final class MoodEventUtility {
         return moodTypeString;
     }
 
-    /**
-     * Converts the numeric month into the word
-     * @param monthInt the month as an int, starting at 0 for January
-     * @return the month as a string
-     */
-    public static String returnMonthStr(int monthInt){
-        String monthStr = null;
-        switch (monthInt){
-            case 0:
-                monthStr = "January";
-                break;
-            case 1:
-                monthStr = "February";
-                break;
-            case 2:
-                monthStr = "March";
-                break;
-            case 3:
-                monthStr = "April";
-                break;
-            case 4:
-                monthStr = "May";
-                break;
-            case 5:
-                monthStr = "June";
-                break;
-            case 6:
-                monthStr = "July";
-                break;
-            case 7:
-                monthStr = "August";
-                break;
-            case 8:
-                monthStr = "September";
-                break;
-            case 9:
-                monthStr = "October";
-                break;
-            case 10:
-                monthStr = "November";
-                break;
-            case 11:
-                monthStr = "December";
-                break;
-        }
-        return monthStr;
-    }
 }
