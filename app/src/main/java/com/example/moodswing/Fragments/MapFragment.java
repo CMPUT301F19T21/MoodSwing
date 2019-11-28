@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MyItem;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,7 +47,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
-
+    private ClusterManager<MyItem> clusterManager;
+    private List<MyItem> items = new ArrayList<>();
 
     private String id;
     private HashMap<Marker, String> markerIdMapping ;
@@ -90,6 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
+        clusterManager = new ClusterManager<MyItem>(getContext(), map);
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
         initElements();
         this.isMapReady = true;
@@ -101,6 +104,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         map.clear();
         // update most recent mood LatLng
         MoodEvent mostRecentMoodEvent = null;
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
         switch (mode){
             case MOODHISTORY_MODE:
                 ArrayList<MoodEvent> moodEvents = communicator.getMoodEvents();
@@ -110,6 +115,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (mostRecentMoodEvent == null){
                             mostRecentMoodEvent = moodEvent;
                         }
+                        LatLng latlng = new LatLng (moodEvent.getLatitude(), moodEvent.getLongitude());
+                        items.add(new MyItem(latlng));
+                        clusterManager.addItems(items);
+                        clusterManager.cluster();
                     }
                 }
                 break;
@@ -121,6 +130,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (mostRecentMoodEvent == null){
                             mostRecentMoodEvent = userJar.getMoodEvent();
                         }
+                        LatLng latlng = new LatLng (userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
+                        items.add(new MyItem(latlng));
+                        clusterManager.addItems(items);
+                        clusterManager.cluster();
                     }
                 }
                 break;
