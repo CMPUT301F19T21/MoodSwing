@@ -174,7 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.moodm2))
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("SAD")
                         .snippet(username));
                 break;
