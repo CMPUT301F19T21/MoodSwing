@@ -117,7 +117,7 @@ public class MoodDetailFollowingFragment extends Fragment{
 
     private void initialElements(){
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
-        timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getUTCtime()));
+        timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
         setMoodImage(moodEvent.getMoodType());
         setReasonText();

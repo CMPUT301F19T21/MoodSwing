@@ -37,11 +37,10 @@ public final class MoodEventUtility {
      * @param utc the UTC object to be converted into a string
      * @return Returns a string of the TimeJar's time
      */
-    public static String getTimeStr (Utc utc) {
-        Long UTC = utc.getUtcLong();
+    public static String getTimeStr (Long utc) {
 
         SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm a");
-        return outputFormat.format(UTC);
+        return outputFormat.format(utc);
     }
 
     /**
