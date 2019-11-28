@@ -2,8 +2,6 @@ package com.example.moodswing;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -16,7 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Telephony;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -28,7 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ComponentActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,21 +37,17 @@ import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -157,15 +149,19 @@ public class NewMoodActivity extends AppCompatActivity {
                                 int hr = calendar.get(Calendar.HOUR_OF_DAY);
                                 int min = calendar.get(Calendar.MINUTE);
                                 Long UTC = calendar.getTimeInMillis();
+
+
                                 DateJar date = new DateJar(year,month,day);
                                 TimeJar time = new TimeJar(hr,min);
+
 
                                 moodEvent.setDate(date);
                                 moodEvent.setTime(time);
                                 moodEvent.setTimeStamp(UTC);
+
                                 // set date and time for display
                                 dateTextView.setText(MoodEventUtility.getDateStr(date));
-                                timeTextView.setText(MoodEventUtility.getTimeStr(time));
+                                timeTextView.setText(MoodEventUtility.getTimeStr(UTC));
                             }
                         });
                     }
