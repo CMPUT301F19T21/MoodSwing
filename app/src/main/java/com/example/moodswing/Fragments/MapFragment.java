@@ -108,6 +108,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         map.setOnMarkerClickListener(clusterManager);
         switch (mode){
             case MOODHISTORY_MODE:
+                items.clear();
+                Log.d("size of items", Integer.toString(items.size()));
                 ArrayList<MoodEvent> moodEvents = communicator.getMoodEvents();
                 for (MoodEvent moodEvent : moodEvents){
                     if (moodEvent.getLatitude() != null){
@@ -123,6 +125,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 break;
             case FOLLOWING_MODE:
+                items.clear();
                 ArrayList<UserJar> userJars = communicator.getUserJars();
                 for (UserJar userJar : userJars){
                     if (userJar.getMoodEvent().getLatitude() != null){

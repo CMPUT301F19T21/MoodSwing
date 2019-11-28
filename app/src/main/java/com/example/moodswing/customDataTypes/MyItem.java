@@ -11,7 +11,7 @@ public class MyItem implements ClusterItem {
     public MyItem(LatLng position) {
         this.position = position;
     }
-
+//
 //    public MyItem(LatLng position, String title, String snippet) {
 //        this.position = position;
 //        this.title = title;
