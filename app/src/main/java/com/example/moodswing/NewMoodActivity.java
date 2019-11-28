@@ -155,7 +155,7 @@ public class NewMoodActivity extends AppCompatActivity {
                                 int min = calendar.get(Calendar.MINUTE);
                                 Long UTC = calendar.getTimeInMillis();
                                 DateJar date = new DateJar(year,month,day);
-                                TimeJar time = new TimeJar(hr,min);
+                                TimeJar time = new TimeJar(UTC);
 
                                 moodEvent.setDate(date);
                                 moodEvent.setTime(time);
