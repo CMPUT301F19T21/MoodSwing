@@ -126,38 +126,18 @@ public class NewMoodActivity extends AppCompatActivity {
         ifLocationEnabled = false;
         geoLocationText.setText("Location Off");
 
+        // set up current date and time
+        Calendar calendar = Calendar.getInstance();
 
-        // Set up time and date
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // set up current date and time
-                                Calendar calendar = Calendar.getInstance();
+        // set UTC values in milliseconds
+        Long UTC = calendar.getTimeInMillis();
 
-                                // set UTC values in milliseconds
-                                Long UTC = calendar.getTimeInMillis();
+        // add to moodevent
+        moodEvent.setTimeStamp(UTC);
 
-                                // add to moodevent
-                                moodEvent.setTimeStamp(UTC);
-
-                                // set date and time for display
-                                dateTextView.setText(MoodEventUtility.getDateStr(UTC));
-                                timeTextView.setText(MoodEventUtility.getTimeStr(UTC));
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        };
-
-        thread.start();
+        // set date and time for display
+        dateTextView.setText(MoodEventUtility.getDateStr(UTC));
+        timeTextView.setText(MoodEventUtility.getTimeStr(UTC));
 
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override

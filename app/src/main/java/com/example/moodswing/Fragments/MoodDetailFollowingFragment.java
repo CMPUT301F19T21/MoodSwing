@@ -50,14 +50,21 @@ public class MoodDetailFollowingFragment extends Fragment{
     private ImageView locationImg;
     private ImageView socialIcon;
 
-    private int userJarPosition;
+    private Fragment outerFragment;
 
     public MoodDetailFollowingFragment(){}
 
+    public MoodDetailFollowingFragment(int userJarPosition, Fragment outerFragment) {
+        this.outerFragment = outerFragment;
+        this.communicator = FirestoreUserDocCommunicator.getInstance();
+        this.userJar = communicator.getUserJar(userJarPosition);
+        this.moodEvent = userJar.getMoodEvent();
+        // moodEvent
+    }
 
     public MoodDetailFollowingFragment(int userJarPosition) {
+        this.outerFragment = null;
         this.communicator = FirestoreUserDocCommunicator.getInstance();
-        this.userJarPosition = userJarPosition;
         this.userJar = communicator.getUserJar(userJarPosition);
         this.moodEvent = userJar.getMoodEvent();
         // moodEvent
@@ -99,11 +106,21 @@ public class MoodDetailFollowingFragment extends Fragment{
     }
 
     private void closeFrag(){
-        getFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                .remove(this)
-                .commit();
+        if (outerFragment== null){
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .remove(this)
+                    .commit();
+        }else{
+            ((MapFragment)getFragmentManager().findFragmentByTag("mapFrag")).initElements();
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .remove(this)
+                    .remove(outerFragment)
+                    .commit();
+        }
     }
 
     @Override

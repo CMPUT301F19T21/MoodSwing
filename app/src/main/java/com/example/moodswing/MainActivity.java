@@ -208,11 +208,11 @@ public class MainActivity extends AppCompatActivity {
                 .commitAllowingStateLoss();
     }
 
-    public void openMapFragment(int mood) {
+    public void openMapFragment(int mode) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(mood),"mapFrag")
+                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(mode),"mapFrag")
                 .commitAllowingStateLoss();
     }
 

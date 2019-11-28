@@ -19,6 +19,7 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class MoodHistoryFragment extends Fragment {
         MapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).openMapFragment(1);
+                ((MainActivity) getActivity()).openMapFragment(MoodEventUtility.MOODHISTORY_MODE);
             }
         });
         addButton.setOnClickListener(new View.OnClickListener() {

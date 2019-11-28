@@ -330,6 +330,17 @@ public class FirestoreUserDocCommunicator{
         return null;    // not found
     }
 
+    public Integer getUserJarPosition(String moodID){
+        int position = 0;
+        for (UserJar userJar : userJars) {
+            if(userJar.getMoodEvent().getUniqueID() == moodID) {
+                return position;
+            }
+            position ++;
+        }
+        return null;    // not found
+    }
+
     // following feature
 
     /**

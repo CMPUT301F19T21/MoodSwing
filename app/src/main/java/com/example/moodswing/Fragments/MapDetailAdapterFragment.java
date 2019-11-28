@@ -19,9 +19,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
+import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
+
 public class MapDetailAdapterFragment extends Fragment {
-    private static final int MOODHISTORY_MODE = 1;
-    private static final int FOLLOWING_MODE = 2;
 
     private FrameLayout MapDetailAdapterLayout;
     private int mode;
@@ -49,24 +50,12 @@ public class MapDetailAdapterFragment extends Fragment {
                         .commitAllowingStateLoss();
                 break;
             case FOLLOWING_MODE:
-                //
+                getFragmentManager().beginTransaction()
+                        .replace(MapDetailAdapterLayout.getId(), new MoodDetailFollowingFragment(communicator.getUserJarPosition(ID),this))
+                        .commitAllowingStateLoss();
                 break;
         }
 
         return root;
-    }
-
-    private int getMoodPosition(String ID) {
-        if(mode == 1) {
-            ArrayList<MoodEvent> moodEvents = communicator.getMoodEvents();
-            int position = 0;
-            for (MoodEvent moodEvent : moodEvents) {
-                if(moodEvent.getUniqueID() == ID) {
-                    return position;
-                }
-                position ++;
-            }
-        }
-        return -1;
     }
 }
