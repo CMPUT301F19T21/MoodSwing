@@ -2,6 +2,7 @@ package com.example.moodswing;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -174,13 +176,20 @@ public class NewMoodActivity extends AppCompatActivity {
                     moodEvent.setUniqueID(moodId);
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                     moodEvent.setSocialSituation(socialSituation);
-
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
                     }else{
+                        if (reasonEditText.getText().toString().length() > 20) {
+                            Toast.makeText(getApplicationContext(), "More than 20 characters!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String[] splitStr = reasonEditText.getText().toString().trim().split("\\s+");
+                        if (splitStr.length > 3) {
+                            Toast.makeText(getApplicationContext(),"More than 3 words!",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
-
                     if (ifLocationEnabled) {
                         if (currentLocation != null){
                             moodEvent.setLatitude(currentLocation.getLatitude());

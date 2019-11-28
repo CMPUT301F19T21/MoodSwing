@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -36,14 +38,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
-    private Integer mood;
-    private ArrayList<MoodEvent> moodList;
+    private Integer mood, moodDetail, user;
+    private ArrayList<MoodEvent> moodList, moodTypeList;
     private ClusterManager<moodCluster>clusterManager;
     private FirestoreUserDocCommunicator communicator;
     private UserJar userJar;
     private List<moodCluster>clusters = new ArrayList<>();
     private MapFragment mapFragment;
-    private String followingUid;
+    private String followingUid, id;
+    private HashMap<Marker, String> markerIdMapping = new HashMap<>();
 
     public MapFragment(){}
 
@@ -123,38 +126,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
 
-
         FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
         String uid = firebaseDoc.getUsername();
         for (MoodEvent moodEvent : moodList) {
             if (moodEvent.getLatitude() != null) {
                 if (moodEvent.getMoodType() == 1) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
                             .title(uid + " Was Happy!")
                             .snippet("View Details"));
-                }
-                else if (moodEvent.getMoodType() == 2) {
+                    id = moodEvent.getUniqueID();
+                    markerIdMapping.put(marker, id);
+                } else if (moodEvent.getMoodType() == 2) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
                             .title(uid + " Was Sad!")
                             .snippet("View Details"));
-                }
-                else if (moodEvent.getMoodType() == 3) {
+                    id = moodEvent.getUniqueID();
+                    markerIdMapping.put(marker, id);
+                } else if (moodEvent.getMoodType() == 3) {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
                             .title(uid + " Was Angry!")
                             .snippet("View Details"));
-                }
-                else {
+                    id = moodEvent.getUniqueID();
+                    markerIdMapping.put(marker, id);
+                } else {
                     LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(latlng)
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
                             .title(uid + " Was Emotional!")
                             .snippet("View Details"));
+                    id = moodEvent.getUniqueID();
+                    markerIdMapping.put(marker, id);
                 }
             }
         }
@@ -162,43 +169,66 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(UofA));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
 
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
+            String uid = firebaseDoc.getUsername();
+
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                switch(mood) {
-                    case 1:
-                        toDetailedView(0);
-                        break;
-                    case 2:
-                        toDetailedView(1);
-                        break;
-                    case 3:
-                        toDetailedView(2);
-                        break;
-                    case 4:
-                        toDetailedView(3);
-                        break;
-                    default:
-                        break;
-                }
+            public void onInfoWindowClick(Marker marker) {
+                String markerId = markerIdMapping.get(marker);
+                Toast.makeText(getContext(), markerId, Toast.LENGTH_SHORT).show();
+                toDetailedView(1);
+            }
+        });
+    }
+
+        public void toDetailedView(int moodPosition){
+            MoodDetailFragment frag = new MoodDetailFragment(1);
+            frag.setTargetFragment(this, 1);
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.mapDetailFragment_placeHolder, frag, "moodHistoryDetailedFrag")
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commitAllowingStateLoss();
+
+//        }
+//        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                switch(moodDetail) {
+//                    case 1:
+//                        toDetailedView(0);
+//                        break;
+//                    case 2:
+//                        toDetailedView(1);
+//                        break;
+//                    case 3:
+//                        toDetailedView(2);
+//                        break;
+//                    case 4:
+//                        toDetailedView(3);
+//                        break;
+//                    default:
+//                        break;
+//                }
                 //                for (MoodEvent moodEvent : moodEvents) {
 //                    if (moodEvent.getLatitude() != null) {
 //                        toDetailedView(0);
 //                    }
 //                }
-                return false;
-            }
-        });
+//                return false;
+//            }
+//        });
 
     }
-    public void toDetailedView(int moodPosition) {
-        MoodDetailFragment frag = new MoodDetailFragment(moodPosition);
-        frag.setTargetFragment(this, 1);
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_placeHolder, frag,"moodHistoryDetailedFrag")
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .hide(this)
-                .commitAllowingStateLoss();
-    }
+//    public void toDetailedView(int moodPosition) {
+//        MoodDetailFragment frag = new MoodDetailFragment(moodPosition);
+//        frag.setTargetFragment(this, 1);
+//        getFragmentManager()
+//                .beginTransaction()
+//                .add(R.id.fragment_placeHolder, frag,"moodHistoryDetailedFrag")
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                .hide(this)
+//                .commitAllowingStateLoss();
+//    }
 }
