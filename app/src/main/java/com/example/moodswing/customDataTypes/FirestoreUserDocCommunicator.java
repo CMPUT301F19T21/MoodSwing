@@ -1,11 +1,19 @@
 package com.example.moodswing.customDataTypes;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,10 +41,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
@@ -62,6 +74,7 @@ public class FirestoreUserDocCommunicator{
 
     // other
     private Integer requestCount;
+    private String url;
 
     // for filter
     private ArrayList<Integer> moodTypeFilterList_moodHistory;
@@ -840,7 +853,7 @@ public class FirestoreUserDocCommunicator{
     // retrieve image from firebase storage and set into imageView
 
 
-    public void getPhoto(String imageId, ImageView imageView) {
+    public void getPhoto(String imageId,ImageView imageView) {
 
         StorageReference storageRef = storage.getReference();
         StorageReference storageName = storageRef.child("Images/" +user.getUid() + "/" + imageId);
@@ -849,9 +862,11 @@ public class FirestoreUserDocCommunicator{
         storageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
+                String url = uri.toString();
                 // Got the download URL for 'users/me/profile.png'
                 Log.d("testa",uri.toString());
-                Picasso.get().load(uri.toString()).into(imageView);
+                Picasso.get().load(url).into(imageView);
+                downloadPhoto(imageId,url);
                 //
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -862,6 +877,48 @@ public class FirestoreUserDocCommunicator{
             }
         });
     }
+    public void downloadPhoto(String imageId,String url){
+
+        Picasso.get()
+                .load(url)
+                .into(new Target() {
+                          @Override
+                          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                              try {
+
+                                  String root = Environment.getExternalStorageDirectory().toString();
+                                  Log.d("testa","root = "+root);
+                                  File myDir = new File(root + "/MoodSwing");
+
+                                  if (!myDir.exists()) {
+                                      myDir.mkdirs();
+                                  }
+
+                                  String name = imageId+ ".jpg";
+                                  myDir = new File(myDir, name);
+                                  FileOutputStream out = new FileOutputStream(myDir);
+                                  bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+                                  out.flush();
+                                  out.close();
+                              } catch(Exception e){
+                                  // some action
+                              }
+                          }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                          @Override
+                          public void onPrepareLoad(Drawable placeHolderDrawable) {
+                              //Some Action;
+                          }
+                      }
+                );
+    }
+
 
 
 
@@ -889,4 +946,9 @@ public class FirestoreUserDocCommunicator{
     public ArrayList<UserJar> getFollowingMoodEvents() {
         return userJars;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
 }

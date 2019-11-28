@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +60,7 @@ public class MoodDetailFragment extends Fragment{
 
     private int moodPosition;
     private int mode;
+    private String imagePath;
 
     public MoodDetailFragment(){}
 
@@ -175,7 +178,15 @@ public class MoodDetailFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
-        communicator.getPhoto(imageId,photoImage);
+        if (checkImageExist(imageId) ==true) {
+            // load local image
+            Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
+            photoImage.setImageBitmap(myBitmap);
+        }
+        else {
+            communicator.getPhoto(imageId,photoImage);
+        }
+
 
 
     }
@@ -278,6 +289,18 @@ public class MoodDetailFragment extends Fragment{
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
         }
+    }
+    private boolean checkImageExist(String imageName){
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");
+
+        if(myFile.exists()){
+            imagePath = myFile.getAbsolutePath();
+            Log.d("testa","image exist");
+            return true;
+        }
+        Log.d("testa","image not exist" + myFile.getAbsolutePath());
+        return false;
     }
 }
 

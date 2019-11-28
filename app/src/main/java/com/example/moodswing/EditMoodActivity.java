@@ -3,6 +3,8 @@ package com.example.moodswing;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,7 +61,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private String imageId;
     private Uri uploadImage;
-
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +90,11 @@ public class EditMoodActivity extends AppCompatActivity {
         social_oneBtn = findViewById(R.id.editMood_oneAnotherBtn);
         social_twoMoreBtn = findViewById(R.id.editMood_twoMoreBtn);
 
-        communicator.getPhoto(imageId,editImage);
+        //communicator.getPhoto(imageId,editImage);
 
         setSocialSituationBtns();
         setReasonText();
+        loadImage();
 
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,5 +312,27 @@ public class EditMoodActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+    private void loadImage(){
+        if (checkImageExist(imageId) ==true) {
+            // load local image
+            Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
+            editImage.setImageBitmap(myBitmap);
+        }
+        else {
+            communicator.getPhoto(imageId,editImage);
+        }
+    }
+    private boolean checkImageExist(String imageName){
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");
+
+        if(myFile.exists()){
+            imagePath = myFile.getAbsolutePath();
+            Log.d("testa","image exist");
+            return true;
+        }
+        Log.d("testa","image not exist" + myFile.getAbsolutePath());
+        return false;
     }
 }
