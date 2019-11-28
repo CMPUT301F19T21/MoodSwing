@@ -6,11 +6,8 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
-
-import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
-import com.example.moodswing.customDataTypes.TimeJar;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -134,13 +131,6 @@ public class MainactivityTest {
         onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         // Get current time
         Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        int hr = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
-        DateJar date = new DateJar(year,month,day);
-        TimeJar time = new TimeJar(hr,min);
         Long UTC = calendar.getTimeInMillis();
         // check if data matched
         onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
@@ -151,7 +141,7 @@ public class MainactivityTest {
             onView(allOf(withId(R.id.moodDetail_moodText), withText("HAPPY"))).check(matches(isDisplayed()));
 
             onView(withId(R.id.moodDetail_timeText)).check(matches(withText(MoodEventUtility.getTimeStr(UTC))));
-            onView(withId(R.id.moodDetail_dateText)).check(matches(withText(MoodEventUtility.getDateStr(date))));
+            onView(withId(R.id.moodDetail_dateText)).check(matches(withText(MoodEventUtility.getDateStr(UTC))));
             onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Test Mood\"")));
             // check if click back succeed
             onView(withId(R.id.detailedView_back)).perform(click());
