@@ -33,7 +33,7 @@
                 android:layout_width="138dp"
                 android:layout_height="138dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
                 android:elevation="10dp"
@@ -85,8 +85,8 @@
 
             <TextView
                 android:id="@+id/followingList_moodDetail_moodText"
-                android:layout_width="135dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-light"
@@ -102,11 +102,9 @@
                 android:id="@+id/followingList_locationButton_moodListCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/followingList_moodDetail_timeText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/followingList_moodIcon_placeHolder"
-                app:layout_constraintTop_toTopOf="@+id/followingList_moodDetail_moodText"
+                app:layout_constraintBottom_toBottomOf="@+id/followingList_username"
+                app:layout_constraintEnd_toEndOf="@+id/separator_followingList"
+                app:layout_constraintTop_toTopOf="@+id/followingList_username"
                 app:srcCompat="@drawable/ic_location_on_accent_red_24dp" />
 
             <TextView

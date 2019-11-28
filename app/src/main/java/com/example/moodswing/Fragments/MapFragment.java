@@ -35,33 +35,32 @@ import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final int MOODHISTORY_MODE = 1;
+    private static final int FOLLOWING_MODE = 2;
+
+    private FirestoreUserDocCommunicator communicator;
+    private Integer mode;
+
+    // views
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
-    private Integer mood, moodDetail, user;
-    private ArrayList<MoodEvent> moodList, moodTypeList;
-    private ClusterManager<moodCluster>clusterManager;
-    private FirestoreUserDocCommunicator communicator;
-    private UserJar userJar;
-    private List<moodCluster>clusters = new ArrayList<>();
-    private MapFragment mapFragment;
-    private String followingUid, id;
-    private HashMap<Marker, String> markerIdMapping = new HashMap<>();
 
-    private ArrayList<Marker> markers;
+
+    private String id;
+    private HashMap<Marker, String> markerIdMapping ;
 
     private Boolean isMapReady;
 
     public MapFragment(){}
 
-    public MapFragment(Integer mood){
+    public MapFragment(Integer mode){
         // should always call filter fragment with this constructor, the empty one should never be used
         // the ArrayList<Integer> is passed by reference, so any change to it inside this fragment will also be changed inside Activity
-        this.mapFragment = this;
-        this.mood = mood;
+        this.mode = mode;
         this.communicator = FirestoreUserDocCommunicator.getInstance();
         this.isMapReady = false;
-        this.markers = new ArrayList<>();
+        this.markerIdMapping = new HashMap<>();
 
     }
     @Nullable
@@ -87,6 +86,105 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.map = googleMap;
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
+        initElements();
+        this.isMapReady = true;
+    }
+
+    public void initElements() {
+        // clear map
+        Log.d("test init", "initElements: ");
+        map.clear();
+        // update most recent mood LatLng
+        MoodEvent mostRecentMoodEvent = null;
+        switch (mode){
+            case MOODHISTORY_MODE:
+                ArrayList<MoodEvent> moodEvents = communicator.getMoodEvents();
+                for (MoodEvent moodEvent : moodEvents){
+                    if (moodEvent.getLatitude() != null){
+                        setUpMarker(moodEvent, communicator.getUsername());
+                        if (mostRecentMoodEvent == null){
+                            mostRecentMoodEvent = moodEvent;
+                        }
+                    }
+                }
+                break;
+            case FOLLOWING_MODE:
+                ArrayList<UserJar> userJars = communicator.getUserJars();
+                for (UserJar userJar : userJars){
+                    if (userJar.getMoodEvent().getLatitude() != null){
+                        setUpMarker(userJar.getMoodEvent(), userJar.getUsername());
+                        if (mostRecentMoodEvent == null){
+                            mostRecentMoodEvent = userJar.getMoodEvent();
+                        }
+                    }
+                }
+        }
+
+        // set up camera using most recent mood, if mood not empty
+        if (mostRecentMoodEvent != null){
+            LatLng centerFocus = new LatLng(mostRecentMoodEvent.getLatitude(), mostRecentMoodEvent.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 14));
+        }
+
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                toDetailedView(markerIdMapping.get(marker));
+            }
+        });
+    }
+
+    private void setUpMarker(MoodEvent moodEvent, String username){
+        LatLng latLng = null;
+        Marker marker = null;
+        switch (moodEvent.getMoodType()){
+            case 1:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood1))
+                        .title(username + "was HAPPY")
+                        .snippet("Click to view Details"));
+                break;
+            case 2:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
+                        .title(username + "was SAD")
+                        .snippet("Click to view Details"));
+                break;
+            case 3:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
+                        .title(username + "was ANGRY")
+                        .snippet("Click to view Details"));
+                break;
+            case 4:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
+                        .title(username + "was EMOTIONAL")
+                        .snippet("Click to view Details"));
+                break;
+        }
+        markerIdMapping.put(marker, moodEvent.getUniqueID());
+    }
+
+    public void toDetailedView(String ID) {
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_fullScreenOverlay, new MapDetailAdapterFragment(this.mode, ID), "outerDetailView")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commitAllowingStateLoss();
+    }
+
     private void closeFrag() {
         getChildFragmentManager()
                 .beginTransaction()
@@ -98,106 +196,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .remove(this)
                 .commit();
-    }
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-    private void clearMarkers(){
-        for (Marker marker : markers) {
-            marker.remove();
-        }
-    }
-
-    public void initElements() {
-        if (mood == 1){
-            Log.d("Does Init work?", "1");
-            map.clear();
-            moodList = communicator.getMoodEvents();
-            String uid = "placeholder";
-            for (MoodEvent moodEvent : moodList) {
-                if (moodEvent.getLatitude() != null) {
-                    if (moodEvent.getMoodType() == 1) {
-                        LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                        Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.happymarker))
-                                .title(uid + " Was Happy!")
-                                .snippet("View Details"));
-                        markers.add(marker);
-                        id = moodEvent.getUniqueID();
-                        markerIdMapping.put(marker, id);
-                    } else if (moodEvent.getMoodType() == 2) {
-                        LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                        Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
-                                .title(uid + " Was Sad!")
-                                .snippet("View Details"));
-                        markers.add(marker);
-                        id = moodEvent.getUniqueID();
-                        markerIdMapping.put(marker, id);
-                    } else if (moodEvent.getMoodType() == 3) {
-                        LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                        Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
-                                .title(uid + " Was Angry!")
-                                .snippet("View Details"));
-                        markers.add(marker);
-                        id = moodEvent.getUniqueID();
-                        markerIdMapping.put(marker, id);
-                    } else {
-                        LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                        Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
-                                .title(uid + " Was Emotional!")
-                                .snippet("View Details"));
-                        markers.add(marker);
-                        id = moodEvent.getUniqueID();
-                        markerIdMapping.put(marker, id);
-                    }
-                }
-            }
-            LatLng UofA = new LatLng(53.523220, -113.526321);
-            map.animateCamera(CameraUpdateFactory.newLatLng(UofA));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(UofA, 14));
-
-            map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                FirestoreUserDocCommunicator firebaseDoc = FirestoreUserDocCommunicator.getInstance();
-                String uid = firebaseDoc.getUsername();
-
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    String markerId = markerIdMapping.get(marker);
-                    Toast.makeText(getContext(), markerId, Toast.LENGTH_SHORT).show();
-                    toDetailedView(1, markerId);
-                }
-            });
-        }else if (mood == 2){
-            //
-        }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.map = googleMap;
-        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
-        this.isMapReady = true;
-        initElements();
-
-
-    }
-
-    public void toDetailedView(int moodPosition, String ID) {
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_fullScreenOverlay, new MapDetailAdapterFragment(1, ID), "outerDetailView")
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commitAllowingStateLoss();
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +29,8 @@ import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -130,6 +133,8 @@ public class EditMoodActivity extends AppCompatActivity {
                     }
                     if (uploadImage != null) {
                         communicator.addPhoto(moodEvent, uploadImage,imageId);
+                        saveImage(moodEvent.getImageId());
+                        //delete old image
                     }
                     communicator.updateMoodEvent(moodEvent);
                     finish();
@@ -334,5 +339,32 @@ public class EditMoodActivity extends AppCompatActivity {
         }
         Log.d("testa","image not exist" + myFile.getAbsolutePath());
         return false;
+    }
+    private void saveImage(String imageName){
+        BitmapDrawable draw = (BitmapDrawable) editImage.getDrawable();
+        Bitmap bitmap = draw.getBitmap();
+        FileOutputStream outStream = null;
+
+        // Write to SD Card
+        try {
+            String root = Environment.getExternalStorageDirectory().toString();
+            File myDir = new File(root + "/MoodSwing");
+            if (!myDir.exists()) {
+                myDir.mkdirs();
+            }
+            String fileName = imageName+ ".jpg";
+            File outFile = new File(myDir, fileName);
+
+            outStream = new FileOutputStream(outFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
     }
 }
