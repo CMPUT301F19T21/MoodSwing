@@ -39,6 +39,7 @@ import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.example.moodswing.customDataTypes.Utc;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -156,10 +157,11 @@ public class NewMoodActivity extends AppCompatActivity {
                                 Long UTC = calendar.getTimeInMillis();
                                 DateJar date = new DateJar(year,month,day);
                                 TimeJar time = new TimeJar(hr,min);
+                                Utc timeStamp = new Utc(UTC);
 
                                 moodEvent.setDate(date);
                                 moodEvent.setTime(time);
-                                moodEvent.setTimeStamp(UTC);
+                                moodEvent.setTimeStamp(Utc);
                                 // set date and time for display
                                 dateTextView.setText(MoodEventUtility.getDateStr(date));
                                 timeTextView.setText(MoodEventUtility.getTimeStr(time));
