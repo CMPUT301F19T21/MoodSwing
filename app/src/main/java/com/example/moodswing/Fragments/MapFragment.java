@@ -1,5 +1,8 @@
 package com.example.moodswing.Fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -140,36 +143,76 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void setUpMarker(MoodEvent moodEvent, String username){
         LatLng latLng = null;
         Marker marker = null;
+        BitmapDrawable mapMarkerDrawable = null;
+        Bitmap mapMarker = null;
+        int MARKER_SIZE = 200;
+
         switch (moodEvent.getMoodType()){
             case 1:
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm1);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+                        latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood1))
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title(username + "was HAPPY")
                         .snippet("Click to view Details"));
                 break;
             case 2:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm2);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.moodm2))
                         .title(username + "was SAD")
                         .snippet("Click to view Details"));
                 break;
             case 3:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm3);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title(username + "was ANGRY")
                         .snippet("Click to view Details"));
                 break;
             case 4:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm4);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
                 latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                 marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title(username + "was EMOTIONAL")
+                        .snippet("Click to view Details"));
+                break;
+            case 5:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm5);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                        .title(username + "was HEART BROKEN")
+                        .snippet("Click to view Details"));
+                break;
+            case 6:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm6);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                        .title(username + "was IN LOVE")
+                        .snippet("Click to view Details"));
+                break;
+            case 7:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm7);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                        .title(username + "was SCARED")
                         .snippet("Click to view Details"));
                 break;
         }
