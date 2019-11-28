@@ -259,13 +259,13 @@ public class NewMoodActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
-            switch (requestCode){
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case 0:
                     //show image comes form gallery
                     Uri selectedImage = data.getData();
                     if (selectedImage != null)
-                        uploadImage =  selectedImage;
+                        uploadImage = selectedImage;
                     addNewImageButton.setImageURI(selectedImage);
                     break;
                 case 1:
@@ -274,6 +274,7 @@ public class NewMoodActivity extends AppCompatActivity {
 
                     break;
             }
+        }
     }
 
 
@@ -494,4 +495,5 @@ public class NewMoodActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }
