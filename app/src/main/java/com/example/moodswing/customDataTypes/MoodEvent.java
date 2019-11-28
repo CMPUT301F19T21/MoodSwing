@@ -18,7 +18,7 @@ public class MoodEvent {
     private Double Latitude;
     private Double Longitude;
     private String imageId;
-    private String imageUrl;
+
 
 
     public MoodEvent() {
@@ -28,13 +28,7 @@ public class MoodEvent {
         return timeStamp;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public void setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;

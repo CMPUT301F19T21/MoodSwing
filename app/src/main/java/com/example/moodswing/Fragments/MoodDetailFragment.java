@@ -172,7 +172,6 @@ public class MoodDetailFragment extends Fragment{
             setLocationStrFromLocation();
         }
         communicator.getPhoto(imageId,photoImage);
-        photoImage.getLayoutParams().width = 100000;
 
 
     }
