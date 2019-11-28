@@ -213,8 +213,14 @@ public class FirestoreUserDocCommunicator{
      */
     public void removeMoodEvent(MoodEvent moodEvent){
         // error code need to be created
-
-        moodEvents.remove(moodEvent);
+        int index = 0;
+        for (MoodEvent moodEvent1 : moodEvents){
+            if (moodEvent.getUniqueID() == moodEvent1.getUniqueID()){
+                moodEvents.remove(index);
+                index++;
+                break;
+            }
+        }
 
         DocumentReference moodEventRef = db
                 .collection("users")

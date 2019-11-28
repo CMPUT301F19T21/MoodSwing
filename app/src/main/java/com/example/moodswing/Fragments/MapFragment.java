@@ -119,7 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void initElements() {
         if (mood == 1){
             Log.d("Does Init work?", "1");
-            markers.clear();
+            map.clear();
             moodList = communicator.getMoodEvents();
             String uid = "placeholder";
             for (MoodEvent moodEvent : moodList) {
@@ -127,7 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (moodEvent.getMoodType() == 1) {
                         LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                         Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_marker))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.happymarker))
                                 .title(uid + " Was Happy!")
                                 .snippet("View Details"));
                         markers.add(marker);
@@ -136,7 +136,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     } else if (moodEvent.getMoodType() == 2) {
                         LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                         Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.sad_marker))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
                                 .title(uid + " Was Sad!")
                                 .snippet("View Details"));
                         markers.add(marker);
@@ -145,7 +145,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     } else if (moodEvent.getMoodType() == 3) {
                         LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                         Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.angry_marker))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
                                 .title(uid + " Was Angry!")
                                 .snippet("View Details"));
                         markers.add(marker);
@@ -154,7 +154,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     } else {
                         LatLng latlng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
                         Marker marker = map.addMarker(new MarkerOptions().position(latlng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.emotional_marker))
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
                                 .title(uid + " Was Emotional!")
                                 .snippet("View Details"));
                         markers.add(marker);
