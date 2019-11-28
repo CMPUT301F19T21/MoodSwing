@@ -9,8 +9,6 @@ public class MoodEvent {
     private Long timeStamp;
     // required fields
     private int moodType; // for this design im assuming each moodType has been assigned an unique int
-    private DateJar date;
-    private TimeJar time;
 
     // optional fields
     private String reason;
@@ -46,22 +44,6 @@ public class MoodEvent {
 
     public void setMoodType(int moodType) {
         this.moodType = moodType;
-    }
-
-    public DateJar getDate() {
-        return date;
-    }
-
-    public void setDate(DateJar date) {
-        this.date = date;
-    }
-
-    public TimeJar getTime() {
-        return time;
-    }
-
-    public void setTime(TimeJar time) {
-        this.time = time;
     }
 
     public String getReason() {

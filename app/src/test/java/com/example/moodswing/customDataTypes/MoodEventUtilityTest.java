@@ -7,17 +7,14 @@ import static org.junit.Assert.*;
 
 public class MoodEventUtilityTest {
 
-    //testing getDateStr method, which is supposed to convert DateJar to String
+    //testing getDateStr method, which is supposed to convert UTC to Date String
     @Test
     public void getDateStr() {
         //setting input values
-        DateJar input = new DateJar();
-        input.setDay(13);
-        input.setMonth(2);
-        input.setYear(2019);
+        Long input = 1574938070120L;
 
         //setting expected value
-        String expected =  "March 13, 2019";
+        String expected =  "November 28, 2019";
 
         //getting output provided by method
         MoodEventUtility moodEventUtility = new MoodEventUtility();
@@ -27,16 +24,14 @@ public class MoodEventUtilityTest {
         assertEquals(expected, output);
     }
 
-    //testing getTimeStr method, which is supposed to convert TimeJar to String
+    //testing getTimeStr method, which is supposed to convert UTC to Time String
     @Test
     public void getTimeStr() {
         //setting input values
-        TimeJar input = new TimeJar();
-        input.setHr(13);
-        input.setMin(45);
+        Long input = 1574938070120L;
 
         //setting expected value
-        String expected = "1:45 PM";
+        String expected = "3:47 AM";
 
         //getting output provided by method
         MoodEventUtility moodEventUtility = new MoodEventUtility();
@@ -64,19 +59,5 @@ public class MoodEventUtilityTest {
     }
 
     //testing returnMonthStr method, which is supposed to int of Month to Corresponding String
-    @Test
-    public void returnMonthStr() {
-        //setting input values
-        int input = 4;
 
-        //setting expected value
-        String expected = "May";
-
-        //getting output provided by method
-        MoodEventUtility moodEventUtility = new MoodEventUtility();
-        String output = moodEventUtility.returnMonthStr(input);
-
-        //assert to check if method works as expecting, comparing expected and output
-        assertEquals(expected,output);
-    }
 }
