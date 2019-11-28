@@ -22,6 +22,7 @@ import com.example.moodswing.customDataTypes.DateJar;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.TimeJar;
+import com.example.moodswing.customDataTypes.Utc;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -159,6 +160,8 @@ public class MainactivityTest {
         int min = calendar.get(Calendar.MINUTE);
         DateJar date = new DateJar(year,month,day);
         TimeJar time = new TimeJar(hr,min);
+        Long UTC = calendar.getTimeInMillis();
+        Utc timeStamp = new Utc(UTC);
         // check if data matched
         onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
         onView(withId(R.id.mood_list)).perform(
@@ -167,7 +170,7 @@ public class MainactivityTest {
         try {
             onView(allOf(withId(R.id.moodDetail_moodText), withText("HAPPY"))).check(matches(isDisplayed()));
 
-            onView(withId(R.id.moodDetail_timeText)).check(matches(withText(MoodEventUtility.getTimeStr(time))));
+            onView(withId(R.id.moodDetail_timeText)).check(matches(withText(MoodEventUtility.getTimeStr(timeStamp))));
             onView(withId(R.id.moodDetail_dateText)).check(matches(withText(MoodEventUtility.getDateStr(date))));
             onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Test Mood\"")));
             // check if click back succeed

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,18 +34,14 @@ public final class MoodEventUtility {
 
     /**
      * Gets a TimeJar object and returns a string of the time stored
-     * @param time the TimeJar object to be converted into a string
+     * @param utc the UTC object to be converted into a string
      * @return Returns a string of the TimeJar's time
      */
-    public static String getTimeStr (TimeJar time) {
-        int hr = time.getHr();
-        String period;
-        if (hr>12){
-            hr =hr-12;
-            period = "PM";
-        }
-        else period = "AM";
-        return String.format(Locale.getDefault(), "%d:%02d %s",hr,time.getMin(),period);
+    public static String getTimeStr (Utc utc) {
+        Long UTC = utc.getUtcLong();
+
+        SimpleDateFormat outputFormat = new SimpleDateFormat("h:mm a");
+        return outputFormat.format(UTC);
     }
 
     /**
