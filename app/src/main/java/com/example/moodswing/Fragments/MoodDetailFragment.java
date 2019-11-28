@@ -169,7 +169,7 @@ public class MoodDetailFragment extends Fragment{
     private void initialElements(){
         moodEvent = communicator.getMoodEvent(moodPosition);
         String imageId = moodEvent.getImageId();
-        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
+        dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
         setMoodImage(moodEvent.getMoodType());
