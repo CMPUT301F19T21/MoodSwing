@@ -111,7 +111,7 @@ public class MoodDetailFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 communicator.removeMoodEvent(moodEvent);
-                ((MainActivity)getActivity()).toMoodHistory();
+                closeFrag();
             }
         });
 
@@ -135,11 +135,15 @@ public class MoodDetailFragment extends Fragment{
                     .remove(this)
                     .commit();
         }else if (mode == 2){
+            ((MapFragment)getFragmentManager().findFragmentByTag("mapFrag")).initElements();
+
+
+
             getFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .remove(this)
-                    .remove(getParentFragment())
+                    .remove(getFragmentManager().findFragmentByTag("outerDetailView"))
                     .commit();
         }
 
