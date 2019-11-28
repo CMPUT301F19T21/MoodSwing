@@ -133,25 +133,45 @@ public class NewMoodActivity extends AppCompatActivity {
         ifLocationEnabled = false;
         geoLocationText.setText("Location Off");
 
-        // set up current date and time
-        Calendar calendar = Calendar.getInstance();
 
-        // set date and time
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        int hr = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
-        Long UTC = calendar.getTimeInMillis();
-        DateJar date = new DateJar(year,month,day);
-        TimeJar time = new TimeJar(hr,min);
+        // Set up time and date
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // set up current date and time
+                                Calendar calendar = Calendar.getInstance();
 
-        moodEvent.setDate(date);
-        moodEvent.setTime(time);
-        moodEvent.setTimeStamp(UTC);
-        // set date and time for display
-        dateTextView.setText(MoodEventUtility.getDateStr(date));
-        timeTextView.setText(MoodEventUtility.getTimeStr(time));
+                                // set date and time
+                                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                                int month = calendar.get(Calendar.MONTH);
+                                int year = calendar.get(Calendar.YEAR);
+                                int hr = calendar.get(Calendar.HOUR_OF_DAY);
+                                int min = calendar.get(Calendar.MINUTE);
+                                Long UTC = calendar.getTimeInMillis();
+                                DateJar date = new DateJar(year,month,day);
+                                TimeJar time = new TimeJar(hr,min);
+
+                                moodEvent.setDate(date);
+                                moodEvent.setTime(time);
+                                moodEvent.setTimeStamp(UTC);
+                                // set date and time for display
+                                dateTextView.setText(MoodEventUtility.getDateStr(date));
+                                timeTextView.setText(MoodEventUtility.getTimeStr(time));
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        thread.start();
 
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
