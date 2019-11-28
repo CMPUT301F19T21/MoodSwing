@@ -20,6 +20,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class MapDetailAdapterFragment extends Fragment {
+    private static final int MOODHISTORY_MODE = 1;
+    private static final int FOLLOWING_MODE = 2;
+
     private FrameLayout MapDetailAdapterLayout;
     private int mode;
     private String ID;
@@ -33,27 +36,20 @@ public class MapDetailAdapterFragment extends Fragment {
         this.communicator = FirestoreUserDocCommunicator.getInstance();
     }
 
-
-    /**
-     * Initializes the UI buttons, the following/follower lists, the redirect to management fragment
-     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_detailed_map, container, false);
         // the view is created after this
 
-
         MapDetailAdapterLayout = root.findViewById(R.id.MapDetailedFrag_placeholder);
 
         switch (mode){
-            case 1:
+            case MOODHISTORY_MODE:
                 getFragmentManager().beginTransaction()
-                        .replace(MapDetailAdapterLayout.getId(), new MoodDetailFragment(getMoodPosition(this.ID),2), "innerDetailedView")
+                        .replace(MapDetailAdapterLayout.getId(), new MoodDetailFragment(communicator.getMoodPosition(ID),this))
                         .commitAllowingStateLoss();
                 break;
-            case 2:
+            case FOLLOWING_MODE:
                 //
-                break;
-            default:
                 break;
         }
 

@@ -62,15 +62,24 @@ public class MoodDetailFragment extends Fragment{
     private int mode;
     private String imagePath;
 
+    private Fragment outerFragment;
+
     public MoodDetailFragment(){}
+
+    public MoodDetailFragment(int moodPosition){
+        this.outerFragment = null;
+        this.communicator = FirestoreUserDocCommunicator.getInstance();
+        this.moodPosition = moodPosition;
+        this.moodEvent = communicator.getMoodEvent(moodPosition);
+    }
 
     /**
      * It can be instantiated with the moodposition, which corresponds to a specific mood event
      * (ie. 1=happy) to be displayed at the top of the screen
      * @param moodPosition
      */
-    public MoodDetailFragment(int moodPosition, int mode) {
-        this.mode = mode;
+    public MoodDetailFragment(int moodPosition, @NonNull Fragment outerFragment) {
+        this.outerFragment = outerFragment;
         this.communicator = FirestoreUserDocCommunicator.getInstance();
         this.moodPosition = moodPosition;
         this.moodEvent = communicator.getMoodEvent(moodPosition);
@@ -131,26 +140,21 @@ public class MoodDetailFragment extends Fragment{
     }
 
     private void closeFrag(){
-        if (mode == 1){
+        if (outerFragment== null){
             getFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .remove(this)
                     .commit();
-        }else if (mode == 2){
+        }else{
             ((MapFragment)getFragmentManager().findFragmentByTag("mapFrag")).initElements();
-
-
-
             getFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .remove(this)
-                    .remove(getFragmentManager().findFragmentByTag("outerDetailView"))
+                    .remove(outerFragment)
                     .commit();
         }
-
-
     }
 
     @Override
