@@ -15,6 +15,8 @@ import java.util.Locale;
  * This is a utility class to handle functionality for mood objects and their arguments
  */
 public final class MoodEventUtility {
+    public static final int MOODHISTORY_MODE = 1;
+    public static final int FOLLOWING_MODE = 2;
 
 
 

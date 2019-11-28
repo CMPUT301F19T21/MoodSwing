@@ -16,6 +16,7 @@ import com.example.moodswing.MainActivity;
 import com.example.moodswing.ManagementActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.example.moodswing.customDataTypes.UserJarAdaptor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -88,7 +89,7 @@ public class FollowingFragment extends Fragment {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).openMapFragment(2);
+                ((MainActivity) getActivity()).openMapFragment(MoodEventUtility.FOLLOWING_MODE);
             }
         });
 

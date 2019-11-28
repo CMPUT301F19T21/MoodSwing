@@ -33,11 +33,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
+import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
+
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-
-    private static final int MOODHISTORY_MODE = 1;
-    private static final int FOLLOWING_MODE = 2;
-
     private FirestoreUserDocCommunicator communicator;
     private Integer mode;
 
@@ -122,6 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }
                 }
+                break;
         }
 
         // set up camera using most recent mood, if mood not empty
