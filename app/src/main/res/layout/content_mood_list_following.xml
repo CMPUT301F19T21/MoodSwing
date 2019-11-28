@@ -24,14 +24,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="213dp"
+            android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="13dp"
             tools:layout_editor_absoluteY="15dp">
 
             <ImageView
                 android:id="@+id/followingList_moodIcon_placeHolder"
-                android:layout_width="113dp"
-                android:layout_height="68dp"
+                android:layout_width="138dp"
+                android:layout_height="138dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="8dp"
@@ -46,7 +46,6 @@
                 android:id="@+id/followingList_moodDetail_dateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-light"
                 android:text="2010-02-27"
                 android:textColor="@color/colorPrimary"
@@ -63,7 +62,7 @@
                 android:fontFamily="sans-serif-light"
                 android:text="2:34 PM"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14dp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/separator_followingList"
                 app:layout_constraintEnd_toEndOf="@+id/followingList_moodDetail_dateText"
                 app:layout_constraintStart_toStartOf="@+id/followingList_moodDetail_dateText"
@@ -77,10 +76,11 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:background="#D5D5D5"
-                app:layout_constraintBottom_toTopOf="@+id/followingList_locationButton_moodListCard"
+                app:layout_constraintBottom_toTopOf="@+id/followingList_username"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
@@ -88,14 +88,12 @@
                 android:layout_width="135dp"
                 android:layout_height="25dp"
 
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:text="EMOTIONAL"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/followingList_moodDetail_dateText"
+                android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="@+id/followingList_moodIcon_placeHolder"
                 app:layout_constraintStart_toStartOf="@+id/followingList_moodIcon_placeHolder"
                 app:layout_constraintTop_toBottomOf="@+id/followingList_moodIcon_placeHolder" />
@@ -104,24 +102,25 @@
                 android:id="@+id/followingList_locationButton_moodListCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/separator_followingList"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/followingList_moodDetail_timeText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/followingList_moodIcon_placeHolder"
+                app:layout_constraintTop_toTopOf="@+id/followingList_moodDetail_moodText"
                 app:srcCompat="@drawable/ic_location_on_accent_red_24dp" />
 
             <TextView
                 android:id="@+id/followingList_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="sans-serif-light"
                 android:text="Gengyuan Huang"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/followingList_locationButton_moodListCard"
-                app:layout_constraintStart_toStartOf="@+id/separator_followingList"
-                app:layout_constraintTop_toTopOf="@+id/followingList_locationButton_moodListCard" />
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

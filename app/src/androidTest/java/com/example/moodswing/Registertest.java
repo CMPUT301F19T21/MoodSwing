@@ -26,13 +26,16 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static io.opencensus.tags.TagKey.MAX_LENGTH;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +49,7 @@ public class Registertest {
     private String loginEmail;
     private String password;
     private String username;
+    private String takenUsername;
     private FirestoreUserDocCommunicator communicator;
 
     @Rule
@@ -59,36 +63,35 @@ public class Registertest {
         loginEmail = letters + "@mail.com";
         password = "123456";
         username = letters;
+        takenUsername = "user";
+
     }
 
 
     @After
     public void delete() {
-        communicator = FirestoreUserDocCommunicator.getInstance();
-        communicator.deleteUser();
+
     }
 
     @Test
-    public void RegisterUser() {
+    public void TakenUsername() {
         onView(withId(R.id.regEmail))
                 .perform(typeText(loginEmail), closeSoftKeyboard());
         onView(withId(R.id.regUsername))
-                .perform(typeText(username), closeSoftKeyboard());
+                .perform(typeText(takenUsername), closeSoftKeyboard());
         onView(withId(R.id.regPassword))
                 .perform(typeText(password), closeSoftKeyboard());
         onView(withId(R.id.regButton))
                 .perform(click());
 
         try {
-            Thread.sleep(1500);
+            Thread.sleep(2000);
         } catch(InterruptedException e) {
             Log.d("Loginerror", "interrupted thread.sleep");
         }
 
-        //Small bug when redirecting, doesn't find either mainactivity or loginactivity. for now
-        //just checking that the buttons work(the functionality still works)
-
-
+        //Checking to see if we are still on RegisterActivity(taken username was rejected)
+        onView(withId(R.id.textView3)).check(matches(isDisplayed()));
 
 
 
