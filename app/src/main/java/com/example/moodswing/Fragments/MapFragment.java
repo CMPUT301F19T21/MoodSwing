@@ -182,53 +182,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-        public void toDetailedView(int moodPosition){
-            MoodDetailFragment frag = new MoodDetailFragment(1);
-            frag.setTargetFragment(this, 1);
+        public void toDetailedView(int moodPosition) {
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.mapDetailFragment_placeHolder, frag, "moodHistoryDetailedFrag")
+                    .add(R.id.fragment_fullScreenOverlay, new MapDetailAdapterFragment(1), "outerDetailView")
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commitAllowingStateLoss();
-
-//        }
-//        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//                switch(moodDetail) {
-//                    case 1:
-//                        toDetailedView(0);
-//                        break;
-//                    case 2:
-//                        toDetailedView(1);
-//                        break;
-//                    case 3:
-//                        toDetailedView(2);
-//                        break;
-//                    case 4:
-//                        toDetailedView(3);
-//                        break;
-//                    default:
-//                        break;
-//                }
-                //                for (MoodEvent moodEvent : moodEvents) {
-//                    if (moodEvent.getLatitude() != null) {
-//                        toDetailedView(0);
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
-    }
-//    public void toDetailedView(int moodPosition) {
-//        MoodDetailFragment frag = new MoodDetailFragment(moodPosition);
-//        frag.setTargetFragment(this, 1);
-//        getFragmentManager()
-//                .beginTransaction()
-//                .add(R.id.fragment_placeHolder, frag,"moodHistoryDetailedFrag")
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .hide(this)
-//                .commitAllowingStateLoss();
-//    }
+        }
 }
