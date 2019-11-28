@@ -56,7 +56,9 @@ public class EditMoodActivity extends AppCompatActivity {
     private ImageView editImage;
 
     private String currentPhotoPath;
+    private String imageId;
     private Uri uploadImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class EditMoodActivity extends AppCompatActivity {
         Intent moodIntent = getIntent();
         int position = moodIntent.getIntExtra("position",-1);
         moodEvent = communicator.getMoodEvent(position);
-
+        imageId = moodEvent.getImageId();
         // find view
         confirmButton = findViewById(R.id.editMood_add_confirm);
         closeBtn = findViewById(R.id.editMood_close);
@@ -85,7 +87,7 @@ public class EditMoodActivity extends AppCompatActivity {
         social_oneBtn = findViewById(R.id.editMood_oneAnotherBtn);
         social_twoMoreBtn = findViewById(R.id.editMood_twoMoreBtn);
 
-        communicator.getPhoto(moodEvent.getUniqueID(),editImage);
+        communicator.getPhoto(imageId,editImage);
 
         setSocialSituationBtns();
         setReasonText();
@@ -113,10 +115,10 @@ public class EditMoodActivity extends AppCompatActivity {
                     }else{
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
-                    communicator.updateMoodEvent(moodEvent);
                     if (uploadImage != null) {
-                        communicator.addPhoto(moodEvent.getUniqueID(), uploadImage);
+                        communicator.addPhoto(moodEvent, uploadImage,imageId);
                     }
+                    communicator.updateMoodEvent(moodEvent);
                     finish();
                 }else{
                     // prompt user to select a mood

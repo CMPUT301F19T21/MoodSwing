@@ -17,14 +17,23 @@ public class MoodEvent {
     private Integer socialSituation;
     private Double Latitude;
     private Double Longitude;
+    private String imageId;
+    private String imageUrl;
 
-    private String uniquePictureID;
 
     public MoodEvent() {
     }
 
     public Long getTimeStamp(){
         return timeStamp;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setTimeStamp(Long timeStamp) {
@@ -93,11 +102,11 @@ public class MoodEvent {
         Longitude = longitude;
     }
 
-    public String getUniquePictureID() {
-        return uniquePictureID;
+    public String getImageId() {
+        return imageId;
     }
 
-    public void setUniquePictureID(String uniquePictureID) {
-        this.uniquePictureID = uniquePictureID;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 }

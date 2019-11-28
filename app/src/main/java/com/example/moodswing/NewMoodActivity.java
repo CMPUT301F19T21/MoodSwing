@@ -191,10 +191,11 @@ public class NewMoodActivity extends AppCompatActivity {
                         moodEvent.setLatitude(null);
                         moodEvent.setLongitude(null);
                     }
-                    communicator.addMoodEvent(moodEvent);
                     if (uploadImage != null){
-                        communicator.addPhoto(moodId,uploadImage);
+                        communicator.addPhoto(moodEvent,uploadImage,null);
                     }
+                    communicator.addMoodEvent(moodEvent);
+
                     finish();
                 }else{
                     // prompt user to select a mood

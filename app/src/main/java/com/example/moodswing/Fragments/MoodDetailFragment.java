@@ -145,6 +145,7 @@ public class MoodDetailFragment extends Fragment{
      */
     private void initialElements(){
         moodEvent = communicator.getMoodEvent(moodPosition);
+        String imageId = moodEvent.getImageId();
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getDate()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTime()));
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
@@ -158,7 +159,8 @@ public class MoodDetailFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
-        communicator.getPhoto(moodEvent.getUniqueID(),photoImage);
+        communicator.getPhoto(imageId,photoImage);
+        photoImage.getLayoutParams().width = 100000;
 
 
     }
