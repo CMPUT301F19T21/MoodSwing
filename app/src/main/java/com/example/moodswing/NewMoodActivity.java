@@ -162,13 +162,17 @@ public class NewMoodActivity extends AppCompatActivity {
                     moodEvent.setUniqueID(moodId);
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                     moodEvent.setSocialSituation(socialSituation);
+                    // check for the length of the reason
                     if (reasonEditText.getText().toString().isEmpty()){
                         moodEvent.setReason(null);
                     }else{
+                        // check for the number of characters
                         if (reasonEditText.getText().toString().length() > 20) {
                             Toast.makeText(getApplicationContext(), "More than 20 characters!", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        // check for the number of words
+                        // assume words are separated by spaces
                         String[] splitStr = reasonEditText.getText().toString().trim().split("\\s+");
                         if (splitStr.length > 3) {
                             Toast.makeText(getApplicationContext(),"More than 3 words!",Toast.LENGTH_SHORT).show();
