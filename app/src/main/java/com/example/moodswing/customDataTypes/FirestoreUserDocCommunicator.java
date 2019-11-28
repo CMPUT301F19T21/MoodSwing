@@ -54,7 +54,6 @@ public class FirestoreUserDocCommunicator{
 
     private static FirestoreUserDocCommunicator instance = null;
 
-    private int position;
     private ArrayList<MoodEvent> moodEvents;
     private ArrayList<UserJar> userJars;
     // reference
@@ -257,12 +256,12 @@ public class FirestoreUserDocCommunicator{
                         continue;
                         // do nothing, continue the loop
                     }else{
+
                         moodAdapter.addToMoods(moodEvent);
                     }
                 }
                 moodAdapter.notifyDataSetChanged();
                 moodEvents = moodAdapter.getMoods();
-
             }
         });
     }
@@ -295,7 +294,6 @@ public class FirestoreUserDocCommunicator{
     }
 
     public MoodEvent getMoodEvent(int position) {
-        this.position = position;
         return moodEvents.get(position);
     }
 
@@ -818,11 +816,15 @@ public class FirestoreUserDocCommunicator{
     }
 
 
-    public void addPhoto(String id, Uri filePath) {
+    public void addPhoto(MoodEvent moodEvent, Uri filePath,@Nullable String oldImageId) {
 
+        String imageId = generateMoodID();
+        if (oldImageId != null){
+            //delete old image
+        }
         StorageReference storageRef = storage.getReference();
-
-        StorageReference storageName = storageRef.child(getUsername() + "/" + id);
+        StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + imageId);
+        moodEvent.setImageId(imageId);
 
         UploadTask uploadTask = storageName.putFile(filePath);
 
@@ -839,10 +841,12 @@ public class FirestoreUserDocCommunicator{
         });
     }
     // retrieve image from firebase storage and set into imageView
-    public void getPhoto(String id, ImageView imageView) {
-        StorageReference storageRef = storage.getReference();
 
-        StorageReference storageName = storageRef.child(getUsername() + "/" + id);
+
+    public void getPhoto(String imageId, ImageView imageView) {
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference storageName = storageRef.child("Images/" +user.getUid() + "/" + imageId);
 
 
         storageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -851,19 +855,19 @@ public class FirestoreUserDocCommunicator{
                 // Got the download URL for 'users/me/profile.png'
                 Log.d("testa",uri.toString());
                 Picasso.get().load(uri.toString()).into(imageView);
+                //
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
+                Log.d("testa","wrong");
             }
         });
-
-
     }
 
 
-        //firebase database string implementation of adding photo. don't think i'll use it
+    //firebase database string implementation of adding photo. don't think i'll use it
 
     public void addPhotoString(MoodEvent moodEvent, String image) {
         DocumentReference moodEventRef = db
