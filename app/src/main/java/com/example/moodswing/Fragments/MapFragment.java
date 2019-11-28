@@ -86,56 +86,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
-    private void closeFrag() {
-        getChildFragmentManager()
-                .beginTransaction()
-                .remove(mapFrag)
-                .commit();
-
-        getFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                .remove(this)
-                .commit();
-    }
-
-    private void setUpMarker(MoodEvent moodEvent, String username){
-        LatLng latLng = null;
-        Marker marker = null;
-        switch (moodEvent.getMoodType()){
-            case 1:
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood1))
-                        .title(username + "was HAPPY")
-                        .snippet("Click to view Details"));
-                break;
-            case 2:
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
-                        .title(username + "was SAD")
-                        .snippet("Click to view Details"));
-                break;
-            case 3:
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
-                        .title(username + "was ANGRY")
-                        .snippet("Click to view Details"));
-                break;
-            case 4:
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
-                        .title(username + "was EMOTIONAL")
-                        .snippet("Click to view Details"));
-                break;
-        }
-        markerIdMapping.put(marker, moodEvent.getUniqueID());
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.map = googleMap;
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
+        initElements();
+        this.isMapReady = true;
     }
 
     public void initElements() {
@@ -182,12 +138,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.map = googleMap;
-        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
-        initElements();
-        this.isMapReady = true;
+    private void setUpMarker(MoodEvent moodEvent, String username){
+        LatLng latLng = null;
+        Marker marker = null;
+        switch (moodEvent.getMoodType()){
+            case 1:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood1))
+                        .title(username + "was HAPPY")
+                        .snippet("Click to view Details"));
+                break;
+            case 2:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood2))
+                        .title(username + "was SAD")
+                        .snippet("Click to view Details"));
+                break;
+            case 3:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood3))
+                        .title(username + "was ANGRY")
+                        .snippet("Click to view Details"));
+                break;
+            case 4:
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.mood4))
+                        .title(username + "was EMOTIONAL")
+                        .snippet("Click to view Details"));
+                break;
+        }
+        markerIdMapping.put(marker, moodEvent.getUniqueID());
     }
 
     public void toDetailedView(String ID) {
@@ -196,5 +183,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .add(R.id.fragment_fullScreenOverlay, new MapDetailAdapterFragment(this.mode, ID), "outerDetailView")
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commitAllowingStateLoss();
+    }
+
+    private void closeFrag() {
+        getChildFragmentManager()
+                .beginTransaction()
+                .remove(mapFrag)
+                .commit();
+
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .remove(this)
+                .commit();
     }
 }
