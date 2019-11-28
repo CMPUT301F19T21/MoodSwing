@@ -73,7 +73,7 @@
 
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-light"
-                android:gravity="end"
+                android:gravity="center"
                 android:text="EMOTIONAL"
                 android:textColor="@color/colorPrimary"
                 android:textSize="22sp"
