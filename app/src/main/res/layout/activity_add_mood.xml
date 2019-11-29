@@ -358,9 +358,22 @@
                                 app:fabCustomSize="45dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/addMood_close"
                                 app:layout_constraintTop_toBottomOf="@+id/addMood_socialSituationCard"
                                 app:srcCompat="@drawable/ic_check_grey_24dp" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/addMood_close"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                app:backgroundTint="@color/button_brown"
+                                app:fabCustomSize="45dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="@+id/add_confirm"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/addMood_socialSituationCard"
+                                app:srcCompat="@drawable/ic_clear_black_24dp" />
 
                             <TextView
                                 android:id="@+id/textView14"

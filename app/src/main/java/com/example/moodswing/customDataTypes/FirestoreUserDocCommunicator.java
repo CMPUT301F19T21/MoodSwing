@@ -843,30 +843,58 @@ public class FirestoreUserDocCommunicator{
         return moodEvents;
     }
 
+    public void deleteFirestoreImage(String imageId){
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
 
-    public void addPhoto(MoodEvent moodEvent, Uri filePath,@Nullable String oldImageId) {
+        // Create a reference to the file to delete
+        StorageReference desertRef = storageRef.child("Images/" + user.getUid() + "/" + imageId);
+
+        // Delete the file
+        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+                Log.d(TAG, "File deleted successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Log.d(TAG, "File deleted error");
+            }
+        });
+
+    }
+
+    public void addPhoto(MoodEvent moodEvent, @Nullable Uri filePath,@Nullable String oldImageId) {
 
         String imageId = generateMoodID();
         if (oldImageId != null){
             //delete old image
+            new FileManager(oldImageId).deleteImage();//delete local file
+            deleteFirestoreImage(oldImageId);
+            moodEvent.setImageId(null);
         }
-        StorageReference storageRef = storage.getReference();
-        StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + imageId);
-        moodEvent.setImageId(imageId);
+        if (filePath != null) {
+            StorageReference storageRef = storage.getReference();
+            StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + imageId);
+            moodEvent.setImageId(imageId);
 
-        UploadTask uploadTask = storageName.putFile(filePath);
+            UploadTask uploadTask = storageName.putFile(filePath);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.d(TAG, "failed to upload image");
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d(TAG, "failed to upload image");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                }
+            });
         }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-            }
-        });
     }
     // retrieve image from firebase storage and set into imageView
 

@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,11 +62,14 @@ public class EditMoodActivity extends AppCompatActivity {
     private FloatingActionButton social_twoMoreBtn;
     private Integer socialSituation;
     private ImageView editImage;
+    private ConstraintLayout imageCard;
 
     private String currentPhotoPath;
     private String imageId;
     private Uri uploadImage;
     private String imagePath;
+    private boolean deleteImageConfirm;
+    private Integer cardWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,6 @@ public class EditMoodActivity extends AppCompatActivity {
         reasonEditText = findViewById(R.id.editMood_reason_EditView);
         editImage = findViewById(R.id.editMood_add_newImage);
         moodSelectList = findViewById(R.id.editMood_moodSelect_recycler);
-
 
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -137,7 +141,9 @@ public class EditMoodActivity extends AppCompatActivity {
                     if (uploadImage != null) {
                         communicator.addPhoto(moodEvent, uploadImage,imageId);
                         saveImage(moodEvent.getImageId());
-                        //delete old image
+                    }
+                    if (deleteImageConfirm == true){
+                        communicator.addPhoto(moodEvent,null,imageId);
                     }
                     communicator.updateMoodEvent(moodEvent);
                     finish();
@@ -330,6 +336,7 @@ public class EditMoodActivity extends AppCompatActivity {
         else {
             communicator.getPhoto(imageId,editImage);
         }
+
     }
     private boolean checkImageExist(String imageName){
         String root = Environment.getExternalStorageDirectory().toString();
