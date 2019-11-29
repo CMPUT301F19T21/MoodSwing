@@ -2,6 +2,7 @@ package com.example.moodswing;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -37,6 +39,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
+import static com.example.moodswing.NewMoodActivity.CAMERA_RETURN_CODE;
+import static com.example.moodswing.NewMoodActivity.GALLERY_RETURN_CODE;
+
 // import com.example.moodswing.customDataTypes.AddMoodAdapter;
 
 //The edit mood screen, contains all the functionality for editing an existing mood
@@ -45,12 +51,13 @@ import java.util.Date;
  */
 // Some restrictions on fields to be completed, and photograph
 public class EditMoodActivity extends AppCompatActivity {
-
+    private static final String TAG = "EditMoodActivity";
     FirestoreUserDocCommunicator communicator;
     MoodEvent moodEvent;
 
     private FloatingActionButton confirmButton;
     private FloatingActionButton closeBtn;
+    private FloatingActionButton imageBtn;
     private EditText reasonEditText;
 
     private RecyclerView moodSelectList;
@@ -66,9 +73,10 @@ public class EditMoodActivity extends AppCompatActivity {
 
     private String currentPhotoPath;
     private String imageId;
-    private Uri uploadImage;
+    private Uri imageUriForUpload;
     private String imagePath;
     private boolean deleteImageConfirm;
+    private boolean ifImageReady;
     private Integer cardWidth;
 
     @Override
@@ -86,6 +94,9 @@ public class EditMoodActivity extends AppCompatActivity {
         reasonEditText = findViewById(R.id.editMood_reason_EditView);
         editImage = findViewById(R.id.editMood_add_newImage);
         moodSelectList = findViewById(R.id.editMood_moodSelect_recycler);
+        imageBtn = findViewById(R.id.editMoodAddImageBtn);
+        ifImageReady = false;
+
 
         // recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -103,7 +114,9 @@ public class EditMoodActivity extends AppCompatActivity {
         setReasonText();
         loadImage();
 
-        editImage.setOnClickListener(new View.OnClickListener() {
+
+
+        imageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ImageFragment imageFragment = new ImageFragment();
@@ -138,8 +151,8 @@ public class EditMoodActivity extends AppCompatActivity {
                         }
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
-                    if (uploadImage != null) {
-                        communicator.addPhoto(moodEvent, uploadImage,imageId);
+                    if (imageUriForUpload != null) {
+                        communicator.addPhoto(moodEvent, imageUriForUpload,imageId);
                         saveImage(moodEvent.getImageId());
                     }
                     if (deleteImageConfirm == true){
@@ -264,30 +277,6 @@ public class EditMoodActivity extends AppCompatActivity {
         startActivityForResult(intent,0);
     }
 
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
-            switch (requestCode){
-                case 0:
-                    //show image comes form gallery
-                    Uri selectedImage = data.getData();
-                    if (selectedImage != null)
-                        uploadImage =  selectedImage;
-                    editImage.setImageURI(selectedImage);
-                    break;
-                case 1:
-                    // Showing the image from camera
-                    editImage.setImageURI(uploadImage);
-
-                    break;
-            }
-    }
-
-
-
     public void takeimage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -307,7 +296,7 @@ public class EditMoodActivity extends AppCompatActivity {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 1);
-                uploadImage = photoURI;
+                imageUriForUpload = photoURI;
             }
         }
     }
@@ -328,53 +317,45 @@ public class EditMoodActivity extends AppCompatActivity {
         return image;
     }
     private void loadImage(){
-        if (checkImageExist(imageId) ==true) {
-            // load local image
-            Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
-            editImage.setImageBitmap(myBitmap);
-        }
-        else {
-            communicator.getPhoto(imageId,editImage,null);
+        if (moodEvent.getImageId() != null){
+            // exist
+            communicator.getPhoto(moodEvent.getImageId(), editImage);
         }
 
     }
-    private boolean checkImageExist(String imageName){
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");
 
-        if(myFile.exists()){
-            imagePath = myFile.getAbsolutePath();
-            Log.d("testa","image exist");
-            return true;
-        }
-        Log.d("testa","image not exist" + myFile.getAbsolutePath());
-        return false;
-    }
-    private void saveImage(String imageName){
-        BitmapDrawable draw = (BitmapDrawable) editImage.getDrawable();
-        Bitmap bitmap = draw.getBitmap();
-        FileOutputStream outStream = null;
-
-        // Write to SD Card
-        try {
-            String root = Environment.getExternalStorageDirectory().toString();
-            File myDir = new File(root + "/MoodSwing");
-            if (!myDir.exists()) {
-                myDir.mkdirs();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case GALLERY_RETURN_CODE:
+                    //show image comes form gallery
+                    if (data != null) {
+                        ifImageReady = true;
+                        imageUriForUpload = data.getData();
+                        editImage.setImageURI(imageUriForUpload);
+                        editImage.setMaxHeight(200);
+                    }
+                    break;
+                case CAMERA_RETURN_CODE:
+                    // Showing the image from camera
+                    ifImageReady = true;
+                    editImage.setImageURI(imageUriForUpload);
+                    break;
             }
-            String fileName = imageName+ ".jpg";
-            File outFile = new File(myDir, fileName);
+        }
+    }
 
-            outStream = new FileOutputStream(outFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-            outStream.flush();
-            outStream.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takeimage();
+                }else{
+                    Log.d(TAG, "onRequestPermissionsResult: user denied camera permission");
+                }
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.example.moodswing.Fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.moodswing.EditMoodActivity;
@@ -18,6 +22,8 @@ import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
 
 public class ImageFragment extends DialogFragment {
     FloatingActionButton closeBtn;
@@ -48,16 +54,21 @@ public class ImageFragment extends DialogFragment {
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                dismiss();
-                if (activity == "Edit"){
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                    dismiss();
+                } else {
+                    if (activity == "Edit"){
                     EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
                     callingActivity.takeimage();
                 }
-                if (activity == "New") {
-                    NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                    callingActivity.takeimage();
+                    if (activity == "New") {
+                        NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                        callingActivity.takeimage();
+                    }
+                    dismiss();
                 }
+
             }
         });
         galleryBtn.setOnClickListener(new View.OnClickListener() {

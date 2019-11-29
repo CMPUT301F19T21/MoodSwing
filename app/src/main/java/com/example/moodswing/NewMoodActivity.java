@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.Fragments.ImageFragment;
-import com.example.moodswing.Fragments.MapFragment;
 import com.example.moodswing.Fragments.MapSetUpFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
@@ -49,7 +48,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -61,10 +59,13 @@ import java.util.Locale;
  * The screen for adding a new mood, accessed from the Home screen.
  */
 public class NewMoodActivity extends AppCompatActivity {
-    private static final int LOCATION_REQUEST_CODE = 1;
+    private static final String TAG = "NewMoodActivity";
+
+    public static final int LOCATION_REQUEST_CODE = 1;
+    public static final int CAMERA_REQUEST_CODE = 2;
     private FloatingActionButton confirmButton;
     private FloatingActionButton closeButton;
-    private ImageView addNewImageButton;
+    private ImageView imageView;
     private EditText reasonEditText;
     private TextView dateTextView;
     private TextView timeTextView;
@@ -74,6 +75,7 @@ public class NewMoodActivity extends AppCompatActivity {
     private FloatingActionButton social_aloneBtn;
     private FloatingActionButton social_oneBtn;
     private FloatingActionButton social_twoMoreBtn;
+    private FloatingActionButton addImageBtn;
 
     private RecyclerView moodSelectList;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -87,11 +89,14 @@ public class NewMoodActivity extends AppCompatActivity {
     private Double latitude, longitude;
 
     private boolean ifLocationEnabled;
-    private boolean ifLocationGranted;
+    private boolean ifImageReady;
     private Integer socialSituation;
 
     private String currentPhotoPath;
-    private Uri uploadImage;
+    private Uri imageUriForUpload;
+
+    public static final int GALLERY_RETURN_CODE = 0;
+    public static final int CAMERA_RETURN_CODE = 1;
 
 
     /**
@@ -106,13 +111,14 @@ public class NewMoodActivity extends AppCompatActivity {
         // find view
         confirmButton = findViewById(R.id.add_confirm);
         closeButton = findViewById(R.id.addMood_close);
-        addNewImageButton = findViewById(R.id.add_newImage);
+        imageView = findViewById(R.id.add_newImage);
         reasonEditText = findViewById(R.id.reason_EditView);
         dateTextView = findViewById(R.id.add_date);
         timeTextView = findViewById(R.id.add_time);
         moodSelectList = findViewById(R.id.moodSelect_recycler);
         locationButton = findViewById(R.id.moodhistory_locationButton);
         geoLocationText = findViewById(R.id.add_geoLocation);
+        addImageBtn = findViewById(R.id.addMood_ImageBtn);
 
         social_aloneBtn = findViewById(R.id.addMood_aloneBtn);
         social_oneBtn = findViewById(R.id.addMood_oneAnotherBtn);
@@ -132,6 +138,9 @@ public class NewMoodActivity extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         ifLocationEnabled = false;
         geoLocationText.setText("Location Off");
+
+        // image
+        ifImageReady = false;
 
         // set up current date and time
         Calendar calendar = Calendar.getInstance();
@@ -168,7 +177,12 @@ public class NewMoodActivity extends AppCompatActivity {
         });
 
         setSocialSituationBtns();
-        PickImage();
+        addImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addImageBtnPress();
+            }
+        });
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,12 +220,13 @@ public class NewMoodActivity extends AppCompatActivity {
                         moodEvent.setLatitude(null);
                         moodEvent.setLongitude(null);
                     }
-                    if (uploadImage != null){
-                        communicator.addPhoto(moodEvent,uploadImage,null);
-                        saveImage(moodEvent.getImageId());
+                    if (ifImageReady){
+                        String uniqueImageID = communicator.generateMoodID();
+                        // link
+                        moodEvent.setImageId(uniqueImageID);
+                        communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, getApplicationContext());
                     }
                     communicator.addMoodEvent(moodEvent);
-
                     finish();
                 }else{
                     // prompt user to select a mood
@@ -228,6 +243,18 @@ public class NewMoodActivity extends AppCompatActivity {
         });
     }
 
+    private void uploadImage(){
+
+    }
+
+    private void addImageBtnPress(){
+        ImageFragment imageFragment = new ImageFragment();
+        Bundle args = new Bundle();
+        args.putString("activity","New");
+        imageFragment.setArguments(args);
+        imageFragment.show(getSupportFragmentManager(),"image");
+    }
+
     private void openMapFragment(){
         getSupportFragmentManager()
                 .beginTransaction()
@@ -240,52 +267,13 @@ public class NewMoodActivity extends AppCompatActivity {
         getAddress();
     }
 
-    private void PickImage(){
-        addNewImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageFragment imageFragment = new ImageFragment();
-                Bundle args = new Bundle();
-                args.putString("activity","New");
-                imageFragment.setArguments(args);
-                imageFragment.show(getSupportFragmentManager(),"image");
-            }
-        });
-    }
-
     public void pickFromGallery(){
         Intent intent=new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        startActivityForResult(intent,0);
+        startActivityForResult(intent,GALLERY_RETURN_CODE);
     }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case 0:
-                    //show image comes form gallery
-                    Uri selectedImage = data.getData();
-                    if (selectedImage != null)
-                        uploadImage = selectedImage;
-                    addNewImageButton.setImageURI(selectedImage);
-                    break;
-                case 1:
-                    // Showing the image from camera
-                    addNewImageButton.setImageURI(uploadImage);
-                    addNewImageButton.getDrawable();
-
-                    break;
-            }
-        }
-    }
-
-
 
     public void takeimage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -297,7 +285,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                Log.d("error", "failed to create photo file");
+                Log.d(TAG, "failed to create photo file");
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -305,26 +293,46 @@ public class NewMoodActivity extends AppCompatActivity {
                         "com.example.moodswing.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, 1);
-                uploadImage = photoURI;
+                imageUriForUpload = photoURI;
+                startActivityForResult(takePictureIntent, CAMERA_RETURN_CODE);
             }
         }
     }
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault()).format(new Date());
+        String imageFileName = "mood_swing" + "_" + timeStamp;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                ".jpg",   /* suffix */
+                storageDir     /* directory */
         );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case GALLERY_RETURN_CODE:
+                    //show image comes form gallery
+                    if (data != null) {
+                        ifImageReady = true;
+                        imageUriForUpload = data.getData();
+                        imageView.setImageURI(imageUriForUpload);
+                        imageView.setMaxHeight(200);
+                    }
+                    break;
+                case CAMERA_RETURN_CODE:
+                    // Showing the image from camera
+                    ifImageReady = true;
+                    imageView.setImageURI(imageUriForUpload);
+                    break;
+            }
+        }
     }
 
     private void setSocialSituationBtns(){
@@ -470,7 +478,6 @@ public class NewMoodActivity extends AppCompatActivity {
         geoLocationText.setText("Location off");
     }
 
-
     private void locationBtnPress() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ifLocationEnabled = false;
@@ -498,37 +505,18 @@ public class NewMoodActivity extends AppCompatActivity {
                     fetchCurrentLocation();
                 }else{
                     // prompt user cannot fetch location
+                    Log.d(TAG, "onRequestPermissionsResult: user denied location permission");
                     ifLocationEnabled = false;
                 }
                 break;
+            case CAMERA_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takeimage();
+                }else{
+                    Log.d(TAG, "onRequestPermissionsResult: user denied camera permission");   
+                }
         }
     }
-    private void saveImage(String imageName){
-        BitmapDrawable draw = (BitmapDrawable) addNewImageButton.getDrawable();
-        Bitmap bitmap = draw.getBitmap();
-        FileOutputStream outStream = null;
 
-        // Write to SD Card
-        try {
-            String root = Environment.getExternalStorageDirectory().toString();
-            File myDir = new File(root + "/MoodSwing");
-            if (!myDir.exists()) {
-                myDir.mkdirs();
-            }
-            String fileName = imageName+ ".jpg";
-            File outFile = new File(myDir, fileName);
-
-            outStream = new FileOutputStream(outFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-            outStream.flush();
-            outStream.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-        }
-    }
 
 }

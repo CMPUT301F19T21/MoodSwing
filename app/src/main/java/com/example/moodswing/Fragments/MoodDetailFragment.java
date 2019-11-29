@@ -25,6 +25,7 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.RecentImagesBox;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -175,6 +176,7 @@ public class MoodDetailFragment extends Fragment{
         setMoodImage(moodEvent.getMoodType());
         setReasonText();
         setSocialSituation();
+        setUpPhoto();
         locationText.setText("");
         if (moodEvent.getLatitude() == null) {
             locationImg.setImageResource(R.drawable.ic_location_off_grey_24dp);
@@ -182,17 +184,13 @@ public class MoodDetailFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
-        if (checkImageExist(imageId) ==true) {
-            // load local image
-            Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
-            photoImage.setImageBitmap(myBitmap);
+    }
+
+    private void setUpPhoto(){
+        if (moodEvent.getImageId() != null){
+            // exist
+            communicator.getPhoto(moodEvent.getImageId(), photoImage);
         }
-        else {
-            communicator.getPhoto(imageId,photoImage,null);
-        }
-
-
-
     }
 
     private void setReasonText(){
@@ -310,17 +308,6 @@ public class MoodDetailFragment extends Fragment{
                 break;
         }
     }
-    private boolean checkImageExist(String imageName){
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");
 
-        if(myFile.exists()){
-            imagePath = myFile.getAbsolutePath();
-            Log.d("testa","image exist");
-            return true;
-        }
-        Log.d("testa","image not exist" + myFile.getAbsolutePath());
-        return false;
-    }
 }
 

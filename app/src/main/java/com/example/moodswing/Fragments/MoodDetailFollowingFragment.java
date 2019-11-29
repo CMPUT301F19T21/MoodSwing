@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.RecentImagesBox;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,7 +51,7 @@ public class MoodDetailFollowingFragment extends Fragment{
     private ImageView moodImage;
     private ImageView locationImg;
     private ImageView socialIcon;
-    private ImageView FollowingImage;
+    private ImageView photoImage;
     private Fragment outerFragment;
     private String imagePath;
 
@@ -94,7 +91,7 @@ public class MoodDetailFollowingFragment extends Fragment{
         locationImg = root.findViewById(R.id.moodDetail_following_locationImg);
         socialIcon = root.findViewById(R.id.moodDetail_following_socialSitIcon);
         locationText = root.findViewById(R.id.moodDetail_following_locationText);
-        FollowingImage = root.findViewById(R.id.moodDetail_following_image_place_holder);
+        photoImage = root.findViewById(R.id.moodDetail_following_image_place_holder);
         usernameText = root.findViewById(R.id.moodDetail_following_username);
 
         initialElements();
@@ -153,15 +150,13 @@ public class MoodDetailFollowingFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
-        String imageId = moodEvent.getImageId();
-        if (checkImageExist(imageId) ==true) {
-            // load local image
-            Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
-            FollowingImage.setImageBitmap(myBitmap);
-        }
-        else {
-            String userId = userJar.getUID();
-            communicator.getPhoto(imageId,FollowingImage,userId);
+        setUpPhoto();
+    }
+
+    private void setUpPhoto(){
+        if (moodEvent.getImageId() != null){
+            // exist
+            communicator.getPhoto(moodEvent.getImageId(), photoImage, userJar.getUID());
         }
     }
 
@@ -275,18 +270,5 @@ public class MoodDetailFollowingFragment extends Fragment{
                 moodImage.setImageResource(R.drawable.mood8);
                 break;
         }
-    }
-
-    private boolean checkImageExist(String imageName){
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");
-
-        if(myFile.exists()){
-            imagePath = myFile.getAbsolutePath();
-            Log.d("testa","image exist");
-            return true;
-        }
-        Log.d("testa","image not exist" + myFile.getAbsolutePath());
-        return false;
     }
 }
