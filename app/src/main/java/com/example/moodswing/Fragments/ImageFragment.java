@@ -24,6 +24,8 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
+import static com.example.moodswing.NewMoodActivity.LOCATION_FOR_CAMERA_REQUEST_CODE;
+
 /**
  * This is the dialog that shows up when the user wants to upload an image to their moodEvent
  * gives the user the choice of gallery, camera, or cancel
@@ -62,20 +64,28 @@ public class ImageFragment extends DialogFragment {
             public void onClick(View v) {
 
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-                    dismiss();
-                } else {
-                    if (activity.equals("Edit")){
-                    EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
-                    callingActivity.takeimage();
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
                     }
-                    if (activity.equals("New")) {
-                        NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                        callingActivity.takeimage();
-                    }
-                    dismiss();
+
+                }
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_FOR_CAMERA_REQUEST_CODE);
                 }
 
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                        if (activity.equals("Edit")){
+                            EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
+                            callingActivity.takeimage();
+                        }
+                        if (activity.equals("New")) {
+                            NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                            callingActivity.takeimage();
+                        }
+                    }
+                }
+                dismiss();
             }
         });
 
@@ -90,6 +100,7 @@ public class ImageFragment extends DialogFragment {
                     NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
                     callingActivity.clearImage();
                 }
+                dismiss();
             }
         });
 

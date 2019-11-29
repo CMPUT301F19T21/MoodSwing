@@ -37,6 +37,7 @@ import java.util.Locale;
 import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
 import static com.example.moodswing.NewMoodActivity.CAMERA_RETURN_CODE;
 import static com.example.moodswing.NewMoodActivity.GALLERY_RETURN_CODE;
+import static com.example.moodswing.NewMoodActivity.LOCATION_FOR_CAMERA_REQUEST_CODE;
 
 // import com.example.moodswing.customDataTypes.AddMoodAdapter;
 
@@ -368,6 +369,14 @@ public class EditMoodActivity extends AppCompatActivity {
                 }else{
                     Log.d(TAG, "onRequestPermissionsResult: user denied camera permission");
                 }
+                break;
+            case LOCATION_FOR_CAMERA_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG,"onRequestPermissionsResult: user granted camera location permission");
+                }else{
+                    Log.d(TAG, "onRequestPermissionsResult: user denied camera location permission");
+                }
+                break;
         }
     }
 }

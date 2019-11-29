@@ -61,6 +61,7 @@ import java.util.Locale;
 public class NewMoodActivity extends AppCompatActivity {
     private static final String TAG = "NewMoodActivity";
 
+    public static final int LOCATION_FOR_CAMERA_REQUEST_CODE = 3;
     public static final int LOCATION_REQUEST_CODE = 1;
     public static final int CAMERA_REQUEST_CODE = 2;
     private FloatingActionButton confirmButton;
@@ -97,7 +98,6 @@ public class NewMoodActivity extends AppCompatActivity {
 
     public static final int GALLERY_RETURN_CODE = 0;
     public static final int CAMERA_RETURN_CODE = 1;
-
 
     /**
      * All the fields for creating a new mood are created and the current date/time are generated.
@@ -566,10 +566,18 @@ public class NewMoodActivity extends AppCompatActivity {
                 break;
             case CAMERA_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    takeimage();
+                    Log.d(TAG,"onRequestPermissionsResult: user granted camera permission");
                 }else{
                     Log.d(TAG, "onRequestPermissionsResult: user denied camera permission");   
                 }
+                break;
+            case LOCATION_FOR_CAMERA_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG,"onRequestPermissionsResult: user granted camera location permission");
+                }else{
+                    Log.d(TAG, "onRequestPermissionsResult: user denied camera location permission");
+                }
+                break;
         }
     }
 
