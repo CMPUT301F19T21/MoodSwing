@@ -72,6 +72,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private String imagePath;
     private boolean deleteImageConfirm;
     private boolean ifImageChanged;
+    private boolean imageChangeForDeletionOnly;
     private Integer cardWidth;
 
     @Override
@@ -91,6 +92,7 @@ public class EditMoodActivity extends AppCompatActivity {
         moodSelectList = findViewById(R.id.editMood_moodSelect_recycler);
         imageBtn = findViewById(R.id.editMoodAddImageBtn);
         ifImageChanged = false;
+        imageChangeForDeletionOnly = false;
 
 
         // recyclerView
@@ -151,13 +153,15 @@ public class EditMoodActivity extends AppCompatActivity {
                         if (moodEvent.getImageId() != null){
                             communicator.deleteFirestoreImage(moodEvent.getImageId());
                         }
-
-                        String uniqueImageID = communicator.generateMoodID();
-                        // link
-                        moodEvent.setImageId(uniqueImageID);
-                        communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, getApplicationContext());
+                        if (!imageChangeForDeletionOnly){
+                            String uniqueImageID = communicator.generateMoodID();
+                            // link
+                            moodEvent.setImageId(uniqueImageID);
+                            communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, getApplicationContext());
+                        }else{
+                            moodEvent.setImageId(null);
+                        }
                     }
-
                     communicator.updateMoodEvent(moodEvent);
                     finish();
                 }else{
@@ -172,6 +176,13 @@ public class EditMoodActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void clearImage(){
+        editImage.setImageDrawable(getDrawable(R.drawable.image_empty));
+        ifImageChanged = true;
+        imageChangeForDeletionOnly = true;
+        imageUriForUpload = null;
     }
 
     private void setReasonText(){
@@ -332,6 +343,7 @@ public class EditMoodActivity extends AppCompatActivity {
                     //show image comes form gallery
                     if (data != null) {
                         ifImageChanged = true;
+                        imageChangeForDeletionOnly = false;
                         imageUriForUpload = data.getData();
                         editImage.setImageURI(imageUriForUpload);
                         editImage.setMaxHeight(200);
@@ -340,6 +352,7 @@ public class EditMoodActivity extends AppCompatActivity {
                 case CAMERA_RETURN_CODE:
                     // Showing the image from camera
                     ifImageChanged = true;
+                    imageChangeForDeletionOnly = false;
                     editImage.setImageURI(imageUriForUpload);
                     break;
             }

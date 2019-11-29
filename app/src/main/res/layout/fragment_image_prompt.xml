@@ -31,11 +31,11 @@
                 android:clickable="true"
                 app:backgroundTint="@color/color_button_lightGrey"
                 app:fabCustomSize="40dp"
-                app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
+                app:layout_constraintBottom_toBottomOf="@+id/imagePrompt_clearBtn"
                 app:layout_constraintEnd_toStartOf="@+id/imagePrompt_camera"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
-                app:layout_constraintTop_toTopOf="@+id/floatingActionButton"
+                app:layout_constraintStart_toEndOf="@+id/imagePrompt_clearBtn"
+                app:layout_constraintTop_toTopOf="@+id/imagePrompt_clearBtn"
                 app:srcCompat="@drawable/ic_photo_black_24dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,14 +60,14 @@
                 app:backgroundTint="@color/button_brown"
                 app:fabCustomSize="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
+                app:layout_constraintEnd_toStartOf="@+id/imagePrompt_clearBtn"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_clear_black_24dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/imagePrompt_clearBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"

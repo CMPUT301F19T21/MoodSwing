@@ -287,6 +287,12 @@ public class NewMoodActivity extends AppCompatActivity {
         startActivityForResult(intent,GALLERY_RETURN_CODE);
     }
 
+    public void clearImage(){
+        imageView.setImageDrawable(getDrawable(R.drawable.image_empty));
+        ifImageReady = false;
+        imageUriForUpload = null;
+    }
+
     /**
      * taking a photo from the camera
      */
@@ -467,6 +473,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 
     /**
      * Refreshes/updates the location and sets it to the screen

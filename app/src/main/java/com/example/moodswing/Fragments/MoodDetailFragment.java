@@ -191,6 +191,8 @@ public class MoodDetailFragment extends Fragment{
         if (moodEvent.getImageId() != null){
             // exist
             communicator.getPhoto(moodEvent.getImageId(), photoImage);
+        }else{
+            photoImage.setImageDrawable(null);
         }
     }
     /**

@@ -13,4 +13,17 @@
 
     <color name="background_grey">#DFDFDF</color>
     <color name="button_brown">#CCAC9F</color>
+
+
+    <color name="mood1_color">#D09797</color>
+    <color name="mood2_color">#C5D0D1</color>
+    <color name="mood3_color">#505E5F</color>
+    <color name="mood4_color">#A9B1C1</color>
+    <color name="mood5_color">#949494</color>
+    <color name="mood6_color">#D0ABAB</color>
+    <color name="mood7_color">#4E4E4E</color>
+    <color name="mood8_color">#2D4273</color>
+
+
+
 </resources>

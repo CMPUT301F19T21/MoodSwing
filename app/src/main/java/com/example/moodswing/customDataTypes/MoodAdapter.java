@@ -1,5 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -28,21 +30,25 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
      * Holds all the views for the fields
      */
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        View view;
         TextView moodType;
         TextView dateText;
         TextView timeText;
         ImageView moodImage;
         ImageView locationImage;
         CardView moodHistoryCard;
+        FloatingActionButton colorCyc;
 
         public MyViewHolder(View view){
             super(view);
+            this.view = view;
             this.moodType = view.findViewById(R.id.moodDetail_moodText);
             this.dateText = view.findViewById(R.id.moodDetail_dateText);
             this.timeText = view.findViewById(R.id.moodDetail_timeText);
             this.moodImage = view.findViewById(R.id.moodIcon_placeHolder);
             this.locationImage = view.findViewById(R.id.location_moodListCard);
             this.moodHistoryCard = view.findViewById(R.id.moodhistory_card);
+            this.colorCyc = view.findViewById(R.id.contentMood_moodColor);
 
         }
     }
@@ -70,12 +76,12 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         TextView timeText = holder.timeText;
         ImageView moodImage = holder.moodImage;
         ImageView locationImage = holder.locationImage;
-
+        FloatingActionButton colorCyc = holder.colorCyc;
         MoodEvent moodEvent = moods.get(position);
 
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
-        printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
+        printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage, colorCyc, holder.view);
         if (moodEvent.getLatitude() == null) {
             locationImage.setImageResource(R.drawable.ic_location_off_grey_24dp);
         }else{
@@ -107,38 +113,47 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
      * @param moodText the text associated with the card
      * @param moodImage the image of the mood
      */
-    private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
+    private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage, FloatingActionButton colorCyc, View view) {
+        colorCyc.setCompatElevation(0f);
         switch(moodTypeInt){
             case 1:
                 moodText.setText("HAPPY");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood1_color)));
                 moodImage.setImageResource(R.drawable.mood1);
                 break;
             case 2:
                 moodText.setText("SAD");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood2_color)));
                 moodImage.setImageResource(R.drawable.mood2);
                 break;
             case 3:
                 moodText.setText("ANGRY");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood3_color)));
                 moodImage.setImageResource(R.drawable.mood3);
                 break;
             case 4:
                 moodText.setText("EMOTIONAL");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood4_color)));
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
             case 5:
                 moodText.setText("HEART BROKEN");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood5_color)));
                 moodImage.setImageResource(R.drawable.mood5);
                 break;
             case 6:
                 moodText.setText("IN LOVE");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood6_color)));
                 moodImage.setImageResource(R.drawable.mood6);
                 break;
             case 7:
                 moodText.setText("SCARED");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood7_color)));
                 moodImage.setImageResource(R.drawable.mood7);
                 break;
             case 8:
                 moodText.setText("SURPRISED");
+                colorCyc.setBackgroundTintList(ColorStateList.valueOf(view.getResources().getColor(R.color.mood8_color)));
                 moodImage.setImageResource(R.drawable.mood8);
                 break;
         }

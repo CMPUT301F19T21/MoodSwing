@@ -33,6 +33,7 @@ public class ImageFragment extends DialogFragment {
     FloatingActionButton closeBtn;
     FloatingActionButton galleryBtn;
     FloatingActionButton cameraBtn;
+    FloatingActionButton clearBtn;
 
 
     String activity;
@@ -53,6 +54,7 @@ public class ImageFragment extends DialogFragment {
         closeBtn = view.findViewById(R.id.imagePrompt_close);
         galleryBtn = view.findViewById(R.id.imagePrompt_gallery);
         cameraBtn = view.findViewById(R.id.imagePrompt_camera);
+        clearBtn = view.findViewById(R.id.imagePrompt_clearBtn);
 
         // listeners
         cameraBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +65,11 @@ public class ImageFragment extends DialogFragment {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
                     dismiss();
                 } else {
-                    if (activity == "Edit"){
+                    if (activity.equals("Edit")){
                     EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
                     callingActivity.takeimage();
-                }
-                    if (activity == "New") {
+                    }
+                    if (activity.equals("New")) {
                         NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
                         callingActivity.takeimage();
                     }
@@ -76,16 +78,32 @@ public class ImageFragment extends DialogFragment {
 
             }
         });
+
+        clearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activity.equals("Edit")){
+                    EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
+                    callingActivity.clearImage();
+                }
+                if (activity.equals("New")) {
+                    NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                    callingActivity.clearImage();
+                }
+            }
+        });
+
+
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //select photo from gallery
                 dismiss();
-                if (activity == "Edit"){
+                if (activity.equals("Edit")){
                     EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
                     callingActivity.pickFromGallery();
                 }
-                if (activity == "New") {
+                if (activity.equals("New")) {
                     NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
                     callingActivity.pickFromGallery();
                 }
