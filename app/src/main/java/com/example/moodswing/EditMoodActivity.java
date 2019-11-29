@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,11 +29,10 @@ import com.example.moodswing.customDataTypes.SelectMoodAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
 import static com.example.moodswing.NewMoodActivity.CAMERA_RETURN_CODE;
@@ -76,7 +71,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private Uri imageUriForUpload;
     private String imagePath;
     private boolean deleteImageConfirm;
-    private boolean ifImageReady;
+    private boolean ifImageChanged;
     private Integer cardWidth;
 
     @Override
@@ -95,7 +90,7 @@ public class EditMoodActivity extends AppCompatActivity {
         editImage = findViewById(R.id.editMood_add_newImage);
         moodSelectList = findViewById(R.id.editMood_moodSelect_recycler);
         imageBtn = findViewById(R.id.editMoodAddImageBtn);
-        ifImageReady = false;
+        ifImageChanged = false;
 
 
         // recyclerView
@@ -151,13 +146,18 @@ public class EditMoodActivity extends AppCompatActivity {
                         }
                         moodEvent.setReason(reasonEditText.getText().toString());
                     }
-                    if (imageUriForUpload != null) {
-                        communicator.addPhoto(moodEvent, imageUriForUpload,imageId);
-                        saveImage(moodEvent.getImageId());
+
+                    if (ifImageChanged){
+                        if (moodEvent.getImageId() != null){
+                            communicator.deleteFirestoreImage(moodEvent.getImageId());
+                        }
+
+                        String uniqueImageID = communicator.generateMoodID();
+                        // link
+                        moodEvent.setImageId(uniqueImageID);
+                        communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, getApplicationContext());
                     }
-                    if (deleteImageConfirm == true){
-                        communicator.addPhoto(moodEvent,null,imageId);
-                    }
+
                     communicator.updateMoodEvent(moodEvent);
                     finish();
                 }else{
@@ -274,7 +274,7 @@ public class EditMoodActivity extends AppCompatActivity {
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        startActivityForResult(intent,0);
+        startActivityForResult(intent,GALLERY_RETURN_CODE);
     }
 
     public void takeimage() {
@@ -287,7 +287,7 @@ public class EditMoodActivity extends AppCompatActivity {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                Log.d("error", "failed to create photo file");
+                Log.d(TAG, "failed to create photo file");
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -295,27 +295,26 @@ public class EditMoodActivity extends AppCompatActivity {
                         "com.example.moodswing.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, 1);
                 imageUriForUpload = photoURI;
+                startActivityForResult(takePictureIntent, CAMERA_RETURN_CODE);
             }
         }
     }
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault()).format(new Date());
+        String imageFileName = "mood_swing" + "_" + timeStamp;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                ".jpg",   /* suffix */
+                storageDir     /* directory */
         );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+
     private void loadImage(){
         if (moodEvent.getImageId() != null){
             // exist
@@ -332,7 +331,7 @@ public class EditMoodActivity extends AppCompatActivity {
                 case GALLERY_RETURN_CODE:
                     //show image comes form gallery
                     if (data != null) {
-                        ifImageReady = true;
+                        ifImageChanged = true;
                         imageUriForUpload = data.getData();
                         editImage.setImageURI(imageUriForUpload);
                         editImage.setMaxHeight(200);
@@ -340,7 +339,7 @@ public class EditMoodActivity extends AppCompatActivity {
                     break;
                 case CAMERA_RETURN_CODE:
                     // Showing the image from camera
-                    ifImageReady = true;
+                    ifImageChanged = true;
                     editImage.setImageURI(imageUriForUpload);
                     break;
             }
