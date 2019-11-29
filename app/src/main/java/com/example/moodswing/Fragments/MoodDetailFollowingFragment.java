@@ -1,8 +1,6 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
-import com.example.moodswing.customDataTypes.RecentImagesBox;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

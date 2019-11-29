@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.moodswing.ManagementActivity;
-import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -44,8 +42,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -566,16 +562,14 @@ public class NewMoodActivity extends AppCompatActivity {
                 break;
             case CAMERA_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG,"onRequestPermissionsResult: user granted camera permission");
+                    Log.d(TAG,"onRequestPermissionsResult: user grant request permission(s)");
+                    if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)){
+                        if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+                            takeimage();
+                        }
+                    }
                 }else{
-                    Log.d(TAG, "onRequestPermissionsResult: user denied camera permission");   
-                }
-                break;
-            case LOCATION_FOR_CAMERA_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG,"onRequestPermissionsResult: user granted camera location permission");
-                }else{
-                    Log.d(TAG, "onRequestPermissionsResult: user denied camera location permission");
+                    Log.d(TAG, "onRequestPermissionsResult: user denied request permission(s)");
                 }
                 break;
         }

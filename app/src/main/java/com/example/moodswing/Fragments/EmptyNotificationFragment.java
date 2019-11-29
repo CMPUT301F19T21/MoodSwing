@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

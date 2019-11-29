@@ -2,18 +2,9 @@ package com.example.moodswing.customDataTypes;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.common.collect.Queues;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
 
 /**
  * Used as a cache for hosting images locally

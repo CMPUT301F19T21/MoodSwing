@@ -1,5 +1,6 @@
 package com.example.moodswing;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +39,6 @@ import java.util.Locale;
 import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
 import static com.example.moodswing.NewMoodActivity.CAMERA_RETURN_CODE;
 import static com.example.moodswing.NewMoodActivity.GALLERY_RETURN_CODE;
-import static com.example.moodswing.NewMoodActivity.LOCATION_FOR_CAMERA_REQUEST_CODE;
 
 // import com.example.moodswing.customDataTypes.AddMoodAdapter;
 
@@ -365,16 +366,14 @@ public class EditMoodActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    takeimage();
+                    Log.d(TAG,"onRequestPermissionsResult: user grant request permission(s)");
+                    if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)){
+                        if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+                            takeimage();
+                        }
+                    }
                 }else{
-                    Log.d(TAG, "onRequestPermissionsResult: user denied camera permission");
-                }
-                break;
-            case LOCATION_FOR_CAMERA_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG,"onRequestPermissionsResult: user granted camera location permission");
-                }else{
-                    Log.d(TAG, "onRequestPermissionsResult: user denied camera location permission");
+                    Log.d(TAG, "onRequestPermissionsResult: user denied request permission(s)");
                 }
                 break;
         }

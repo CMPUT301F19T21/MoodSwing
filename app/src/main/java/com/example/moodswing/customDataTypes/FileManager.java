@@ -1,7 +1,6 @@
 package com.example.moodswing.customDataTypes;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
-import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
-import com.example.moodswing.customDataTypes.MoodEvent;
-import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,12 +25,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
-import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
 
 /**
  * This class is for the google API to set up the map

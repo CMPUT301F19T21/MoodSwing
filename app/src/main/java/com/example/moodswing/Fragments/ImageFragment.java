@@ -1,15 +1,11 @@
 package com.example.moodswing.Fragments;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,14 +13,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.moodswing.EditMoodActivity;
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
-import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
-import static com.example.moodswing.NewMoodActivity.LOCATION_FOR_CAMERA_REQUEST_CODE;
 
 /**
  * This is the dialog that shows up when the user wants to upload an image to their moodEvent
@@ -65,24 +58,20 @@ public class ImageFragment extends DialogFragment {
 
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA,Manifest.permission.ACCESS_FINE_LOCATION}, CAMERA_REQUEST_CODE);
+                    }else{
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
                     }
-
-                }
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_FOR_CAMERA_REQUEST_CODE);
-                }
-
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                        if (activity.equals("Edit")){
-                            EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
-                            callingActivity.takeimage();
-                        }
-                        if (activity.equals("New")) {
-                            NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                            callingActivity.takeimage();
-                        }
+                }else if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CAMERA_REQUEST_CODE);
+                }else{
+                    if (activity.equals("Edit")){
+                        EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
+                        callingActivity.takeimage();
+                    }
+                    if (activity.equals("New")) {
+                        NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                        callingActivity.takeimage();
                     }
                 }
                 dismiss();
