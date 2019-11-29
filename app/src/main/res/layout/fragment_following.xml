@@ -17,6 +17,7 @@
         android:clipToPadding="false"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/following_filterBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
