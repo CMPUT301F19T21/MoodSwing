@@ -746,32 +746,6 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
-    /**
-     * This gets the users that currently are requesting to follow and adds them to the selected notification bar
-     * @param notificationBar
-     */
-    public void setAutoDisplayViewForNewRequest(View notificationBar){
-        CollectionReference mainBoxColRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("mailBox");
-
-        mainBoxColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (queryDocumentSnapshots.isEmpty()){
-                    notificationBar.setVisibility(View.INVISIBLE);
-                    requestCount = 0;
-                }else{
-                    Integer currentRequestCount = queryDocumentSnapshots.size();
-                    if (currentRequestCount > requestCount){
-                        notificationBar.setVisibility(View.VISIBLE);
-                    }
-                    requestCount = queryDocumentSnapshots.size();
-                }
-            }
-        });
-    }
 
     /**
      * unfollows the user given in the userJar
