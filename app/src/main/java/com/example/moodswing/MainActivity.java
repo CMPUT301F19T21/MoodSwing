@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton moodHistoryBtn;
     private ImageButton followingBtn;
     private FloatingActionButton profileBtn;
-    private FrameLayout notificationBar;
-    private CardView notificationBar_card;
-    private FloatingActionButton notificationBar_closeBtn;
 
     private Boolean moodHistoryIsEmpty;
     private Boolean moodFollowingIsEmpty;
@@ -78,9 +75,6 @@ public class MainActivity extends AppCompatActivity {
         moodHistoryBtn = findViewById(R.id.nav_homeBtn);
         followingBtn = findViewById(R.id.nav_followingBtn);
         profileBtn = findViewById(R.id.nav_profile);
-        notificationBar = findViewById(R.id.notificationBar);
-        notificationBar_card = findViewById(R.id.notificationBar_card);
-        notificationBar_closeBtn = findViewById(R.id.notificationBar_close_button);
 
         // listeners
         moodHistoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,22 +104,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        notificationBar_closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notificationBar.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        notificationBar_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ManagementActivity.class));
-            }
-        });
-
         // other action that need to be init
-        communicator.setAutoDisplayViewForNewRequest(notificationBar);
         toMoodHistory();
         initEmptyListener();
     }

@@ -105,6 +105,11 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
     }
 
 
+    /**
+     * starts detailed view from follower list
+     * @param cardPosition the position in the recyclerview of the card
+     * @param view the view it is in
+     */
     private void startDetailedViewActivity (int cardPosition,View view){
         // cardPosition will be passed to detailed view
         ((MainActivity) view.getContext()).toDetailedView_following(cardPosition);
@@ -133,6 +138,22 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
             case 4:
                 moodText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
+                break;
+            case 5:
+                moodText.setText("HEART BROKEN");
+                moodImage.setImageResource(R.drawable.mood5);
+                break;
+            case 6:
+                moodText.setText("IN LOVE");
+                moodImage.setImageResource(R.drawable.mood6);
+                break;
+            case 7:
+                moodText.setText("SCARED");
+                moodImage.setImageResource(R.drawable.mood7);
+                break;
+            case 8:
+                moodText.setText("SURPRISED");
+                moodImage.setImageResource(R.drawable.mood8);
                 break;
         }
     }

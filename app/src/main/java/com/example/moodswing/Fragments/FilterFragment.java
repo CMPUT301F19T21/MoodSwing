@@ -2,6 +2,7 @@ package com.example.moodswing.Fragments;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +115,9 @@ public class FilterFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Closes the fragment
+     */
     private void closeFragment(){
         getFragmentManager()
                 .beginTransaction()
@@ -122,6 +126,9 @@ public class FilterFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * utility method for pressing and deselecting a mood filter
+     */
     public void changeFilterButtonState(){
         if (filterList.isEmpty()){
             popFilterButton();
@@ -130,6 +137,9 @@ public class FilterFragment extends Fragment {
         }
     }
 
+    /**
+     * Refreshes the moodlist that is shown, used for when a filter is changed
+     */
     public void refreshMoodList() {
         switch (mode){
             case 1:
@@ -141,6 +151,9 @@ public class FilterFragment extends Fragment {
         }
     }
 
+    /**
+     * Functionality for pressing a filter button
+     */
     private void pressFilterButton(){
         switch (mode){
             case 1:
@@ -151,6 +164,10 @@ public class FilterFragment extends Fragment {
                 break;
         }
     }
+
+    /**
+     * functionality for deselecting a filter button
+     */
     private void popFilterButton(){
         switch (mode){
             case 1:
@@ -161,4 +178,29 @@ public class FilterFragment extends Fragment {
                 break;
         }
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
+        }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFragment();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
 }

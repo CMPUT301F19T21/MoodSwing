@@ -3,9 +3,11 @@ package com.example.moodswing.customDataTypes;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -43,9 +45,13 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,6 +86,9 @@ public class FirestoreUserDocCommunicator{
     private ArrayList<Integer> moodTypeFilterList_moodHistory;
     private ArrayList<Integer> moodTypeFilterList_following;
 
+    // for image
+    private RecentImagesBox recentImagesBox;
+
     protected FirestoreUserDocCommunicator(){
         // init db
         this.db = FirebaseFirestore.getInstance();
@@ -98,6 +107,9 @@ public class FirestoreUserDocCommunicator{
         moodTypeFilterList_following = new ArrayList<>();
 
         storage = FirebaseStorage.getInstance();
+
+        // for image
+        recentImagesBox = new RecentImagesBox();
     }
 
     private boolean ifLogin(){
@@ -225,9 +237,15 @@ public class FirestoreUserDocCommunicator{
      */
     public void removeMoodEvent(MoodEvent moodEvent){
 
+        // remove from moodEvents
         Integer moodPosition = getMoodPosition(moodEvent.getUniqueID());
         if (moodPosition != null){
             moodEvents.remove((int)moodPosition);
+        }
+
+        // remove image if exist
+        if (moodEvent.getImageId() != null){
+            deleteFirestoreImage(moodEvent.getImageId());
         }
 
         DocumentReference moodEventRef = db
@@ -731,29 +749,11 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
-    public void setAutoDisplayViewForNewRequest(View notificationBar){
-        CollectionReference mainBoxColRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("mailBox");
 
-        mainBoxColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (queryDocumentSnapshots.isEmpty()){
-                    notificationBar.setVisibility(View.INVISIBLE);
-                    requestCount = 0;
-                }else{
-                    Integer currentRequestCount = queryDocumentSnapshots.size();
-                    if (currentRequestCount > requestCount){
-                        notificationBar.setVisibility(View.VISIBLE);
-                    }
-                    requestCount = queryDocumentSnapshots.size();
-                }
-            }
-        });
-    }
-
+    /**
+     * unfollows the user given in the userJar
+     * @param userJar the user to unfollow
+     */
     public void unfollow(UserJar userJar){
         // 从对方的permittedlist中移除自己
         // 把对方从自己的followinglist中移除
@@ -823,27 +823,50 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * gets the document for the user
+     * @return the user document from firestore to return
+     */
     public DocumentReference getUserDocRef(){
         return db
                 .collection("users")
                 .document(user.getUid());
     }
 
+    /**
+     * simple getter
+     * @return mood history list
+     */
     public ArrayList<Integer> getMoodHistoryFilterList(){
         return this.moodTypeFilterList_moodHistory;
     }
 
+    /**
+     * simple getter
+     * @return followingfilterlist
+     */
     public ArrayList<Integer> getFollowingFilterList(){
         return this.moodTypeFilterList_following;
     }
 
 
-
+    /**
+     * simple getter
+     * @return moodevents
+     */
     public ArrayList<MoodEvent> getMoodEvents() {
         return moodEvents;
     }
 
+    /**
+     * deletes an image in the firestore storage(not database)
+     * @param imageId the ID of the image
+     */
     public void deleteFirestoreImage(String imageId){
+        if (recentImagesBox.getImage(imageId) != null){
+            recentImagesBox.delImage(imageId);
+        }
+
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
 
@@ -851,138 +874,144 @@ public class FirestoreUserDocCommunicator{
         StorageReference desertRef = storageRef.child("Images/" + user.getUid() + "/" + imageId);
 
         // Delete the file
-        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // File deleted successfully
-                Log.d(TAG, "File deleted successfully");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Uh-oh, an error occurred!
-                Log.d(TAG, "File deleted error");
-            }
-        });
-
+        desertRef
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "File deleted successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "File deleted error");
+                    }
+                });
     }
 
-    public void addPhoto(MoodEvent moodEvent, @Nullable Uri filePath,@Nullable String oldImageId) {
-
-        String imageId = generateMoodID();
-        if (oldImageId != null){
-            //delete old image
-            new FileManager(oldImageId).deleteImage();//delete local file
-            deleteFirestoreImage(oldImageId);
-            moodEvent.setImageId(null);
+    public void uploadPhotoToStorage(String uniqueImageID, Uri filePath, Context context) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(filePath);
+            Drawable drawable = Drawable.createFromStream(inputStream, filePath.toString() );
+            recentImagesBox.addImage(uniqueImageID, drawable);
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "uploadPhotoToStorage: failed get drawable");
         }
-        if (filePath != null) {
-            StorageReference storageRef = storage.getReference();
-            StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + imageId);
-            moodEvent.setImageId(imageId);
-
-            UploadTask uploadTask = storageName.putFile(filePath);
-
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.d(TAG, "failed to upload image");
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                }
-            });
-        }
-    }
-    // retrieve image from firebase storage and set into imageView
-
-
-    public void getPhoto(String imageId,ImageView imageView) {
 
         StorageReference storageRef = storage.getReference();
-        StorageReference storageName = storageRef.child("Images/" +user.getUid() + "/" + imageId);
+        StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + uniqueImageID);
 
-
-        storageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url = uri.toString();
-                // Got the download URL for 'users/me/profile.png'
-                Log.d("testa",uri.toString());
-                Picasso.get().load(url).into(imageView);
-                downloadPhoto(imageId,url);
-                //
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                Log.d("testa","wrong");
-            }
-        });
+        storageName
+                .putFile(filePath)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d(TAG, "onSuccess: upload image");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: upload image");
+                    }
+                });
     }
-    public void downloadPhoto(String imageId,String url){
 
+    // retrieve image from firebase storage and set into imageView
+    public void getPhoto(String imageId, ImageView imageView){
+
+        Drawable imageDrawable = recentImagesBox.getImage(imageId);
+        if (imageDrawable != null){
+            imageView.setImageDrawable(imageDrawable);
+            return;
+        }
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + imageId);
+
+        storageName
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String url = uri.toString();
+                        Log.d(TAG, "onSuccess: download Photo successful");
+                        Picasso.get().load(url).into(imageView);
+                        saveToRecentImage(imageId, url);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: download Photo");
+                    }
+                });
+
+    }
+
+    private void saveToRecentImage(String imageID, String url){
         Picasso.get()
                 .load(url)
                 .into(new Target() {
-                          @Override
-                          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                              try {
-
-                                  String root = Environment.getExternalStorageDirectory().toString();
-                                  Log.d("testa","root = "+root);
-                                  File myDir = new File(root + "/MoodSwing");
-
-                                  if (!myDir.exists()) {
-                                      myDir.mkdirs();
-                                  }
-
-                                  String name = imageId+ ".jpg";
-                                  myDir = new File(myDir, name);
-                                  FileOutputStream out = new FileOutputStream(myDir);
-                                  bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-
-                                  out.flush();
-                                  out.close();
-                              } catch(Exception e){
-                                  // some action
-                              }
-                          }
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        // convert and then save
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                        byte[] bitmapData = bos.toByteArray();
+                        ByteArrayInputStream inputStream = new ByteArrayInputStream(bitmapData);
+                        Drawable drawable = Drawable.createFromStream(inputStream, url);
+                        recentImagesBox.addImage(imageID, drawable);
+                    }
 
                     @Override
                     public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
+                        Log.d(TAG, "onBitmapFailed: failed to save to recent image");
                     }
 
-                          @Override
-                          public void onPrepareLoad(Drawable placeHolderDrawable) {
-                              //Some Action;
-                          }
-                      }
-                );
-    }
-
-
-
-
-    //firebase database string implementation of adding photo. don't think i'll use it
-
-
-    public void addPhotoString(MoodEvent moodEvent, String image) {
-        DocumentReference moodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(moodEvent.getUniqueID())
-                .collection("pictures")
-                .document("picture");
-        moodEventRef.set(image);
-
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        Log.d(TAG, "onBitmapPrepareLoad");
+                    }
+                });
 
     }
+
+    public void getPhoto(String imageId, ImageView imageView, String uid){
+
+        Drawable imageDrawable = recentImagesBox.getImage(imageId);
+        if (imageDrawable != null){
+            imageView.setImageDrawable(imageDrawable);
+            return;
+        }
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference storageName = storageRef.child("Images/" + uid + "/" + imageId);
+
+        storageName
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String url = uri.toString();
+                        Log.d(TAG, "onSuccess: download Photo successful");
+                        Picasso.get().load(url).into(imageView);
+                        recentImagesBox.addImage(imageId, imageView.getDrawable());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: download Photo");
+                    }
+                });
+    }
+
+    /**
+     * Starts an async task
+     * @return returns the database
+     */
     public Task<DocumentSnapshot> getAsynchronousTask(){
         return db
                 .collection("users")
@@ -993,8 +1022,8 @@ public class FirestoreUserDocCommunicator{
         return userJars;
     }
 
-    public String getUrl() {
-        return url;
+    public RecentImagesBox getRecentImagesBox(){
+        return recentImagesBox;
     }
 
 }

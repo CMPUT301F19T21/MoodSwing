@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.RecentImagesBox;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -175,6 +177,7 @@ public class MoodDetailFragment extends Fragment{
         setMoodImage(moodEvent.getMoodType());
         setReasonText();
         setSocialSituation();
+        setUpPhoto();
         locationText.setText("");
         if (moodEvent.getLatitude() == null) {
             locationImg.setImageResource(R.drawable.ic_location_off_grey_24dp);
@@ -182,19 +185,17 @@ public class MoodDetailFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
-        if (checkImageExist(imageId) ==true) {
-            // load local image
-            Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
-            photoImage.setImageBitmap(myBitmap);
-        }
-        else {
-            communicator.getPhoto(imageId,photoImage);
-        }
-
-
-
     }
 
+    private void setUpPhoto(){
+        if (moodEvent.getImageId() != null){
+            // exist
+            communicator.getPhoto(moodEvent.getImageId(), photoImage);
+        }
+    }
+    /**
+     * sets the reason
+     */
     private void setReasonText(){
         if (moodEvent.getReason() != null){
             this.reasonText.setVisibility(View.VISIBLE);
@@ -204,6 +205,9 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * sets the social situation
+     */
     private void setSocialSituation(){
         Integer socialSituation = moodEvent.getSocialSituation();
         switch (socialSituation){
@@ -230,6 +234,9 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * Converts the location to a location string
+     */
     private void setLocationStrFromLocation(){
         communicator.getAsynchronousTask()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -240,6 +247,9 @@ public class MoodDetailFragment extends Fragment{
                 });
     }
 
+    /**
+     * Updates the location string
+     */
     private void updateLocationStr(){
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         if (moodEvent.getLatitude() != null){
@@ -249,13 +259,27 @@ public class MoodDetailFragment extends Fragment{
                     if (firstAddressList.isEmpty()){
                         // error
                     }else{
-                        //
-                        Address address = firstAddressList.get(0);
-                        String thoroughfare = address.getThoroughfare();
-                        if (thoroughfare == null){
-                            locationText.setText("nowhere!");
+                        if (firstAddressList.isEmpty()){
+                            // error
                         }else{
-                            locationText.setText(thoroughfare);
+                            Address address = firstAddressList.get(0);
+                            String locationForDisplay = address.getThoroughfare();
+                            if (locationForDisplay == null){
+                                locationForDisplay = address.getPremises();
+                                if (locationForDisplay == null){
+                                    locationForDisplay = address.getLocality();
+                                    if (locationForDisplay == null){
+                                        locationForDisplay = address.getCountryName();
+                                        if (locationForDisplay == null){
+                                            locationForDisplay = address.getCountryName();
+                                            if (locationForDisplay == null){
+                                                locationForDisplay = "Can't find address";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            locationText.setText(locationForDisplay);
                         }
                     }
                 }else {
@@ -304,19 +328,34 @@ public class MoodDetailFragment extends Fragment{
                 moodText.setText("SCARED");
                 moodImage.setImageResource(R.drawable.mood7);
                 break;
+            case 8:
+                moodText.setText("SURPRISED");
+                moodImage.setImageResource(R.drawable.mood8);
+                break;
         }
     }
-    private boolean checkImageExist(String imageName){
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");
 
-        if(myFile.exists()){
-            imagePath = myFile.getAbsolutePath();
-            Log.d("testa","image exist");
-            return true;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
         }
-        Log.d("testa","image not exist" + myFile.getAbsolutePath());
-        return false;
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFrag();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }
 

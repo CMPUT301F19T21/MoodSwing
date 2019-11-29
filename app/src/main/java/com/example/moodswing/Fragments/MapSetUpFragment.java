@@ -36,6 +36,9 @@ import java.util.HashMap;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
 
+/**
+ * This class is for the google API to set up the map
+ */
 public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
 
         // views
@@ -82,11 +85,15 @@ public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
 
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            BitmapDrawable mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.current_marker);
+            int MARKER_SIZE = 250;
+            Bitmap mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
             map.addMarker(new MarkerOptions()
                     .position(latLng)
-                    .title("Drag to move your location")
+                    .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                    .title("long hold, then drag to move your location")
                     .draggable(true));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
 
             map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                 @Override
@@ -108,7 +115,10 @@ public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
             });
         }
 
-        private void closeFrag() {
+    /**
+     * method to close the fragment
+     */
+    private void closeFrag() {
             ((NewMoodActivity) getActivity()).MapSetUpFragmentCallBack();
 
             getChildFragmentManager()

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,10 @@ import java.util.List;
 
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
+
+/**
+ * This class handles the map and setting the marker
+ */
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FirestoreUserDocCommunicator communicator;
@@ -130,32 +135,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // set up camera using most recent mood, if mood not empty
         if (mostRecentMoodEvent != null){
             LatLng centerFocus = new LatLng(mostRecentMoodEvent.getLatitude(), mostRecentMoodEvent.getLongitude());
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 14));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 11));
         }
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String markerID = markerIdMapping.get(marker);
-                if (selectedMarker != markerID){
-                    marker.showInfoWindow();
+                if (selectedMarker == null) {
                     selectedMarker = markerID;
                     return false;
                 }else{
-                    marker.hideInfoWindow();
-                    toDetailedView(markerIdMapping.get(marker));
-                    return true;
+                    if (selectedMarker.equals(markerID)){
+                        toDetailedView(markerIdMapping.get(marker));
+
+                        return true;
+                    }else{
+                        selectedMarker = markerID;
+                        return false;
+                    }
                 }
             }
         });
     }
 
+    /**
+     * Sets up the map marker on the map
+     * @param moodEvent the moodEvent associated with the location
+     * @param username The users username that the marker is for
+     */
     private void setUpMarker(MoodEvent moodEvent, String username){
         LatLng latLng = null;
         Marker marker = null;
         BitmapDrawable mapMarkerDrawable = null;
         Bitmap mapMarker = null;
-        int MARKER_SIZE = 200;
+        int MARKER_SIZE = 250;
 
         switch (moodEvent.getMoodType()){
             case 1:
@@ -225,10 +239,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .title("SCARED")
                         .snippet(username));
                 break;
+            case 8:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm8);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                        .title("SURPRISED")
+                        .snippet(username));
+                break;
         }
         markerIdMapping.put(marker, moodEvent.getUniqueID());
     }
 
+    /**
+     * the map can redirect to detailed view of each of the moods. this method handles that
+     * @param ID the user ID
+     */
     public void toDetailedView(String ID) {
         getFragmentManager()
                 .beginTransaction()
@@ -237,6 +264,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .commitAllowingStateLoss();
     }
 
+    /**
+     * method to close the map fragment
+     */
     private void closeFrag() {
         getChildFragmentManager()
                 .beginTransaction()
@@ -248,5 +278,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                 .remove(this)
                 .commit();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
+        }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFrag();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }

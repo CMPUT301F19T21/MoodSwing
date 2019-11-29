@@ -1,6 +1,8 @@
 package com.example.moodswing.Fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -14,11 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.RecentImagesBox;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +32,9 @@ import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * The moodDetail screen for followers, different than for the user's own detail view
+ */
 
 public class MoodDetailFollowingFragment extends Fragment{
     private FirestoreUserDocCommunicator communicator;
@@ -49,8 +54,9 @@ public class MoodDetailFollowingFragment extends Fragment{
     private ImageView moodImage;
     private ImageView locationImg;
     private ImageView socialIcon;
-
+    private ImageView photoImage;
     private Fragment outerFragment;
+    private String imagePath;
 
     public MoodDetailFollowingFragment(){}
 
@@ -88,7 +94,7 @@ public class MoodDetailFollowingFragment extends Fragment{
         locationImg = root.findViewById(R.id.moodDetail_following_locationImg);
         socialIcon = root.findViewById(R.id.moodDetail_following_socialSitIcon);
         locationText = root.findViewById(R.id.moodDetail_following_locationText);
-
+        photoImage = root.findViewById(R.id.moodDetail_following_image_place_holder);
         usernameText = root.findViewById(R.id.moodDetail_following_username);
 
         initialElements();
@@ -105,6 +111,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         return root;
     }
 
+    /**
+     * closes the fragment
+     */
     private void closeFrag(){
         if (outerFragment== null){
             getFragmentManager()
@@ -132,6 +141,9 @@ public class MoodDetailFollowingFragment extends Fragment{
     }
 
 
+    /**
+     * initializes all the fields to their views
+     */
     private void initialElements(){
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
@@ -147,8 +159,19 @@ public class MoodDetailFollowingFragment extends Fragment{
             locationImg.setImageResource(R.drawable.ic_location_on_accent_red_24dp);
             setLocationStrFromLocation();
         }
+        setUpPhoto();
     }
 
+    private void setUpPhoto(){
+        if (moodEvent.getImageId() != null){
+            // exist
+            communicator.getPhoto(moodEvent.getImageId(), photoImage, userJar.getUID());
+        }
+    }
+
+    /**
+     * gets the location and converts it into a string
+     */
     private void setLocationStrFromLocation(){
         communicator.getAsynchronousTask()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -159,6 +182,9 @@ public class MoodDetailFollowingFragment extends Fragment{
                 });
     }
 
+    /**
+     * updates the location
+     */
     private void updateLocationStr(){
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         if (moodEvent.getLatitude() != null){
@@ -168,14 +194,24 @@ public class MoodDetailFollowingFragment extends Fragment{
                     if (firstAddressList.isEmpty()){
                         // error
                     }else{
-                        //
                         Address address = firstAddressList.get(0);
-                        String thoroughfare = address.getThoroughfare();
-                        if (thoroughfare == null){
-                            locationText.setText("nowhere!");
-                        }else{
-                            locationText.setText(thoroughfare);
+                        String locationForDisplay = address.getThoroughfare();
+                        if (locationForDisplay == null){
+                            locationForDisplay = address.getPremises();
+                            if (locationForDisplay == null){
+                                locationForDisplay = address.getLocality();
+                                if (locationForDisplay == null){
+                                    locationForDisplay = address.getCountryName();
+                                    if (locationForDisplay == null){
+                                        locationForDisplay = address.getCountryName();
+                                        if (locationForDisplay == null){
+                                            locationForDisplay = "Can't find address";
+                                        }
+                                    }
+                                }
+                            }
                         }
+                        locationText.setText(locationForDisplay);
                     }
                 }else {
                     // error
@@ -189,6 +225,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * simple setter for reason
+     */
     private void setReasonText(){
         if (moodEvent.getReason() != null){
             this.reasonText.setVisibility(View.VISIBLE);
@@ -198,6 +237,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * social situation has 3 buttons, depending on which is clicked is the one that is set
+     */
     private void setSocialSituation(){
         Integer socialSituation = moodEvent.getSocialSituation();
         switch (socialSituation){
@@ -224,6 +266,10 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * sets the mood image depending on which is clicked
+     * @param moodType the int associated with the mood clicked
+     */
     private void setMoodImage(int moodType){
         switch(moodType){
             case 1:
@@ -254,7 +300,10 @@ public class MoodDetailFollowingFragment extends Fragment{
                 moodText.setText("SCARED");
                 moodImage.setImageResource(R.drawable.mood7);
                 break;
+            case 8:
+                moodText.setText("SURPRISED");
+                moodImage.setImageResource(R.drawable.mood8);
+                break;
         }
     }
-
 }

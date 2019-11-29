@@ -4,200 +4,232 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_yellow_accent"
-    android:clickable="true"
-    tools:context=".MainActivity">
+    android:clickable="true">
 
-    <View
-        android:id="@+id/moodDetail_following_separator2"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="32dp"
-        android:background="#D5D5D5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_username" />
-
-    <ImageView
-        android:id="@+id/moodDetail_following_image_place_holder"
-        android:layout_width="100dp"
-        android:layout_height="75dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_locationImg"
-        app:srcCompat="@drawable/ic_add_circle_grey_24dp" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/moodDetail_following_dateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center"
-        android:text="September 8, 2019"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="@+id/detailedView_following_moodImg"
-        app:layout_constraintStart_toStartOf="@+id/detailedView_following_moodImg"
-        app:layout_constraintTop_toBottomOf="@+id/detailedView_following_moodImg" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/moodDetail_following_timeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center"
-        android:text="04:45"
-        android:textColor="@color/colorPrimary"
-        android:textSize="22dp"
-        app:layout_constraintStart_toStartOf="@+id/moodDetail_following_dateText"
-        app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_dateText" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_yellow_accent">
 
-    <TextView
-        android:id="@+id/moodDetail_following_moodText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:fontFamily="sans-serif-light"
-        android:text="EMOTIONAL"
-        android:textColor="@color/colorPrimary"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/moodDetail_following_separator"
-        app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_separator" />
+                <View
+                    android:id="@+id/moodDetail_following_separator2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="#D5D5D5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_username" />
 
-    <ImageView
-        android:id="@+id/detailedView_following_moodImg"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_separator2"
-        app:srcCompat="@drawable/mood4" />
+                <TextView
+                    android:id="@+id/moodDetail_following_dateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="September 8, 2019"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="@+id/detailedView_following_moodImg"
+                    app:layout_constraintStart_toStartOf="@+id/detailedView_following_moodImg"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedView_following_moodImg" />
 
-    <TextView
-        android:id="@+id/moodDetail_following_locationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="sans-serif-light"
-        android:text="University of Alberta"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/moodDetail_following_locationImg"
-        app:layout_constraintStart_toStartOf="@+id/moodDetail_following_separator"
-        app:layout_constraintTop_toTopOf="@+id/moodDetail_following_locationImg" />
+                <TextView
+                    android:id="@+id/moodDetail_following_timeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="04:45"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="22dp"
+                    app:layout_constraintStart_toStartOf="@+id/moodDetail_following_dateText"
+                    app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_dateText" />
 
-    <View
-        android:id="@+id/moodDetail_following_separator"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="#D5D5D5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailedView_following_edit_placeHolder" />
+                <TextView
+                    android:id="@+id/moodDetail_following_moodText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="EMOTIONAL"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="25dp"
+                    app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_separator"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedView_following_reasonText" />
 
-    <TextView
-        android:id="@+id/detailedView_following_reasonText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:fontFamily="sans-serif-light"
-        android:text='"Good Weather"'
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/moodDetail_following_moodText"
-        app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_moodText" />
+                <ImageView
+                    android:id="@+id/detailedView_following_moodImg"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_separator2"
+                    app:srcCompat="@drawable/mood4" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/detailedView_following_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="24dp"
-        android:clickable="true"
-        app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="42dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+                <TextView
+                    android:id="@+id/moodDetail_following_locationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="University of Alberta"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="@+id/moodDetail_following_locationImg"
+                    app:layout_constraintStart_toStartOf="@+id/moodDetail_following_separator"
+                    app:layout_constraintTop_toTopOf="@+id/moodDetail_following_locationImg" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/detailedView_following_edit_placeHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:clickable="true"
-        android:visibility="invisible"
-        app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="42dp"
-        app:layout_constraintStart_toStartOf="@+id/detailedView_following_delete_placeHolder"
-        app:layout_constraintTop_toBottomOf="@+id/detailedView_following_delete_placeHolder"
-        app:srcCompat="@drawable/ic_edit_black_24dp" />
+                <View
+                    android:id="@+id/moodDetail_following_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="#D5D5D5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_moodText" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/detailedView_following_delete_placeHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:clickable="true"
-        android:visibility="invisible"
-        app:backgroundTint="@color/color_button_lightGrey"
-        app:fabCustomSize="42dp"
-        app:layout_constraintStart_toStartOf="@+id/detailedView_following_back"
-        app:layout_constraintTop_toBottomOf="@+id/detailedView_following_back"
-        app:srcCompat="@drawable/ic_delete_black_24dp" />
+                <TextView
+                    android:id="@+id/detailedView_following_reasonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginEnd="4dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text='"Good Weather"'
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_moodText"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedView_following_edit_placeHolder" />
 
-    <ImageView
-        android:id="@+id/moodDetail_following_locationImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_separator"
-        app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_separator"
-        app:srcCompat="@drawable/ic_location_on_accent_red_24dp" />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/detailedView_following_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="64dp"
+                    android:layout_marginEnd="24dp"
+                    android:clickable="true"
+                    app:backgroundTint="@color/color_button_lightGrey"
+                    app:fabCustomSize="42dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
-    <TextView
-        android:id="@+id/moodDetail_following_SocialText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
-        android:text="Alone"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/moodDetail_following_moodText"
-        app:layout_constraintStart_toStartOf="@+id/moodDetail_following_locationText" />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/detailedView_following_edit_placeHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:clickable="true"
+                    android:visibility="invisible"
+                    app:backgroundTint="@color/color_button_lightGrey"
+                    app:fabCustomSize="42dp"
+                    app:layout_constraintStart_toStartOf="@+id/detailedView_following_delete_placeHolder"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedView_following_delete_placeHolder"
+                    app:srcCompat="@drawable/ic_edit_black_24dp" />
 
-    <ImageView
-        android:id="@+id/moodDetail_following_socialSitIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/moodDetail_following_SocialText"
-        app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_SocialText"
-        app:layout_constraintStart_toStartOf="@+id/moodDetail_following_SocialText"
-        app:srcCompat="@drawable/ic_account_group" />
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/detailedView_following_delete_placeHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:clickable="true"
+                    android:visibility="invisible"
+                    app:backgroundTint="@color/color_button_lightGrey"
+                    app:fabCustomSize="42dp"
+                    app:layout_constraintStart_toStartOf="@+id/detailedView_following_back"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedView_following_back"
+                    app:srcCompat="@drawable/ic_delete_black_24dp" />
 
-    <TextView
-        android:id="@+id/moodDetail_following_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:fontFamily="sans-serif-light"
-        android:text="Dan_Zhang"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/moodDetail_following_separator2"
-        app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/moodDetail_following_locationImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_separator"
+                    app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_separator"
+                    app:srcCompat="@drawable/ic_location_on_accent_red_24dp" />
+
+                <TextView
+                    android:id="@+id/moodDetail_following_SocialText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Alone"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/moodDetail_following_moodText"
+                    app:layout_constraintStart_toStartOf="@+id/moodDetail_following_locationText" />
+
+                <ImageView
+                    android:id="@+id/moodDetail_following_socialSitIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/moodDetail_following_SocialText"
+                    app:layout_constraintEnd_toEndOf="@+id/moodDetail_following_SocialText"
+                    app:layout_constraintStart_toStartOf="@+id/moodDetail_following_SocialText"
+                    app:srcCompat="@drawable/ic_account_group" />
+
+                <TextView
+                    android:id="@+id/moodDetail_following_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Dan_Zhang"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/moodDetail_following_separator2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="250dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/moodDetail_following_locationImg">
+
+                    <ImageView
+                        android:id="@+id/moodDetail_following_image_place_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

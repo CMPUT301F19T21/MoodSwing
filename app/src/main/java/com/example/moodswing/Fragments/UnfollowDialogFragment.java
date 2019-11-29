@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Locale;
 
 /**
- * The screen to show pending requests for being followed.
+ * The screen to unfollow a user.
  */
 public class UnfollowDialogFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;

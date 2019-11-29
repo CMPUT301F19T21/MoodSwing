@@ -1,6 +1,9 @@
 package com.example.moodswing.Fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.moodswing.EditMoodActivity;
@@ -17,11 +21,20 @@ import com.example.moodswing.MainActivity;
 import com.example.moodswing.NewMoodActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
+/**
+ * This is the dialog that shows up when the user wants to upload an image to their moodEvent
+ * gives the user the choice of gallery, camera, or cancel
+ */
 
 public class ImageFragment extends DialogFragment {
-    TextView gallery;
-    TextView camera;
-    TextView cancel;
+    FloatingActionButton closeBtn;
+    FloatingActionButton galleryBtn;
+    FloatingActionButton cameraBtn;
+
+
     String activity;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,31 +46,36 @@ public class ImageFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image_source_selection, container, false);
+        View view = inflater.inflate(R.layout.fragment_image_prompt, container, false);
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         // link elements
-        camera = view.findViewById(R.id.action_camera);
-        gallery = view.findViewById(R.id.action_gallery);
-        cancel = view.findViewById(R.id.action_cancel);
+        closeBtn = view.findViewById(R.id.imagePrompt_close);
+        galleryBtn = view.findViewById(R.id.imagePrompt_gallery);
+        cameraBtn = view.findViewById(R.id.imagePrompt_camera);
 
         // listeners
-        camera.setOnClickListener(new View.OnClickListener() {
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                dismiss();
-                if (activity == "Edit"){
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                    dismiss();
+                } else {
+                    if (activity == "Edit"){
                     EditMoodActivity callingActivity = (EditMoodActivity) getActivity();
                     callingActivity.takeimage();
                 }
-                if (activity == "New") {
-                    NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                    callingActivity.takeimage();
+                    if (activity == "New") {
+                        NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
+                        callingActivity.takeimage();
+                    }
+                    dismiss();
                 }
+
             }
         });
-        gallery.setOnClickListener(new View.OnClickListener() {
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //select photo from gallery
@@ -74,20 +92,13 @@ public class ImageFragment extends DialogFragment {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
+        closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
 
-
-
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

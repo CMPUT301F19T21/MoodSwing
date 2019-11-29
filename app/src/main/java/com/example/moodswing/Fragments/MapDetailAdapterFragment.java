@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
 
+/**
+ * An adapter class for the Mood Detail Fragments, depending on if the user is looking at the map of
+ * their own moodhistory, or their followers one
+ */
 public class MapDetailAdapterFragment extends Fragment {
 
     private FrameLayout MapDetailAdapterLayout;
