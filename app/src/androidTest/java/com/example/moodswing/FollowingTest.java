@@ -6,6 +6,10 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +33,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 
@@ -127,9 +132,10 @@ public class FollowingTest {
                     .perform(click());
         }
         onView(withId(R.id.moodSelect_recycler)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(2, click()));
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.reason_EditView))
                 .perform(typeText("Test Mood"), closeSoftKeyboard());
+        onView(withId(R.id.moodhistory_locationButton)).perform(click());
         onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         Thread.sleep(2000);
 
@@ -175,8 +181,13 @@ public class FollowingTest {
         //Checking the right detailedView is visible
         onView(withId(R.id.following_list)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.moodDetail_following_moodText)).check(matches(withText("ANGRY")));
+        onView(withId(R.id.moodDetail_following_moodText)).check(matches(withText("HAPPY")));
         onView(withId(R.id.detailedView_following_back)).perform(click());
+
+        //functionality same as map check in mainactivityTest
+        onView(withId(R.id.following_map)).perform(click());
+        onView(withId(R.id.maplayoutid)).check(matches(isDisplayed()));
+        onView(withId(R.id.map_backBtn)).perform(click());
 
 
         onView(withId(R.id.following_management)).perform(click());

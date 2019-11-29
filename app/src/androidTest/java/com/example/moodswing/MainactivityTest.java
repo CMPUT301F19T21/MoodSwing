@@ -1,11 +1,19 @@
 package com.example.moodswing;
 
+import android.content.ComponentName;
+
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
+
+import com.example.moodswing.Fragments.MapFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +28,7 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import static androidx.core.util.Preconditions.checkNotNull;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -32,6 +41,8 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.core.AllOf.allOf;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -49,20 +60,22 @@ public class MainactivityTest {
     /**
      * Runs before all tests
      * Log out current account and login to test account
+     *
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         Intents.init();
         // login to test account
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser()!=null){
-        onView(withId(R.id.nav_profile)).perform(click());
-        onView(withId(R.id.profile_LogOut)).perform(click());}
+        if (mAuth.getCurrentUser() != null) {
+            onView(withId(R.id.nav_profile)).perform(click());
+            onView(withId(R.id.profile_LogOut)).perform(click());
+        }
         onView(withId(R.id.userEmailField))
-                .perform(typeText("test@mail.com"),closeSoftKeyboard());
+                .perform(typeText("test@mail.com"), closeSoftKeyboard());
         onView(withId(R.id.passField))
-                .perform(typeText("123456"),closeSoftKeyboard());
+                .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.loginComfirmBtn)).perform(click());
         Thread.sleep(2000);
         communicator = FirestoreUserDocCommunicator.getInstance();
@@ -72,6 +85,7 @@ public class MainactivityTest {
     /**
      * Check whether fragment correct switch
      * Check whether mood being added
+     *
      * @throws InterruptedException
      */
     @Test
@@ -87,18 +101,21 @@ public class MainactivityTest {
             onView(withId(R.id.home_add))
                     .perform(click());
         }
-            intended(hasComponent(NewMoodActivity.class.getName()));
-            onView(withId(R.id.moodSelect_recycler)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(2, click()));
-            onView(withId(R.id.reason_EditView))
-                    .perform(typeText("Test Mood"), closeSoftKeyboard());
-            Integer oldSize = communicator.getMoodEvents().size();
-            onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
-            // check if item correct added
-            onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
-            Integer newSize = communicator.getMoodEvents().size();
-            assertTrue(newSize == (oldSize + 1));
-            assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
+        intended(hasComponent(NewMoodActivity.class.getName()));
+        onView(withId(R.id.moodSelect_recycler)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(2, click()));
+        onView(withId(R.id.reason_EditView))
+                .perform(typeText("Test Mood"), closeSoftKeyboard());
+
+        onView(withId(R.id.moodhistory_locationButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.moodhistory_locationButton)).perform(click());
+        Integer oldSize = communicator.getMoodEvents().size();
+        onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
+        // check if item correct added
+        onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
+        Integer newSize = communicator.getMoodEvents().size();
+        assertTrue(newSize == (oldSize + 1));
+        assertTrue(communicator.getMoodEvents().get(0).getMoodType() == 3);
 
 
     }
@@ -107,6 +124,7 @@ public class MainactivityTest {
      * Check whether fragment correct switch
      * Check if data correct shows
      * Test delete mood from moodDetail screen
+     *
      * @throws InterruptedException
      */
     @Test
@@ -127,7 +145,7 @@ public class MainactivityTest {
         onView(withId(R.id.moodSelect_recycler)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.reason_EditView))
-                .perform(typeText("Test Mood"),closeSoftKeyboard());
+                .perform(typeText("Test Mood"), closeSoftKeyboard());
         onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         // Get current time
         Calendar calendar = Calendar.getInstance();
@@ -155,8 +173,7 @@ public class MainactivityTest {
             onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
             Integer newSize = communicator.getMoodEvents().size();
             assertTrue(newSize == (oldSize - 1));// check if delete succeed
-        }
-        catch (AmbiguousViewMatcherException e) {
+        } catch (AmbiguousViewMatcherException e) {
             //Error checker finds two of each of the views.
             // not a big deal, since we're just checking to make sure that one exists
         }
@@ -167,7 +184,7 @@ public class MainactivityTest {
      * Test whether data is edited
      */
     @Test
-    public void CheckEditMood(){
+    public void CheckEditMood() {
         // add a new mood to test
         try {
             onView(withText("CLICK TO ADD FIRST MOOD EVENT")).check(matches(isDisplayed()));
@@ -182,29 +199,28 @@ public class MainactivityTest {
         onView(withId(R.id.moodSelect_recycler)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.reason_EditView))
-                .perform(typeText("Test Mood"),closeSoftKeyboard());
+                .perform(typeText("Test Mood"), closeSoftKeyboard());
         onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         // go to edit mood screen
         onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
         onView(withId(R.id.mood_list)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        try{
-        onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
-        onView(withId(R.id.detailedView_edit))
-                .perform(click());
-        intended(hasComponent(EditMoodActivity.class.getName()));
-        // editing mood
-        onView(withId(R.id.moodSelect_recycler)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(1, click()));
-        onView(withId(R.id.reason_EditView))
-                .perform(typeText("Edited Test Mood"),closeSoftKeyboard());
-        onView(withId(R.id.add_confirm)).perform(click());
-        //Check if Mood being edited
-        onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
-        onView(withId(R.id.moodDetail_moodText)).check(matches(withText("SAD")));
-        onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Edited Test Mood\""))); }
-
-        catch (AmbiguousViewMatcherException e) {
+        try {
+            onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
+            onView(withId(R.id.detailedView_edit))
+                    .perform(click());
+            intended(hasComponent(EditMoodActivity.class.getName()));
+            // editing mood
+            onView(withId(R.id.moodSelect_recycler)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(1, click()));
+            onView(withId(R.id.reason_EditView))
+                    .perform(typeText("Edited Test Mood"), closeSoftKeyboard());
+            onView(withId(R.id.add_confirm)).perform(click());
+            //Check if Mood being edited
+            onView(withId(R.id.moodDetail_moodText)).check(matches(isDisplayed()));//check if in the moodDetail fragment
+            onView(withId(R.id.moodDetail_moodText)).check(matches(withText("SAD")));
+            onView(withId(R.id.detailedView_reasonText)).check(matches(withText("\"Edited Test Mood\"")));
+        } catch (AmbiguousViewMatcherException e) {
             //Error checker finds two of each of the views.
             // not a big deal, since we're just checking to make sure that at least one exists
         }
@@ -215,7 +231,7 @@ public class MainactivityTest {
      * Check if mood is deleted
      */
     @Test
-    public void CheckDeleteMood(){
+    public void CheckDeleteMood() {
         // add a new mood to test
         onView(withId(R.id.home_add))
                 .perform(click());
@@ -223,7 +239,7 @@ public class MainactivityTest {
         onView(withId(R.id.moodSelect_recycler)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.reason_EditView))
-                .perform(typeText("Test Mood"),closeSoftKeyboard());
+                .perform(typeText("Test Mood"), closeSoftKeyboard());
         onView(withId(R.id.add_confirm)).perform(scrollTo(), click());
         // delete first mood
         onView(withId(R.id.mood_list)).check(matches(isDisplayed()));//check if in the homeFragment
@@ -234,9 +250,8 @@ public class MainactivityTest {
                 RecyclerViewActions.actionOnItemAtPosition(0, swipeLeft()));
         // check if mood deleted
         Integer newSize = communicator.getMoodEvents().size();
-        assertTrue(newSize==(oldSize-1));
+        assertTrue(newSize == (oldSize - 1));
     }
-
 
 
     /**
@@ -245,7 +260,7 @@ public class MainactivityTest {
      * Test log out from mood profile
      */
     @Test
-    public void CheckProfile(){
+    public void CheckProfile() {
         onView(withId(R.id.nav_profile))
                 .perform(click());
         //check if profile correctly shows
@@ -278,11 +293,37 @@ public class MainactivityTest {
         //1 mood added to filter list
         assertTrue(after > before);
 
+    }
+
+    @Test
+    public void mapTest() {
+        onView(withId(R.id.home_map))
+                .perform(click());
+        onView(withId(R.id.maplayoutid)).check(matches(isDisplayed()));
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        // https://stackoverflow.com/questions/29924564/using-espresso-to-unit-test-google-maps
+        try {
+            UiObject marker = device.findObject(new UiSelector().descriptionContains("HAPPY"));
+            marker.click();
+        } catch (UiObjectNotFoundException e) {
+            fail();
+        }
+        try {
+            UiObject marker = device.findObject(new UiSelector().descriptionContains("HAPPY"));
+            marker.click();
+        } catch (UiObjectNotFoundException e) {
+            fail();
+        }
+        onView(withId(R.id.mooddetailidfragment)).check(matches(isDisplayed()));
+
+
+
+
 
     }
 
     @After
-    public void cleanUp(){
+    public void cleanUp() {
         Intents.release();
     }
 
