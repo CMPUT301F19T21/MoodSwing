@@ -99,15 +99,23 @@ public class FollowingFragment extends Fragment {
     }
 
 
+    /**
+     * Refreshes the moodlist
+     */
     public void refreshMoodList(){
         communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());
     }
 
+    /**
+     * changes the look of the button when pressed
+     */
     public void filterButtonPressed(){
         filterButton.setCompatElevation(0f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
     }
-
+    /**
+     * changes the look of the button when deselected
+     */
     public void filterButtonPopped(){
         filterButton.setCompatElevation(12f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));

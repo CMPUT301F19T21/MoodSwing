@@ -115,6 +115,9 @@ public class FilterFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Closes the fragment
+     */
     private void closeFragment(){
         getFragmentManager()
                 .beginTransaction()
@@ -123,6 +126,9 @@ public class FilterFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * utility method for pressing and deselecting a mood filter
+     */
     public void changeFilterButtonState(){
         if (filterList.isEmpty()){
             popFilterButton();
@@ -131,6 +137,9 @@ public class FilterFragment extends Fragment {
         }
     }
 
+    /**
+     * Refreshes the moodlist that is shown, used for when a filter is changed
+     */
     public void refreshMoodList() {
         switch (mode){
             case 1:
@@ -142,6 +151,9 @@ public class FilterFragment extends Fragment {
         }
     }
 
+    /**
+     * Functionality for pressing a filter button
+     */
     private void pressFilterButton(){
         switch (mode){
             case 1:
@@ -152,6 +164,10 @@ public class FilterFragment extends Fragment {
                 break;
         }
     }
+
+    /**
+     * functionality for deselecting a filter button
+     */
     private void popFilterButton(){
         switch (mode){
             case 1:
@@ -162,6 +178,8 @@ public class FilterFragment extends Fragment {
                 break;
         }
     }
+
+
     @Override
     public void onResume() {
         super.onResume();
