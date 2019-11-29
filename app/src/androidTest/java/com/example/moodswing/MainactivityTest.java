@@ -300,7 +300,6 @@ public class MainactivityTest {
         onView(withId(R.id.home_map))
                 .perform(click());
         onView(withId(R.id.maplayoutid)).check(matches(isDisplayed()));
-        onView(withId(R.id.maplayoutid)).check(matches(isDisplayed()));
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         // https://stackoverflow.com/questions/29924564/using-espresso-to-unit-test-google-maps
         try {
