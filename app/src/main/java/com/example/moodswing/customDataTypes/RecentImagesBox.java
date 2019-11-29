@@ -15,6 +15,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
+/**
+ * Used as a cache for hosting images locally
+ */
+
 public class RecentImagesBox {
     private static final String TAG = "RecentImagesBox";
     private ArrayList<Drawable> imageViews;
@@ -36,6 +40,10 @@ public class RecentImagesBox {
         }
     }
 
+    /**
+     * gets the latest used position
+     * @return the minimum position
+     */
     private Integer getLatestUsed(){
         Long minUTC = null;
         Integer minPosition = null;
@@ -59,6 +67,12 @@ public class RecentImagesBox {
 
     // return null full
     // return the position of next empty
+
+    /**
+     *  return null full
+     *     return the position of next empty
+     * @return the next empty position
+     */
     private Integer getNextEmpty(){
         int position = 0;
         for (String id : imageIDs){
@@ -76,13 +90,21 @@ public class RecentImagesBox {
     }
 
 
-
+    /**
+     * Clears the position
+     * @param position the position to be cleared
+     */
     private void clearPosition(int position){
         timeStamps.set(position, null);
         imageViews.set(position, null);
         imageIDs.set(position, null);
     }
 
+    /**
+     * finding the position of the image with the associated image ID
+     * @param imageID the image name
+     * @return the position of the image
+     */
     private Integer findPosition(String imageID){
         Log.d(TAG, "this is imageID");
         Log.d(TAG, imageID);
@@ -101,6 +123,10 @@ public class RecentImagesBox {
         return null;
     }
 
+    /**
+     * Deletes the image
+     * @param imageID the image to be deleted
+     */
     public void delImage(String imageID){
         Integer position = findPosition(imageID);
         if (position != null){
@@ -108,6 +134,11 @@ public class RecentImagesBox {
         }
     }
 
+    /**
+     * adds an image to the next empty position
+     * @param imageID the image ID of the image to be added
+     * @param imageDrawable the graphic to be drawn
+     */
     public void addImage(String imageID, Drawable imageDrawable){
         Integer nextPosition = getNextEmpty();
         if (nextPosition == null){
@@ -123,6 +154,11 @@ public class RecentImagesBox {
         }
     }
 
+    /**
+     * gets an image with a specific string
+     * @param imageID the image ID
+     * @return returns the image if found, null if not
+     */
     public Drawable getImage(String imageID){
         Integer position = findPosition(imageID);
         if (position != null){
