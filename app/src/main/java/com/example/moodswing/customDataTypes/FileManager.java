@@ -5,6 +5,10 @@ import android.util.Log;
 
 import java.io.File;
 
+/**
+ * a utility class for adding a photograph
+ */
+
 public class FileManager {
 
     File file;
@@ -15,6 +19,10 @@ public class FileManager {
 
     }
 
+    /**
+     * deletes an image with the corresponding filename
+     * @param fileName the image string to be deleted
+     */
     public void deleteImage(String fileName){
         File image = new File(file, fileName);
         image.delete();

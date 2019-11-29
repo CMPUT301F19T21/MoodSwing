@@ -105,6 +105,11 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
     }
 
 
+    /**
+     * starts detailed view from follower list
+     * @param cardPosition the position in the recyclerview of the card
+     * @param view the view it is in
+     */
     private void startDetailedViewActivity (int cardPosition,View view){
         // cardPosition will be passed to detailed view
         ((MainActivity) view.getContext()).toDetailedView_following(cardPosition);

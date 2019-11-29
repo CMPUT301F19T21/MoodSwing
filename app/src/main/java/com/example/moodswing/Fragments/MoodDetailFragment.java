@@ -195,7 +195,9 @@ public class MoodDetailFragment extends Fragment{
 
 
     }
-
+    /**
+     * sets the reason
+     */
     private void setReasonText(){
         if (moodEvent.getReason() != null){
             this.reasonText.setVisibility(View.VISIBLE);
@@ -205,6 +207,9 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * sets the social situation
+     */
     private void setSocialSituation(){
         Integer socialSituation = moodEvent.getSocialSituation();
         switch (socialSituation){
@@ -231,6 +236,9 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * Converts the location to a location string
+     */
     private void setLocationStrFromLocation(){
         communicator.getAsynchronousTask()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -241,6 +249,9 @@ public class MoodDetailFragment extends Fragment{
                 });
     }
 
+    /**
+     * Updates the location string
+     */
     private void updateLocationStr(){
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         if (moodEvent.getLatitude() != null){
@@ -311,6 +322,12 @@ public class MoodDetailFragment extends Fragment{
                 break;
         }
     }
+
+    /**
+     * a method to check if an image exists so the user can save data
+     * @param imageName the img name
+     * @return true if  it exists in local memory, false if it doesnt
+     */
     private boolean checkImageExist(String imageName){
         String root = Environment.getExternalStorageDirectory().toString();
         File myFile = new File(root + "/MoodSwing/"+ imageName +".jpg");

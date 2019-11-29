@@ -731,6 +731,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * This gets the users that currently are requesting to follow and adds them to the selected notification bar
+     * @param notificationBar
+     */
     public void setAutoDisplayViewForNewRequest(View notificationBar){
         CollectionReference mainBoxColRef = db
                 .collection("users")
@@ -754,6 +758,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * unfollows the user given in the userJar
+     * @param userJar the user to unfollow
+     */
     public void unfollow(UserJar userJar){
         // 从对方的permittedlist中移除自己
         // 把对方从自己的followinglist中移除
@@ -823,26 +831,45 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * gets the document for the user
+     * @return the user document from firestore to return
+     */
     public DocumentReference getUserDocRef(){
         return db
                 .collection("users")
                 .document(user.getUid());
     }
 
+    /**
+     * simple getter
+     * @return mood history list
+     */
     public ArrayList<Integer> getMoodHistoryFilterList(){
         return this.moodTypeFilterList_moodHistory;
     }
 
+    /**
+     * simple getter
+     * @return followingfilterlist
+     */
     public ArrayList<Integer> getFollowingFilterList(){
         return this.moodTypeFilterList_following;
     }
 
 
-
+    /**
+     * simple getter
+     * @return moodevents
+     */
     public ArrayList<MoodEvent> getMoodEvents() {
         return moodEvents;
     }
 
+    /**
+     * deletes an image in the firestore storage(not database)
+     * @param imageId the ID of the image
+     */
     public void deleteFirestoreImage(String imageId){
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
@@ -867,6 +894,12 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * adds a photo to the firestore storage
+     * @param moodEvent the moodEvent that the photo is attached to
+     * @param filePath the filepath to the image
+     * @param oldImageId the old image id, if there is one
+     */
     public void addPhoto(MoodEvent moodEvent, @Nullable Uri filePath,@Nullable String oldImageId) {
 
         String imageId = generateMoodID();
@@ -899,6 +932,12 @@ public class FirestoreUserDocCommunicator{
     // retrieve image from firebase storage and set into imageView
 
 
+    /**
+     * gets a photo from firebase storage
+     * @param imageId id of the image
+     * @param imageView the view the photo is on
+     * @param userId the user's id
+     */
     public void getPhoto(String imageId,ImageView imageView,@Nullable String userId) {
 
         StorageReference storageRef = storage.getReference();
@@ -927,6 +966,12 @@ public class FirestoreUserDocCommunicator{
             }
         });
     }
+
+    /**
+     * downloads the photo(potentially uses lots of data)
+     * @param imageId the images id
+     * @param url The image url
+     */
     public void downloadPhoto(String imageId,String url){
 
         Picasso.get()
@@ -987,6 +1032,11 @@ public class FirestoreUserDocCommunicator{
 
 
     }
+
+    /**
+     * Starts an async task
+     * @return returns the database
+     */
     public Task<DocumentSnapshot> getAsynchronousTask(){
         return db
                 .collection("users")
