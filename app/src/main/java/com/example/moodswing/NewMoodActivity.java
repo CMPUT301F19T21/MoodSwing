@@ -26,13 +26,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moodswing.Fragments.ImageFragment;
-import com.example.moodswing.Fragments.MapFragment;
-import com.example.moodswing.Fragments.MapSetUpFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
@@ -49,7 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +87,6 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private String currentPhotoPath;
     private Uri uploadImage;
-
 
     /**
      * All the fields for creating a new mood are created and the current date/time are generated.
@@ -156,15 +151,6 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
         });
 
-        geoLocationText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ifLocationEnabled){
-                    openMapFragment();
-                }
-            }
-        });
-
         setSocialSituationBtns();
         PickImage();
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -216,18 +202,6 @@ public class NewMoodActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void openMapFragment(){
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.addMood_fullscreen_placeHolder, new MapSetUpFragment(currentLocation),"mapSetUpFrag")
-                .commitAllowingStateLoss();
-    }
-
-    public void MapSetUpFragmentCallBack(){
-        getAddress();
     }
 
     private void PickImage(){
