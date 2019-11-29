@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -40,6 +41,7 @@ public class FollowingFragment extends Fragment {
     private UserJarAdaptor userJarAdaptor;
     private ArrayList<UserJar> userJars;
     private RecyclerView userJarList;
+
 
     /**
      * Initializes the UI buttons, the following/follower lists, the redirect to management fragment

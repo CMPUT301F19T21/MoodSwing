@@ -188,7 +188,7 @@ public class MoodDetailFragment extends Fragment{
             photoImage.setImageBitmap(myBitmap);
         }
         else {
-            communicator.getPhoto(imageId,photoImage);
+            communicator.getPhoto(imageId,photoImage,null);
         }
 
 

@@ -334,7 +334,7 @@ public class EditMoodActivity extends AppCompatActivity {
             editImage.setImageBitmap(myBitmap);
         }
         else {
-            communicator.getPhoto(imageId,editImage);
+            communicator.getPhoto(imageId,editImage,null);
         }
 
     }

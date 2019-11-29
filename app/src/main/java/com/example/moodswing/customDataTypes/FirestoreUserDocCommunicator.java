@@ -872,7 +872,7 @@ public class FirestoreUserDocCommunicator{
         String imageId = generateMoodID();
         if (oldImageId != null){
             //delete old image
-            new FileManager(oldImageId).deleteImage();//delete local file
+            new FileManager().deleteImage(oldImageId);//delete local file
             deleteFirestoreImage(oldImageId);
             moodEvent.setImageId(null);
         }
@@ -899,11 +899,15 @@ public class FirestoreUserDocCommunicator{
     // retrieve image from firebase storage and set into imageView
 
 
-    public void getPhoto(String imageId,ImageView imageView) {
+    public void getPhoto(String imageId,ImageView imageView,@Nullable String userId) {
 
         StorageReference storageRef = storage.getReference();
-        StorageReference storageName = storageRef.child("Images/" +user.getUid() + "/" + imageId);
-
+        StorageReference storageName;
+        if (userId == null){
+            storageName = storageRef.child("Images/" +user.getUid() + "/" + imageId);}
+        else {
+            storageName = storageRef.child("Images/" +userId + "/" + imageId);
+        }
 
         storageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
