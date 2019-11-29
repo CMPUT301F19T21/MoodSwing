@@ -24,7 +24,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/download"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/download"
+        android:roundIcon="@mipmap/f4a8d24adc444e07a68fc7170ea9d0ad"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
