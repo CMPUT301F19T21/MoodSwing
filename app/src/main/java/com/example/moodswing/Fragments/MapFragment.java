@@ -47,6 +47,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
+    private String selectedMarker;
+
 //    private ClusterManager<MyItem> clusterManager;
 //    private List<MyItem> items = new ArrayList<>();
 
@@ -100,8 +102,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void initElements() {
         // clear map
-        Log.d("test init", "initElements: ");
         map.clear();
+        selectedMarker = null;
         // update most recent mood LatLng
         MoodEvent mostRecentMoodEvent = null;
 //        map.setOnCameraIdleListener(clusterManager);
@@ -151,12 +153,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if (marker.isInfoWindowShown()){
+                String markerID = markerIdMapping.get(marker);
+                if (selectedMarker != markerID){
+                    marker.showInfoWindow();
+                    selectedMarker = markerID;
+                    return false;
+                }else{
+                    marker.hideInfoWindow();
                     toDetailedView(markerIdMapping.get(marker));
                     return true;
-                }else{
-                    marker.showInfoWindow();
-                    return false;
                 }
             }
         });
