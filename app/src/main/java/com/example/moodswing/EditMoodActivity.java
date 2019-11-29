@@ -332,10 +332,6 @@ public class EditMoodActivity extends AppCompatActivity {
             // load local image
             Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
             editImage.setImageBitmap(myBitmap);
-            int height = (myBitmap.getWidth()/cardWidth)*myBitmap.getHeight();
-            editImage.getLayoutParams().height = height ;
-
-            editImage.getLayoutParams().width = cardWidth-10;
         }
         else {
             communicator.getPhoto(imageId,editImage);
