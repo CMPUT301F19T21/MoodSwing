@@ -85,11 +85,15 @@ public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
 
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            BitmapDrawable mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.current_marker);
+            int MARKER_SIZE = 250;
+            Bitmap mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
             map.addMarker(new MarkerOptions()
                     .position(latLng)
-                    .title("Drag to move your location")
+                    .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                    .title("long hold, then drag to move your location")
                     .draggable(true));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
 
             map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                 @Override

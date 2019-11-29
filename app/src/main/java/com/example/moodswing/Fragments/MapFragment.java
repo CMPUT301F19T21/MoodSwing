@@ -135,7 +135,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // set up camera using most recent mood, if mood not empty
         if (mostRecentMoodEvent != null){
             LatLng centerFocus = new LatLng(mostRecentMoodEvent.getLatitude(), mostRecentMoodEvent.getLongitude());
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 14));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 11));
         }
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

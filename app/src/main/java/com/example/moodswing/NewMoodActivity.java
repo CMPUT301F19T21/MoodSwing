@@ -452,12 +452,23 @@ public class NewMoodActivity extends AppCompatActivity {
                     }else{
                         //
                         Address address = firstAddressList.get(0);
-                        String thoroughfare = address.getThoroughfare();
-                        if (thoroughfare == null){
-                            geoLocationText.setText("nowhere!");
-                        }else{
-                            geoLocationText.setText(thoroughfare);
+                        String locationForDisplay = address.getThoroughfare();
+                        if (locationForDisplay == null){
+                            locationForDisplay = address.getPremises();
+                            if (locationForDisplay == null){
+                                locationForDisplay = address.getLocality();
+                                if (locationForDisplay == null){
+                                    locationForDisplay = address.getCountryName();
+                                    if (locationForDisplay == null){
+                                        locationForDisplay = address.getCountryName();
+                                        if (locationForDisplay == null){
+                                            locationForDisplay = "Can't find address";
+                                        }
+                                    }
+                                }
+                            }
                         }
+                        geoLocationText.setText(locationForDisplay);
                     }
                 }else {
                     // error
