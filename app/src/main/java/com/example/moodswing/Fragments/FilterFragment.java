@@ -2,6 +2,7 @@ package com.example.moodswing.Fragments;
 
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,4 +162,27 @@ public class FilterFragment extends Fragment {
                 break;
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
+        }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFragment();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
 }
