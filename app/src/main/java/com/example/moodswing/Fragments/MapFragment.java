@@ -49,8 +49,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private String selectedMarker;
 
-//    private ClusterManager<MyItem> clusterManager;
-//    private List<MyItem> items = new ArrayList<>();
+    private ClusterManager<MyItem> clusterManager;
+    private List<MyItem> items = new ArrayList<>();
 
     private String id;
     private HashMap<Marker, String> markerIdMapping ;
@@ -94,7 +94,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
-//        clusterManager = new ClusterManager<MyItem>(getContext(), map);
+        clusterManager = new ClusterManager<MyItem>(getContext(), map);
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
         initElements();
         this.isMapReady = true;
@@ -110,8 +110,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //        map.setOnMarkerClickListener(clusterManager);
         switch (mode){
             case MOODHISTORY_MODE:
-//                items.clear();
-//                Log.d("size of items", Integer.toString(items.size()));
+                items.clear();
+                Log.d("size of items", Integer.toString(items.size()));
                 ArrayList<MoodEvent> moodEvents = communicator.getMoodEvents();
                 for (MoodEvent moodEvent : moodEvents){
                     if (moodEvent.getLatitude() != null){
@@ -120,14 +120,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             mostRecentMoodEvent = moodEvent;
                         }
                     }
-//                    LatLng latlng = new LatLng (moodEvent.getLatitude(), moodEvent.getLongitude());
-//                    items.add(new MyItem(latlng));
-//                    clusterManager.addItems(items);
-//                    clusterManager.cluster();
+                    LatLng latlng = new LatLng (moodEvent.getLatitude(), moodEvent.getLongitude());
+                    items.add(new MyItem(latlng));
+                    clusterManager.addItems(items);
+                    clusterManager.cluster();
                 }
                 break;
             case FOLLOWING_MODE:
-//                items.clear();
+                items.clear();
                 ArrayList<UserJar> userJars = communicator.getUserJars();
                 for (UserJar userJar : userJars){
                     if (userJar.getMoodEvent().getLatitude() != null){
@@ -136,10 +136,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             mostRecentMoodEvent = userJar.getMoodEvent();
                         }
                     }
-//                    LatLng latlng = new LatLng (userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
-//                    items.add(new MyItem(latlng));
-//                    clusterManager.addItems(items);
-//                    clusterManager.cluster();
+                    LatLng latlng = new LatLng (userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
+                    items.add(new MyItem(latlng));
+                    clusterManager.addItems(items);
+                    clusterManager.cluster();
                 }
                 break;
         }
