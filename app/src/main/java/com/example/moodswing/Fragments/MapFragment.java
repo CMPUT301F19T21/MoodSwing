@@ -109,7 +109,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         switch (mode){
             case MOODHISTORY_MODE:
 //                items.clear();
-                Log.d("size of items", Integer.toString(items.size()));
+//                Log.d("size of items", Integer.toString(items.size()));
                 ArrayList<MoodEvent> moodEvents = communicator.getMoodEvents();
                 for (MoodEvent moodEvent : moodEvents){
                     if (moodEvent.getLatitude() != null){
