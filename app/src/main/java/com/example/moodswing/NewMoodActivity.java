@@ -63,7 +63,6 @@ import java.util.Locale;
 public class NewMoodActivity extends AppCompatActivity {
     private static final int LOCATION_REQUEST_CODE = 1;
     private FloatingActionButton confirmButton;
-    private FloatingActionButton closeButton;
     private ImageView addNewImageButton;
     private EditText reasonEditText;
     private TextView dateTextView;
@@ -105,7 +104,6 @@ public class NewMoodActivity extends AppCompatActivity {
 
         // find view
         confirmButton = findViewById(R.id.add_confirm);
-        closeButton = findViewById(R.id.addMood_close);
         addNewImageButton = findViewById(R.id.add_newImage);
         reasonEditText = findViewById(R.id.reason_EditView);
         dateTextView = findViewById(R.id.add_date);
@@ -216,14 +214,6 @@ public class NewMoodActivity extends AppCompatActivity {
                 }else{
                     // prompt user to select a mood
                 }
-            }
-        });
-
-        // Set for return button
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
     }
