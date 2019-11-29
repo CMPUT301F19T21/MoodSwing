@@ -1,6 +1,7 @@
 package com.example.moodswing.customDataTypes;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import java.util.Iterator;
 import java.util.Queue;
 
 public class RecentImagesBox {
+    private static final String TAG = "RecentImagesBox";
     private ArrayList<Drawable> imageViews;
     private ArrayList<String> imageIDs;
     private ArrayList<Long> timeStamps;
@@ -82,20 +84,21 @@ public class RecentImagesBox {
     }
 
     private Integer findPosition(String imageID){
+        Log.d(TAG, "this is imageID");
+        Log.d(TAG, imageID);
         // get position
         int position = 0;
         for (String id : imageIDs){
-            if (id == imageID){
-                break;
+            if ((id != null)&&(id.equals(imageID))){
+                Log.d(TAG, "this is id inside imageID");
+                Log.d(TAG, id);
+                Log.d(TAG, "this is position");
+                Log.d(TAG, ((Integer) position).toString());
+                return position;
             }
             position++;
         }
-
-        if (position == capacity){
-            return null;
-        }else{
-            return position;
-        }
+        return null;
     }
 
     public void delImage(String imageID){
@@ -124,6 +127,7 @@ public class RecentImagesBox {
         Integer position = findPosition(imageID);
         if (position != null){
             timeStamps.set(position, Calendar.getInstance().getTimeInMillis());
+            Log.d(TAG, "getImage: YES!");
             return imageViews.get(position);
         }
         return null;

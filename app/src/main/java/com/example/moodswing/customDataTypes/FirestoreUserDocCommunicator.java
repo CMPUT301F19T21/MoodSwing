@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -44,6 +45,8 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -935,13 +938,41 @@ public class FirestoreUserDocCommunicator{
                         String url = uri.toString();
                         Log.d(TAG, "onSuccess: download Photo successful");
                         Picasso.get().load(url).into(imageView);
-                        recentImagesBox.addImage(imageId, imageView.getDrawable());
+                        saveToRecentImage(imageId, url);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "onFailure: download Photo");
+                    }
+                });
+
+    }
+
+    private void saveToRecentImage(String imageID, String url){
+        Picasso.get()
+                .load(url)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        // convert and then save
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                        byte[] bitmapData = bos.toByteArray();
+                        ByteArrayInputStream inputStream = new ByteArrayInputStream(bitmapData);
+                        Drawable drawable = Drawable.createFromStream(inputStream, url);
+                        recentImagesBox.addImage(imageID, drawable);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                        Log.d(TAG, "onBitmapFailed: failed to save to recent image");
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        Log.d(TAG, "onBitmapPrepareLoad");
                     }
                 });
 

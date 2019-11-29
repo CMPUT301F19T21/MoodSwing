@@ -176,6 +176,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("HAPPY")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 2:
@@ -186,6 +187,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("SAD")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 3:
@@ -196,6 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("ANGRY")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 4:
@@ -205,6 +208,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("EMOTIONAL")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 5:
@@ -215,6 +219,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("HEART BROKEN")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 6:
@@ -224,6 +229,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("IN LOVE")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 7:
@@ -233,6 +239,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("SCARED")
+                        .draggable(true)
                         .snippet(username));
                 break;
             case 8:
@@ -242,6 +249,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("SURPRISED")
+                        .draggable(true)
                         .snippet(username));
                 break;
         }
