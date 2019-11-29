@@ -278,6 +278,7 @@ public class NewMoodActivity extends AppCompatActivity {
                 case 1:
                     // Showing the image from camera
                     addNewImageButton.setImageURI(uploadImage);
+                    addNewImageButton.getDrawable();
 
                     break;
             }
