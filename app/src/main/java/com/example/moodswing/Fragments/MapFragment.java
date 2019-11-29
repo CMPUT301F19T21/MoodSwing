@@ -119,11 +119,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (mostRecentMoodEvent == null){
                             mostRecentMoodEvent = moodEvent;
                         }
-//                        LatLng latlng = new LatLng (moodEvent.getLatitude(), moodEvent.getLongitude());
-//                        items.add(new MyItem(latlng));
-//                        clusterManager.addItems(items);
-//                        clusterManager.cluster();
                     }
+//                    LatLng latlng = new LatLng (moodEvent.getLatitude(), moodEvent.getLongitude());
+//                    items.add(new MyItem(latlng));
+//                    clusterManager.addItems(items);
+//                    clusterManager.cluster();
                 }
                 break;
             case FOLLOWING_MODE:
@@ -135,11 +135,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if (mostRecentMoodEvent == null){
                             mostRecentMoodEvent = userJar.getMoodEvent();
                         }
-//                        LatLng latlng = new LatLng (userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
-//                        items.add(new MyItem(latlng));
-//                        clusterManager.addItems(items);
-//                        clusterManager.cluster();
                     }
+//                    LatLng latlng = new LatLng (userJar.getMoodEvent().getLatitude(), userJar.getMoodEvent().getLongitude());
+//                    items.add(new MyItem(latlng));
+//                    clusterManager.addItems(items);
+//                    clusterManager.cluster();
                 }
                 break;
         }
