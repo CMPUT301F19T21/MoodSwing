@@ -437,6 +437,8 @@ public class NewMoodActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         updateLocationStr();
+                        Toast.makeText(getApplicationContext(),
+                                "location retrieval successful, you can perform a location fix by click the address string", Toast.LENGTH_LONG).show();
                     }
                 });
     }
