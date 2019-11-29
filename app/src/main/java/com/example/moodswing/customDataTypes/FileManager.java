@@ -6,7 +6,7 @@ import android.util.Log;
 import java.io.File;
 
 /**
- * a utility class for adding a photograph
+ * a utility class for adding a photograph, unused
  */
 
 public class FileManager {
