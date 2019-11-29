@@ -31,7 +31,7 @@ public final class MoodEventUtility {
      * @return Returns a string from UTC in Month,Day,Year format
      */
     public static String getDateStr (Long utc) {
-        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM d, yyyy");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, yyyy");
         return outputFormat.format(utc);
 
     }
