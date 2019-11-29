@@ -1,15 +1,12 @@
 package com.example.moodswing.Fragments;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,11 +27,9 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
@@ -52,7 +47,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SupportMapFragment mapFrag;
     private GoogleMap map;
     private String selectedMarker;
-
 
     private String id;
     private HashMap<Marker, String> markerIdMapping ;
@@ -95,6 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
         initElements();
@@ -135,9 +130,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // set up camera using most recent mood, if mood not empty
         if (mostRecentMoodEvent != null){
             LatLng centerFocus = new LatLng(mostRecentMoodEvent.getLatitude(), mostRecentMoodEvent.getLongitude());
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 11));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 13));
         }
 
+        // detail of the mood shows up on the screen upon marker click
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -157,6 +153,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
+        // detail of the mood show up on the screen upon info window click
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                String markerID = markerIdMapping.get(marker);
+                if (selectedMarker == null) {
+                    selectedMarker = markerID;
+                }else{
+                    if (selectedMarker.equals(markerID)){
+                        toDetailedView(markerIdMapping.get(marker));
+                    }else{
+                        selectedMarker = markerID;
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -164,6 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      * @param moodEvent the moodEvent associated with the location
      * @param username The users username that the marker is for
      */
+    // initially set all values to null so the map is automatically updated
     private void setUpMarker(MoodEvent moodEvent, String username){
         LatLng latLng = null;
         Marker marker = null;
@@ -171,6 +185,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Bitmap mapMarker = null;
         int MARKER_SIZE = 250;
 
+        // Displays customized markers on the map depending on the mood
         switch (moodEvent.getMoodType()){
             case 1:
                 mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm1);
