@@ -130,45 +130,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // set up camera using most recent mood, if mood not empty
         if (mostRecentMoodEvent != null){
             LatLng centerFocus = new LatLng(mostRecentMoodEvent.getLatitude(), mostRecentMoodEvent.getLongitude());
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 13));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 11));
         }
-
-        // detail of the mood shows up on the screen upon marker click
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                String markerID = markerIdMapping.get(marker);
-                if (selectedMarker == null) {
-                    selectedMarker = markerID;
-                    return false;
-                }else{
-                    if (selectedMarker.equals(markerID)){
-                        toDetailedView(markerIdMapping.get(marker));
-
-                        return true;
-                    }else{
-                        selectedMarker = markerID;
-                        return false;
-                    }
-                }
-            }
-        });
-
         // detail of the mood show up on the screen upon info window click
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 String markerID = markerIdMapping.get(marker);
-                if (selectedMarker == null) {
-                    selectedMarker = markerID;
-                }else{
-                    if (selectedMarker.equals(markerID)){
-                        toDetailedView(markerIdMapping.get(marker));
-                    }else{
-                        selectedMarker = markerID;
-                    }
+                toDetailedView(markerIdMapping.get(marker));
+                marker.hideInfoWindow();
                 }
-            }
         });
     }
 
