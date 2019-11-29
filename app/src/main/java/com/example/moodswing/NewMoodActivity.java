@@ -247,6 +247,9 @@ public class NewMoodActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * redirect for pressing the addimage button
+     */
     private void addImageBtnPress(){
         ImageFragment imageFragment = new ImageFragment();
         Bundle args = new Bundle();
@@ -255,6 +258,9 @@ public class NewMoodActivity extends AppCompatActivity {
         imageFragment.show(getSupportFragmentManager(),"image");
     }
 
+    /**
+     * Opens the google map fragment
+     */
     private void openMapFragment(){
         getSupportFragmentManager()
                 .beginTransaction()
@@ -263,10 +269,16 @@ public class NewMoodActivity extends AppCompatActivity {
                 .commitAllowingStateLoss();
     }
 
+    /**
+     * a callback for async tasks
+     */
     public void MapSetUpFragmentCallBack(){
         getAddress();
     }
 
+    /**
+     * Picking a photo from the users gallery(local)
+     */
     public void pickFromGallery(){
         Intent intent=new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -275,6 +287,9 @@ public class NewMoodActivity extends AppCompatActivity {
         startActivityForResult(intent,GALLERY_RETURN_CODE);
     }
 
+    /**
+     * taking a photo from the camera
+     */
     public void takeimage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -299,6 +314,10 @@ public class NewMoodActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the image and returns it as a file object
+     * @return the file object to be returned
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault()).format(new Date());
@@ -335,6 +354,9 @@ public class NewMoodActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * sets the social situation buttons
+     */
     private void setSocialSituationBtns(){
         socialSituation = 0;
 
@@ -431,6 +453,9 @@ public class NewMoodActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Gets the set address if GPS is enabled
+     */
     private void getAddress(){
         communicator.getAsynchronousTask()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -443,6 +468,9 @@ public class NewMoodActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Refreshes/updates the location and sets it to the screen
+     */
     private void updateLocationStr(){
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         if (currentLocation != null){
@@ -484,6 +512,9 @@ public class NewMoodActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Changes how the location button looks when deselected
+     */
     private void locationBtnPop() {
         ifLocationEnabled = false;
         locationButton.setCompatElevation(12f);
@@ -491,6 +522,9 @@ public class NewMoodActivity extends AppCompatActivity {
         geoLocationText.setText("Location off");
     }
 
+    /**
+     * Changes how the location button looks when selected
+     */
     private void locationBtnPress() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ifLocationEnabled = false;
