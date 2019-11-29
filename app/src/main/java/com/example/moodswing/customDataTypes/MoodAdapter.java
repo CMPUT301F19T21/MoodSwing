@@ -137,6 +137,10 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
                 moodText.setText("SCARED");
                 moodImage.setImageResource(R.drawable.mood7);
                 break;
+            case 8:
+                moodText.setText("SURPRISED");
+                moodImage.setImageResource(R.drawable.mood8);
+                break;
         }
     }
 

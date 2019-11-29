@@ -304,6 +304,10 @@ public class MoodDetailFragment extends Fragment{
                 moodText.setText("SCARED");
                 moodImage.setImageResource(R.drawable.mood7);
                 break;
+            case 8:
+                moodText.setText("SURPRISED");
+                moodImage.setImageResource(R.drawable.mood8);
+                break;
         }
     }
     private boolean checkImageExist(String imageName){

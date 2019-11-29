@@ -155,7 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Marker marker = null;
         BitmapDrawable mapMarkerDrawable = null;
         Bitmap mapMarker = null;
-        int MARKER_SIZE = 200;
+        int MARKER_SIZE = 250;
 
         switch (moodEvent.getMoodType()){
             case 1:
@@ -223,6 +223,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 marker = map.addMarker(new MarkerOptions().position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
                         .title("SCARED")
+                        .snippet(username));
+                break;
+            case 8:
+                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm8);
+                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+                marker = map.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                        .title("SURPRISED")
                         .snippet(username));
                 break;
         }

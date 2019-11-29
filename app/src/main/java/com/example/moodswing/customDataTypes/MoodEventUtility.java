@@ -17,7 +17,7 @@ import java.util.Locale;
 public final class MoodEventUtility {
     public static final int MOODHISTORY_MODE = 1;
     public static final int FOLLOWING_MODE = 2;
-    public static final int TOTAL_MOOD_TYPE_COUNTS = 7;
+    public static final int TOTAL_MOOD_TYPE_COUNTS = 8;
 
 
 
@@ -72,6 +72,12 @@ public final class MoodEventUtility {
                 break;
             case 6:
                 moodTypeString = "IN LOVE";
+                break;
+            case 7:
+                moodTypeString = "SCARED";
+                break;
+            case 8:
+                moodTypeString = "SURPRISED";
                 break;
         }
         return moodTypeString;
