@@ -36,6 +36,9 @@ import java.util.HashMap;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
 
+/**
+ * This class is for the google API to set up the map
+ */
 public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
 
         // views
@@ -108,7 +111,10 @@ public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
             });
         }
 
-        private void closeFrag() {
+    /**
+     * method to close the fragment
+     */
+    private void closeFrag() {
             ((NewMoodActivity) getActivity()).MapSetUpFragmentCallBack();
 
             getChildFragmentManager()

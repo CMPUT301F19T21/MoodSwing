@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,7 +193,9 @@ public class MoodDetailFragment extends Fragment{
             communicator.getPhoto(moodEvent.getImageId(), photoImage);
         }
     }
-
+    /**
+     * sets the reason
+     */
     private void setReasonText(){
         if (moodEvent.getReason() != null){
             this.reasonText.setVisibility(View.VISIBLE);
@@ -202,6 +205,9 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * sets the social situation
+     */
     private void setSocialSituation(){
         Integer socialSituation = moodEvent.getSocialSituation();
         switch (socialSituation){
@@ -228,6 +234,9 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    /**
+     * Converts the location to a location string
+     */
     private void setLocationStrFromLocation(){
         communicator.getAsynchronousTask()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -238,6 +247,9 @@ public class MoodDetailFragment extends Fragment{
                 });
     }
 
+    /**
+     * Updates the location string
+     */
     private void updateLocationStr(){
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         if (moodEvent.getLatitude() != null){
@@ -309,5 +321,27 @@ public class MoodDetailFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
+        }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFrag();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 }
 

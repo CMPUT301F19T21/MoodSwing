@@ -73,6 +73,11 @@ public class SendingRequestFragment extends DialogFragment {
         return view;
     }
 
+    /**
+     * checks if the user is already in the following list
+     * @param username the username to check
+     * @return true if the user is in the followinglist, false if not
+     */
     private boolean ifInFollowing(String username){
         for (UserJar userJar : communicator.getUserJars()){
             if (userJar.getUsername().equals(username)){
@@ -82,6 +87,10 @@ public class SendingRequestFragment extends DialogFragment {
         return false;
     }
 
+    /**
+     * Sends a following request to  another user
+     * @param username
+     */
     private void sendingRequest(String username){
         if (username.isEmpty()) {
             Toast.makeText(getContext(), "Sorry, username cannot be empty", Toast.LENGTH_SHORT).show();

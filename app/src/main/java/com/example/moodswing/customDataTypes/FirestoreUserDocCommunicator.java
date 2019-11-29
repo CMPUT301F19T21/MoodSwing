@@ -746,6 +746,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * This gets the users that currently are requesting to follow and adds them to the selected notification bar
+     * @param notificationBar
+     */
     public void setAutoDisplayViewForNewRequest(View notificationBar){
         CollectionReference mainBoxColRef = db
                 .collection("users")
@@ -769,6 +773,10 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
+    /**
+     * unfollows the user given in the userJar
+     * @param userJar the user to unfollow
+     */
     public void unfollow(UserJar userJar){
         // 从对方的permittedlist中移除自己
         // 把对方从自己的followinglist中移除
@@ -838,26 +846,45 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * gets the document for the user
+     * @return the user document from firestore to return
+     */
     public DocumentReference getUserDocRef(){
         return db
                 .collection("users")
                 .document(user.getUid());
     }
 
+    /**
+     * simple getter
+     * @return mood history list
+     */
     public ArrayList<Integer> getMoodHistoryFilterList(){
         return this.moodTypeFilterList_moodHistory;
     }
 
+    /**
+     * simple getter
+     * @return followingfilterlist
+     */
     public ArrayList<Integer> getFollowingFilterList(){
         return this.moodTypeFilterList_following;
     }
 
 
-
+    /**
+     * simple getter
+     * @return moodevents
+     */
     public ArrayList<MoodEvent> getMoodEvents() {
         return moodEvents;
     }
 
+    /**
+     * deletes an image in the firestore storage(not database)
+     * @param imageId the ID of the image
+     */
     public void deleteFirestoreImage(String imageId){
         if (recentImagesBox.getImage(imageId) != null){
             recentImagesBox.delImage(imageId);
@@ -976,6 +1003,10 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    /**
+     * Starts an async task
+     * @return returns the database
+     */
     public Task<DocumentSnapshot> getAsynchronousTask(){
         return db
                 .collection("users")

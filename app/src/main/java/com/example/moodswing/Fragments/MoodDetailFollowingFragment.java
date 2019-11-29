@@ -32,6 +32,9 @@ import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * The moodDetail screen for followers, different than for the user's own detail view
+ */
 
 public class MoodDetailFollowingFragment extends Fragment{
     private FirestoreUserDocCommunicator communicator;
@@ -108,6 +111,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         return root;
     }
 
+    /**
+     * closes the fragment
+     */
     private void closeFrag(){
         if (outerFragment== null){
             getFragmentManager()
@@ -135,6 +141,9 @@ public class MoodDetailFollowingFragment extends Fragment{
     }
 
 
+    /**
+     * initializes all the fields to their views
+     */
     private void initialElements(){
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
@@ -160,6 +169,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * gets the location and converts it into a string
+     */
     private void setLocationStrFromLocation(){
         communicator.getAsynchronousTask()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -170,6 +182,9 @@ public class MoodDetailFollowingFragment extends Fragment{
                 });
     }
 
+    /**
+     * updates the location
+     */
     private void updateLocationStr(){
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         if (moodEvent.getLatitude() != null){
@@ -200,6 +215,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * simple setter for reason
+     */
     private void setReasonText(){
         if (moodEvent.getReason() != null){
             this.reasonText.setVisibility(View.VISIBLE);
@@ -209,6 +227,9 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * social situation has 3 buttons, depending on which is clicked is the one that is set
+     */
     private void setSocialSituation(){
         Integer socialSituation = moodEvent.getSocialSituation();
         switch (socialSituation){
@@ -235,6 +256,10 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
+    /**
+     * sets the mood image depending on which is clicked
+     * @param moodType the int associated with the mood clicked
+     */
     private void setMoodImage(int moodType){
         switch(moodType){
             case 1:

@@ -24,6 +24,10 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.example.moodswing.NewMoodActivity.CAMERA_REQUEST_CODE;
+/**
+ * This is the dialog that shows up when the user wants to upload an image to their moodEvent
+ * gives the user the choice of gallery, camera, or cancel
+ */
 
 public class ImageFragment extends DialogFragment {
     FloatingActionButton closeBtn;
