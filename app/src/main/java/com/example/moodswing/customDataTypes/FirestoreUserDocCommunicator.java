@@ -890,6 +890,12 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    /**
+     * uploads a photo to firebase storage
+     * @param uniqueImageID the unique image ID
+     * @param filePath the local filepath
+     * @param context the app context
+     */
     public void uploadPhotoToStorage(String uniqueImageID, Uri filePath, Context context) {
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(filePath);
@@ -918,6 +924,11 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
+    /**
+     * gets a photo from firebase storage
+     * @param imageId the image id of the photo
+     * @param imageView the imageview the photo will be set to
+     */
     // retrieve image from firebase storage and set into imageView
     public void getPhoto(String imageId, ImageView imageView){
 
@@ -950,6 +961,11 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * Saves to a recent image
+     * @param imageID the image ID
+     * @param url the url to the image
+     */
     private void saveToRecentImage(String imageID, String url){
         Picasso.get()
                 .load(url)
@@ -978,6 +994,12 @@ public class FirestoreUserDocCommunicator{
 
     }
 
+    /**
+     * gets a photo from firebase storage
+     * @param imageId the image ID
+     * @param imageView the imageview to display the image
+     * @param uid the user's UID
+     */
     public void getPhoto(String imageId, ImageView imageView, String uid){
 
         Drawable imageDrawable = recentImagesBox.getImage(imageId);
