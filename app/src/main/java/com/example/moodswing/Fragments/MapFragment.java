@@ -39,6 +39,10 @@ import java.util.List;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.FOLLOWING_MODE;
 import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY_MODE;
 
+/**
+ * This class handles the map and setting the marker
+ */
+
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FirestoreUserDocCommunicator communicator;
     private Integer mode;
@@ -151,6 +155,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    /**
+     * Sets up the map marker on the map
+     * @param moodEvent the moodEvent associated with the location
+     * @param username The users username that the marker is for
+     */
     private void setUpMarker(MoodEvent moodEvent, String username){
         LatLng latLng = null;
         Marker marker = null;
@@ -239,6 +248,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         markerIdMapping.put(marker, moodEvent.getUniqueID());
     }
 
+    /**
+     * the map can redirect to detailed view of each of the moods. this method handles that
+     * @param ID the user ID
+     */
     public void toDetailedView(String ID) {
         getFragmentManager()
                 .beginTransaction()
@@ -247,6 +260,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .commitAllowingStateLoss();
     }
 
+    /**
+     * method to close the map fragment
+     */
     private void closeFrag() {
         getChildFragmentManager()
                 .beginTransaction()

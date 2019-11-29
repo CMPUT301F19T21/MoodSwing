@@ -141,16 +141,25 @@ public class MoodHistoryFragment extends Fragment {
         return root;
     }
 
+    /**
+     * refreshes the moodlist to display the updated recyclerview
+     */
     public void refreshMoodList(){
         communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
     }
 
+    /**
+     * changes the color of the filter button when it is pressed
+     */
     public void filterButtonPressed(){
         filterButton.setCompatElevation(0f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
 
     }
 
+    /**
+     * changes the color of the filter button when unpressed
+     */
     public void filterButtonPopped(){
         filterButton.setCompatElevation(12f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
