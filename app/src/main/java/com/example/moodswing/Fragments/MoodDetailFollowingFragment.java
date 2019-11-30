@@ -162,7 +162,7 @@ public class MoodDetailFollowingFragment extends Fragment{
     private void setUpPhoto(){
         if (moodEvent.getImageId() != null){
             // exist
-            communicator.getPhoto(moodEvent.getImageId(), photoImage);
+            communicator.getPhoto(moodEvent.getImageId(), photoImage, userJar.getUID());
         }else{
             photoImage.setImageDrawable(null);
         }
