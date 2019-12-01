@@ -66,13 +66,8 @@ public class EditMoodActivity extends AppCompatActivity {
     private FloatingActionButton social_twoMoreBtn;
     private Integer socialSituation;
     private ImageView editImage;
-    private ConstraintLayout imageCard;
 
-    private String currentPhotoPath;
-    private String imageId;
     private Uri imageUriForUpload;
-    private String imagePath;
-    private boolean deleteImageConfirm;
     private boolean ifImageChanged;
     private boolean imageChangeForDeletionOnly;
     private Integer cardWidth;
@@ -85,7 +80,6 @@ public class EditMoodActivity extends AppCompatActivity {
         Intent moodIntent = getIntent();
         int position = moodIntent.getIntExtra("position",-1);
         moodEvent = communicator.getMoodEvent(position);
-        imageId = moodEvent.getImageId();
         // find view
         confirmButton = findViewById(R.id.editMood_add_confirm);
         closeBtn = findViewById(R.id.editMood_close);
@@ -159,7 +153,7 @@ public class EditMoodActivity extends AppCompatActivity {
                             String uniqueImageID = communicator.generateMoodID();
                             // link
                             moodEvent.setImageId(uniqueImageID);
-                            communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, getApplicationContext());
+                            communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, editImage);
                         }else{
                             moodEvent.setImageId(null);
                         }

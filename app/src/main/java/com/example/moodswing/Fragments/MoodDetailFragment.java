@@ -235,7 +235,9 @@ public class MoodDetailFragment extends Fragment{
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        updateLocationStr();
+                        if (getContext() != null){
+                            updateLocationStr();
+                        }
                     }
                 });
     }

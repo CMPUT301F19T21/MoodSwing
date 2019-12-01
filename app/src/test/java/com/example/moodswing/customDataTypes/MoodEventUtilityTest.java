@@ -18,7 +18,7 @@ public class MoodEventUtilityTest {
 
         //getting output provided by method
         MoodEventUtility moodEventUtility = new MoodEventUtility();
-        String output = moodEventUtility.getDateStr(input);
+        String output = MoodEventUtility.getDateStr(input);
 
         //assert to check if method works as expecting, comparing expected and output
         assertEquals(expected, output);
@@ -35,7 +35,7 @@ public class MoodEventUtilityTest {
 
         //getting output provided by method
         MoodEventUtility moodEventUtility = new MoodEventUtility();
-        String output =  moodEventUtility.getTimeStr(input);
+        String output =  MoodEventUtility.getTimeStr(input);
 
         //assert to check if method works as expecting, comparing expected and output
         assertEquals(expected, output);
@@ -52,7 +52,7 @@ public class MoodEventUtilityTest {
         //setting values
         input = 1;
         expected = "Happy";
-        output = moodEventUtility.getMoodType(input);
+        output = MoodEventUtility.getMoodType(input);
 
         //assert to check if method works as expecting, comparing expected and output
         assertEquals(expected, output);

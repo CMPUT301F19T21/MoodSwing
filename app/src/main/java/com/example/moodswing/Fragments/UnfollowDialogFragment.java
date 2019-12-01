@@ -62,7 +62,7 @@ public class UnfollowDialogFragment extends DialogFragment {
 
 
         // text
-        String forDisplay = String.format(Locale.getDefault(), "Unfollow %s?", userJar.getUsername().toString());
+        String forDisplay = String.format(Locale.getDefault(), "Unfollow %s?", userJar.getUsername());
         displayText.setText(forDisplay);
 
         // listeners
