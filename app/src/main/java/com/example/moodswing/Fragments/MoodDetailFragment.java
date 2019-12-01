@@ -305,7 +305,7 @@ public class MoodDetailFragment extends Fragment{
                 moodImage.setImageResource(R.drawable.mood3);
                 break;
             case 4:
-                moodText.setText("EDMOTIONAL");
+                moodText.setText("EMOTIONAL");
                 moodImage.setImageResource(R.drawable.mood4);
                 break;
             case 5:
