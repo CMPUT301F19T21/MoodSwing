@@ -83,8 +83,6 @@ public class NewMoodActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private Double latitude, longitude;
-
     private boolean ifLocationEnabled;
     private boolean ifImageReady;
     private Integer socialSituation;
@@ -220,7 +218,7 @@ public class NewMoodActivity extends AppCompatActivity {
                         String uniqueImageID = communicator.generateMoodID();
                         // link
                         moodEvent.setImageId(uniqueImageID);
-                        communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, getApplicationContext());
+                        communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, imageView);
                     }
                     communicator.addMoodEvent(moodEvent);
                     finish();

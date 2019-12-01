@@ -1,7 +1,7 @@
 package com.example.moodswing.customDataTypes;
 
-import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,7 +12,7 @@ import java.util.Calendar;
 
 public class RecentImagesBox {
     private static final String TAG = "RecentImagesBox";
-    private ArrayList<Drawable> imageViews;
+    private ArrayList<ImageView> imageViews;
     private ArrayList<String> imageIDs;
     private ArrayList<Long> timeStamps;
     private Integer capacity;
@@ -126,19 +126,19 @@ public class RecentImagesBox {
     /**
      * adds an image to the next empty position
      * @param imageID the image ID of the image to be added
-     * @param imageDrawable the graphic to be drawn
+     * @param imageView the graphic to be drawn
      */
-    public void addImage(String imageID, Drawable imageDrawable){
+    public void addImage(String imageID, ImageView imageView){
         Integer nextPosition = getNextEmpty();
         if (nextPosition == null){
             Integer position = getLatestUsed(); // impossible to be null in this case
             if (position != null){
                 clearPosition(position);
-                addImage(imageID, imageDrawable);
+                addImage(imageID, imageView);
             }
         }else{
             timeStamps.set(nextPosition, Calendar.getInstance().getTimeInMillis());
-            imageViews.set(nextPosition, imageDrawable);
+            imageViews.set(nextPosition, imageView);
             imageIDs.set(nextPosition, imageID);
         }
     }
@@ -148,7 +148,7 @@ public class RecentImagesBox {
      * @param imageID the image ID
      * @return returns the image if found, null if not
      */
-    public Drawable getImage(String imageID){
+    public ImageView getImage(String imageID){
         Integer position = findPosition(imageID);
         if (position != null){
             timeStamps.set(position, Calendar.getInstance().getTimeInMillis());

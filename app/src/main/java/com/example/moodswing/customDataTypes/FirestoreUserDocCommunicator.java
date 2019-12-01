@@ -1,8 +1,5 @@
 package com.example.moodswing.customDataTypes;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
@@ -30,12 +27,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -93,11 +85,7 @@ public class FirestoreUserDocCommunicator{
     }
 
     private boolean ifLogin(){
-        if (user == null) {
-            return false;
-        }else{
-            return true;
-        }
+        return user != null;
     }
 
     /**
@@ -874,17 +862,10 @@ public class FirestoreUserDocCommunicator{
      * uploads a photo to firebase storage
      * @param uniqueImageID the unique image ID
      * @param filePath the local filepath
-     * @param context the app context
+     * @param imageView imageView for cache
      */
-    public void uploadPhotoToStorage(String uniqueImageID, Uri filePath, Context context) {
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(filePath);
-            Drawable drawable = Drawable.createFromStream(inputStream, filePath.toString() );
-            recentImagesBox.addImage(uniqueImageID, drawable);
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "uploadPhotoToStorage: failed get drawable");
-        }
-
+    public void uploadPhotoToStorage(String uniqueImageID, Uri filePath, ImageView imageView) {
+        recentImagesBox.addImage(uniqueImageID, imageView);
         StorageReference storageRef = storage.getReference();
         StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + uniqueImageID);
 
@@ -912,9 +893,9 @@ public class FirestoreUserDocCommunicator{
     // retrieve image from firebase storage and set into imageView
     public void getPhoto(String imageId, ImageView imageView){
 
-        Drawable imageDrawable = recentImagesBox.getImage(imageId);
-        if (imageDrawable != null){
-            imageView.setImageDrawable(imageDrawable);
+        ImageView imageViewTemp = recentImagesBox.getImage(imageId);
+        if (imageViewTemp != null){
+            imageView.setImageDrawable(imageViewTemp.getDrawable());
             return;
         }
 
@@ -929,46 +910,13 @@ public class FirestoreUserDocCommunicator{
                         String url = uri.toString();
                         Log.d(TAG, "onSuccess: download Photo successful");
                         Picasso.get().load(url).into(imageView);
-                        saveToRecentImage(imageId, url);
+                        recentImagesBox.addImage(imageId, imageView);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "onFailure: download Photo");
-                    }
-                });
-
-    }
-
-    /**
-     * Saves to a recent image
-     * @param imageID the image ID
-     * @param url the url to the image
-     */
-    private void saveToRecentImage(String imageID, String url){
-        Picasso.get()
-                .load(url)
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        // convert and then save
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
-                        byte[] bitmapData = bos.toByteArray();
-                        ByteArrayInputStream inputStream = new ByteArrayInputStream(bitmapData);
-                        Drawable drawable = Drawable.createFromStream(inputStream, url);
-                        recentImagesBox.addImage(imageID, drawable);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                        Log.d(TAG, "onBitmapFailed: failed to save to recent image");
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                        Log.d(TAG, "onBitmapPrepareLoad");
                     }
                 });
 
@@ -982,11 +930,12 @@ public class FirestoreUserDocCommunicator{
      */
     public void getPhoto(String imageId, ImageView imageView, String uid){
 
-        Drawable imageDrawable = recentImagesBox.getImage(imageId);
-        if (imageDrawable != null){
-            imageView.setImageDrawable(imageDrawable);
+        ImageView imageViewTemp = recentImagesBox.getImage(imageId);
+        if (imageViewTemp != null){
+            imageView.setImageDrawable(imageViewTemp.getDrawable());
             return;
         }
+
 
         StorageReference storageRef = storage.getReference();
         StorageReference storageName = storageRef.child("Images/" + uid + "/" + imageId);
@@ -999,7 +948,7 @@ public class FirestoreUserDocCommunicator{
                         String url = uri.toString();
                         Log.d(TAG, "onSuccess: download Photo successful");
                         Picasso.get().load(url).into(imageView);
-                        recentImagesBox.addImage(imageId, imageView.getDrawable());
+                        recentImagesBox.addImage(imageId, imageView);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

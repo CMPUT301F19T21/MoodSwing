@@ -14,7 +14,7 @@ public class MoodAdapterTest {
     public void testAddMoodEvents() {
 
         ArrayList<MoodEvent> moods = new ArrayList<>();
-        MoodAdapter moodAdapter = new MoodAdapter(moods);;
+        MoodAdapter moodAdapter = new MoodAdapter(moods);
 
         assertEquals(moods.size(),0);
         moodAdapter.addToMoods(new MoodEvent());
