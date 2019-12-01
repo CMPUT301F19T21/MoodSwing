@@ -103,11 +103,9 @@ public class RecentImagesBox {
         int position = 0;
         for (String id : imageIDs){
             if ((id != null)&&(id.equals(imageID))){
-                Log.d(TAG, "this is id inside imageID");
-                Log.d(TAG, id);
-                Log.d(TAG, "this is position");
-                Log.d(TAG, ((Integer) position).toString());
-                return position;
+                if (this.imageViews.get(position) != null){
+                    return position;
+                }
             }
             position++;
         }
@@ -154,7 +152,6 @@ public class RecentImagesBox {
         Integer position = findPosition(imageID);
         if (position != null){
             timeStamps.set(position, Calendar.getInstance().getTimeInMillis());
-            Log.d(TAG, "getImage: YES!");
             return imageViews.get(position);
         }
         return null;
