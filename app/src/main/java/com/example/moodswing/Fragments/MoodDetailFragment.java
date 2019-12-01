@@ -206,6 +206,7 @@ public class MoodDetailFragment extends Fragment{
             case 0:
                 this.socialText.setVisibility(View.INVISIBLE);
                 this.socialIcon.setVisibility(View.INVISIBLE);
+                break;
             case 1:
                 this.socialText.setVisibility(View.VISIBLE);
                 this.socialIcon.setVisibility(View.VISIBLE);
