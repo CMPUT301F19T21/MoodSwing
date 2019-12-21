@@ -1,6 +1,16 @@
 package com.example.moodswing.customDataTypes;
 
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.example.moodswing.R;
+
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This is a utility class to handle functionality for mood objects and their arguments
@@ -10,6 +20,37 @@ public final class MoodEventUtility {
     public static final int FOLLOWING_MODE = 2;
     public static final int TOTAL_MOOD_TYPE_COUNTS = 8;
 
+    // storage
+    private static final String moodText[] = {
+            "Happy",
+            "Sad",
+            "Angry",
+            "Emotional",
+            "Heart Broken",
+            "In Love",
+            "Scared",
+            "Surprised",
+    };
+    private static final Integer moodDrawableInt[] = {
+            R.drawable.mood1,
+            R.drawable.mood2,
+            R.drawable.mood3,
+            R.drawable.mood4,
+            R.drawable.mood5,
+            R.drawable.mood6,
+            R.drawable.mood7,
+            R.drawable.mood8,
+    };
+    private static final Integer moodColorResInt[] = {
+            R.color.mood1_color,
+            R.color.mood2_color,
+            R.color.mood3_color,
+            R.color.mood4_color,
+            R.color.mood5_color,
+            R.color.mood6_color,
+            R.color.mood7_color,
+            R.color.mood8_color,
+    };
 
 
     public MoodEventUtility(){
@@ -44,34 +85,14 @@ public final class MoodEventUtility {
      * @return The string value of the mood
      */
     public static String getMoodType (int moodTypeInt) {
-        String moodTypeString = null;
-        switch (moodTypeInt){
-            case 1:
-                moodTypeString = "Happy";
-                break;
-            case 2:
-                moodTypeString = "Sad";
-                break;
-            case 3:
-                moodTypeString = "Angry";
-                break;
-            case 4:
-                moodTypeString = "Emotional";
-                break;
-            case 5:
-                moodTypeString = "HEART BROKEN";
-                break;
-            case 6:
-                moodTypeString = "IN LOVE";
-                break;
-            case 7:
-                moodTypeString = "SCARED";
-                break;
-            case 8:
-                moodTypeString = "SURPRISED";
-                break;
-        }
-        return moodTypeString;
+        return moodText[moodTypeInt-1];
+    }
+
+    public static Integer getMoodDrawableInt (int moodTypeInt) {
+        return moodDrawableInt[moodTypeInt-1];
+    }
+    public static Integer getMoodColorResInt (int moodTypeInt) {
+        return moodColorResInt[moodTypeInt-1];
     }
 
 }

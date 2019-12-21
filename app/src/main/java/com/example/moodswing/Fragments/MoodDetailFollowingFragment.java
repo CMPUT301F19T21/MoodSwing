@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,7 +146,7 @@ public class MoodDetailFollowingFragment extends Fragment{
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
         moodText.setText(MoodEventUtility.getMoodType(moodEvent.getMoodType()));
-        setMoodImage(moodEvent.getMoodType());
+        moodImage.setImageResource(MoodEventUtility.getMoodDrawableInt(moodEvent.getMoodType()));
         setReasonText();
         setSocialSituation();
         usernameText.setText(userJar.getUsername());
@@ -266,44 +267,26 @@ public class MoodDetailFollowingFragment extends Fragment{
         }
     }
 
-    /**
-     * sets the mood image depending on which is clicked
-     * @param moodType the int associated with the mood clicked
-     */
-    private void setMoodImage(int moodType){
-        switch(moodType){
-            case 1:
-                moodText.setText("HAPPY");
-                moodImage.setImageResource(R.drawable.mood1);
-                break;
-            case 2:
-                moodText.setText("SAD");
-                moodImage.setImageResource(R.drawable.mood2);
-                break;
-            case 3:
-                moodText.setText("ANGRY");
-                moodImage.setImageResource(R.drawable.mood3);
-                break;
-            case 4:
-                moodText.setText("EMOTIONAL");
-                moodImage.setImageResource(R.drawable.mood4);
-                break;
-            case 5:
-                moodText.setText("HEART BROKEN");
-                moodImage.setImageResource(R.drawable.mood5);
-                break;
-            case 6:
-                moodText.setText("IN LOVE");
-                moodImage.setImageResource(R.drawable.mood6);
-                break;
-            case 7:
-                moodText.setText("SCARED");
-                moodImage.setImageResource(R.drawable.mood7);
-                break;
-            case 8:
-                moodText.setText("SURPRISED");
-                moodImage.setImageResource(R.drawable.mood8);
-                break;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(getView() == null){
+            return;
         }
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    closeFrag();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }

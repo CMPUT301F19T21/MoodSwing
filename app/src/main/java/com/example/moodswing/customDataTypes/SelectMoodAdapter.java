@@ -94,89 +94,14 @@ public class SelectMoodAdapter extends RecyclerView.Adapter<SelectMoodAdapter.My
         TextView moodTypeText= holder.moodTypeText;
         ImageView moodImage= holder.moodImage;
         int moodType = moodTypes.get(position);
+        moodTypeText.setText(MoodEventUtility.getMoodType(moodType));
+        moodImage.setImageResource(MoodEventUtility.getMoodDrawableInt(moodType));
+        holder.color.setBackgroundTintList(
+                ColorStateList.valueOf(holder
+                        .holderView
+                        .getResources()
+                        .getColor(MoodEventUtility.getMoodColorResInt(moodType))));
 
-        switch (moodType){
-            case 1:
-                moodTypeText.setText("HAPPY");
-                moodImage.setImageResource(R.drawable.mood1);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood1_color))
-                );
-                break;
-            case 2:
-                moodTypeText.setText("SAD");
-                moodImage.setImageResource(R.drawable.mood2);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood2_color))
-                );
-                break;
-            case 3:
-                moodTypeText.setText("ANGRY");
-                moodImage.setImageResource(R.drawable.mood3);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood3_color))
-                );
-                break;
-            case 4:
-                moodTypeText.setText("EMOTIONAL");
-                moodImage.setImageResource(R.drawable.mood4);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood4_color))
-                );
-                break;
-            case 5:
-                moodTypeText.setText("HEART BROKEN");
-                moodImage.setImageResource(R.drawable.mood5);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood5_color))
-                );
-                break;
-            case 6:
-                moodTypeText.setText("IN LOVE");
-                moodImage.setImageResource(R.drawable.mood6);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood6_color))
-                );
-                break;
-            case 7:
-                moodTypeText.setText("SCARED");
-                moodImage.setImageResource(R.drawable.mood7);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood7_color))
-                );
-                break;
-            case 8:
-                moodTypeText.setText("SURPRISED");
-                moodImage.setImageResource(R.drawable.mood8);
-                holder.color.setBackgroundTintList(
-                        ColorStateList.valueOf(holder
-                                .holderView
-                                .getResources()
-                                .getColor(R.color.mood8_color))
-                );
-                break;
-        }
         // preSelect
         if (selectedPosition != null) {
             if (selectedPosition == position){

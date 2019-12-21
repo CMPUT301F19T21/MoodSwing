@@ -73,10 +73,13 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         ImageView moodImage = holder.moodImage;
         ImageView locationImage = holder.locationImage;
         MoodEvent moodEvent = moods.get(position);
+        Integer moodTypeInt = moodEvent.getMoodType();
 
         dateText.setText(MoodEventUtility.getDateStr(moodEvent.getTimeStamp()));
         timeText.setText(MoodEventUtility.getTimeStr(moodEvent.getTimeStamp()));
-        printMoodTypeToCard(moodEvent.getMoodType(),moodType, moodImage);
+        moodType.setText(MoodEventUtility.getMoodType(moodTypeInt));
+        moodImage.setImageResource(MoodEventUtility.getMoodDrawableInt(moodTypeInt));
+
         if (moodEvent.getLatitude() == null) {
             locationImage.setImageResource(R.drawable.ic_location_off_grey_24dp);
         }else{
@@ -100,49 +103,6 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
     private void startDetailedViewActivity (int cardPosition,View view){
         // cardPosition will be passed to detailed view
         ((MainActivity) view.getContext()).toDetailedView(cardPosition);
-    }
-
-    /**
-     * initializes the card with the image and associated text with the image
-     * @param moodTypeInt the card number, currently 1-4
-     * @param moodText the text associated with the card
-     * @param moodImage the image of the mood
-     */
-    private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
-        switch(moodTypeInt){
-            case 1:
-                moodText.setText("HAPPY");
-                moodImage.setImageResource(R.drawable.mood1);
-                break;
-            case 2:
-                moodText.setText("SAD");
-                moodImage.setImageResource(R.drawable.mood2);
-                break;
-            case 3:
-                moodText.setText("ANGRY");
-                moodImage.setImageResource(R.drawable.mood3);
-                break;
-            case 4:
-                moodText.setText("EMOTIONAL");
-                moodImage.setImageResource(R.drawable.mood4);
-                break;
-            case 5:
-                moodText.setText("HEART BROKEN");
-                moodImage.setImageResource(R.drawable.mood5);
-                break;
-            case 6:
-                moodText.setText("IN LOVE");
-                moodImage.setImageResource(R.drawable.mood6);
-                break;
-            case 7:
-                moodText.setText("SCARED");
-                moodImage.setImageResource(R.drawable.mood7);
-                break;
-            case 8:
-                moodText.setText("SURPRISED");
-                moodImage.setImageResource(R.drawable.mood8);
-                break;
-        }
     }
 
     @Override
