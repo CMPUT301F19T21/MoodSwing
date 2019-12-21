@@ -120,12 +120,11 @@ public class MoodDetailFollowingFragment extends Fragment{
                     .remove(this)
                     .commit();
         }else{
-            ((MapFragment)getFragmentManager().findFragmentByTag("mapFrag")).initElements();
+            ((MapFragment) outerFragment).initElements();
             getFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .remove(this)
-                    .remove(outerFragment)
                     .commit();
         }
     }

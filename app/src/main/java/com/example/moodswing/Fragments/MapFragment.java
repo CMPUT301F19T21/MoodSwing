@@ -243,11 +243,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      * @param ID the user ID
      */
     public void toDetailedView(String ID) {
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_fullScreenOverlay, new MapDetailAdapterFragment(this.mode, ID), "outerDetailView")
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commitAllowingStateLoss();
+
+        switch (mode){
+            case MOODHISTORY_MODE:
+                getFragmentManager()
+                        .beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .add(R.id.fragment_placeHolder, new MoodDetailFragment(communicator.getMoodPosition(ID),this))
+                        .commitAllowingStateLoss();
+                break;
+            case FOLLOWING_MODE:
+                getFragmentManager()
+                        .beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .replace(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(communicator.getUserJarPosition(ID),this))
+                        .commitAllowingStateLoss();
+                break;
+        }
     }
 
     /**

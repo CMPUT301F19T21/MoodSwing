@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_fullScreenOverlay, new MapFragment(mode),"mapFrag")
+                .add(R.id.fragment_placeHolder, new MapFragment(mode),"mapFrag")
                 .commitAllowingStateLoss();
     }
 
