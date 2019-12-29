@@ -28,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -36,13 +37,13 @@ import java.util.ArrayList;
  */
 public class FirestoreUserDocCommunicator{
 
+    private static FirestoreUserDocCommunicator instance = null;
+
     private static final String TAG = "FirestoreUserDocCommuni";
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private DocumentSnapshot userDocSnapshot;
-
-    private static FirestoreUserDocCommunicator instance = null;
 
     private ArrayList<MoodEvent> moodEvents;
     private ArrayList<UserJar> userJars;
@@ -77,7 +78,6 @@ public class FirestoreUserDocCommunicator{
         // init filter
         moodTypeFilterList_moodHistory = new ArrayList<>();
         moodTypeFilterList_following = new ArrayList<>();
-
         storage = FirebaseStorage.getInstance();
 
         // for image
@@ -150,7 +150,6 @@ public class FirestoreUserDocCommunicator{
 
     /* moodEvent related methods*/
 
-
     /**
      * Generates the users Mood ID
      * @return Returns the ID as a string
@@ -166,7 +165,6 @@ public class FirestoreUserDocCommunicator{
 
         return refID;
     }
-
 
     /**
      * Adds a mood event to the user's list of moods in firestore
@@ -236,6 +234,29 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
         updateRecentMoodToFollowers();
+    }
+
+    private void getMoodEventListInstance(ArrayList<MoodEvent> moodEvents) {
+        Query moodEventsQuery = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .orderBy("timeStamp", Query.Direction.DESCENDING);
+        moodEventsQuery
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        QuerySnapshot querySnapshot= task.getResult();
+                        if (!(querySnapshot.isEmpty())){
+                            for (DocumentSnapshot moodEventDoc : querySnapshot.getDocuments()){
+                                MoodEvent moodEvent = moodEventDoc.toObject(MoodEvent.class);
+                                moodEvents.add(moodEvent);
+                            }
+                        }
+                    }
+                });
     }
 
     /**
@@ -395,7 +416,6 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
     }
-
 
     /**
      * Deletes a request from the user's mailbox collection

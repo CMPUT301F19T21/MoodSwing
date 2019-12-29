@@ -52,6 +52,10 @@ public final class MoodEventUtility {
             R.color.mood8_color,
     };
 
+    // constance for Command Object
+    public static final int COMMAND_ACTION_ADD = 1;
+    public static final int COMMAND_ACTION_DELETE = 2;
+    public static final int COMMAND_ACTION_UPDATE = 3;
 
     public MoodEventUtility(){
         // nothing

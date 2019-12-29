@@ -4,7 +4,7 @@ package com.example.moodswing.customDataTypes;
 /**
  * This Class is the blueprint for a moodEvent object
  */
-public class MoodEvent {
+public class MoodEvent implements Comparable {
     private String uniqueID; // this value is used to identify moodEvent
     private Long timeStamp;
     // required fields
@@ -82,5 +82,10 @@ public class MoodEvent {
 
     public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return ((int)(((MoodEvent)o).getTimeStamp() - this.getTimeStamp()));
     }
 }
