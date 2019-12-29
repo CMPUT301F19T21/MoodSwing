@@ -182,7 +182,7 @@ public class NewMoodActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (moodSelectAdapter.getSelectedMoodType() != null) {
                     // do upload
-                    String moodId = communicator.generateMoodID();
+                    String moodId = communicator.generateUniqueID();
                     moodEvent.setUniqueID(moodId);
                     moodEvent.setMoodType(moodSelectAdapter.getSelectedMoodType());
                     moodEvent.setSocialSituation(socialSituation);
@@ -215,7 +215,7 @@ public class NewMoodActivity extends AppCompatActivity {
                         moodEvent.setLongitude(null);
                     }
                     if (ifImageReady){
-                        String uniqueImageID = communicator.generateMoodID();
+                        String uniqueImageID = communicator.generateUniqueID();
                         // link
                         moodEvent.setImageId(uniqueImageID);
                         communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, imageView);

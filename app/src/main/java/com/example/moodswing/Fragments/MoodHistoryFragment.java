@@ -21,6 +21,7 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 /**
  * The first screen after logging in, part of mainActivity. User will see their own moodlist here
  */
-public class MoodHistoryFragment extends Fragment {
+public class MoodHistoryFragment extends Fragment implements ObservableMoodEventArray.ObservableMoodEventArrayClient {
     // communicator
     private FirestoreUserDocCommunicator communicator;
 
@@ -64,6 +65,8 @@ public class MoodHistoryFragment extends Fragment {
         filterButton = root.findViewById(R.id.home_filterBtn);
         moodList = root.findViewById(R.id.mood_list);
         deleteEnabled = false;
+        // testing
+        communicator.setUpMoodListObserverClient(this);
 
         // construct recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
@@ -165,5 +168,10 @@ public class MoodHistoryFragment extends Fragment {
     public void filterButtonPopped(){
         filterButton.setCompatElevation(12f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+    }
+
+    @Override
+    public void MoodEventArrayChanged() {
+        refreshMoodList();
     }
 }

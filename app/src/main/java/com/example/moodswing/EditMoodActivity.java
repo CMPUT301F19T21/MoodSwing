@@ -18,7 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -150,7 +149,7 @@ public class EditMoodActivity extends AppCompatActivity {
                             communicator.deleteFirestoreImage(moodEvent.getImageId());
                         }
                         if (!imageChangeForDeletionOnly){
-                            String uniqueImageID = communicator.generateMoodID();
+                            String uniqueImageID = communicator.generateUniqueID();
                             // link
                             moodEvent.setImageId(uniqueImageID);
                             communicator.uploadPhotoToStorage(uniqueImageID,imageUriForUpload, editImage);

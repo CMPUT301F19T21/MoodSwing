@@ -28,8 +28,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class Handles all the functionality related to firestore, a go-between for the app and firestore
@@ -45,15 +46,11 @@ public class FirestoreUserDocCommunicator{
     private FirebaseUser user;
     private DocumentSnapshot userDocSnapshot;
 
-    private ArrayList<MoodEvent> moodEvents;
+    private ObservableMoodEventArray moodEvents;
     private ArrayList<UserJar> userJars;
     // reference
 
     private FirebaseStorage storage;
-
-    // other
-    private Integer requestCount;
-    private String url;
 
     // for filter
     private ArrayList<Integer> moodTypeFilterList_moodHistory;
@@ -62,18 +59,19 @@ public class FirestoreUserDocCommunicator{
     // for image
     private RecentImagesBox recentImagesBox;
 
+    // testing
+    private String appInstanceID;
+
     protected FirestoreUserDocCommunicator(){
         // init db
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
         this.user = mAuth.getCurrentUser();
         this.userDocSnapshot = null;
-        this.moodEvents = new ArrayList<>();
+        this.moodEvents = new ObservableMoodEventArray();
         this.userJars = new ArrayList<>();
-        this.getUserSnapShot();
 
-        // init requestCount to 0
-        this.requestCount = 0;
+        this.getUserSnapShot();
 
         // init filter
         moodTypeFilterList_moodHistory = new ArrayList<>();
@@ -82,6 +80,11 @@ public class FirestoreUserDocCommunicator{
 
         // for image
         recentImagesBox = new RecentImagesBox();
+
+        // init moodEvents, testing
+        this.getMoodEventListInstance(this.moodEvents);
+        this.appInstanceID = generateUniqueID();
+        this.setUpAppLock();
     }
 
     private boolean ifLogin(){
@@ -96,16 +99,24 @@ public class FirestoreUserDocCommunicator{
         db.collection("users")
                 .document(user.getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    userDocSnapshot = task.getResult();
-                    Log.d(TAG, "get userDocSnap success");
-                }else{
-                    Log.d(TAG, "get userDocSnap failed with", task.getException());
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            userDocSnapshot = task.getResult();
+                            Log.d(TAG, "get userDocSnap success");
+                        }else{
+                            Log.d(TAG, "get userDocSnap failed with", task.getException());
                 }
             }
         });
+    }
+
+    private void setUpAppLock(){
+        this.appInstanceID = this.generateUniqueID();
+
+        db.collection("users")
+                .document(user.getUid())
+                .update("mostRecentAppID",this.generateUniqueID());
     }
 
     /**
@@ -154,7 +165,7 @@ public class FirestoreUserDocCommunicator{
      * Generates the users Mood ID
      * @return Returns the ID as a string
      */
-    public String generateMoodID(){
+    public String generateUniqueID(){
         String refID = db
                 .collection("users")
                 .document(user.getUid())
@@ -195,6 +206,9 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
         updateRecentMoodToFollowers();
+
+        this.moodEvents.add(moodEvent);
+        this.moodEvents.notifyChange();
     }
 
     /**
@@ -207,6 +221,7 @@ public class FirestoreUserDocCommunicator{
         Integer moodPosition = getMoodPosition(moodEvent.getUniqueID());
         if (moodPosition != null){
             moodEvents.remove((int)moodPosition);
+            this.moodEvents.notifyChange();
         }
 
         // remove image if exist
@@ -234,9 +249,10 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
         updateRecentMoodToFollowers();
+
     }
 
-    private void getMoodEventListInstance(ArrayList<MoodEvent> moodEvents) {
+    private void getMoodEventListInstance(ObservableMoodEventArray moodEvents) {
         Query moodEventsQuery = db
                 .collection("users")
                 .document(user.getUid())
@@ -247,7 +263,6 @@ public class FirestoreUserDocCommunicator{
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
                         QuerySnapshot querySnapshot= task.getResult();
                         if (!(querySnapshot.isEmpty())){
                             for (DocumentSnapshot moodEventDoc : querySnapshot.getDocuments()){
@@ -255,8 +270,13 @@ public class FirestoreUserDocCommunicator{
                                 moodEvents.add(moodEvent);
                             }
                         }
+                        moodEvents.notifyChange();
                     }
                 });
+    }
+
+    public void setUpMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
+        this.moodEvents.setCurrentClient(client);
     }
 
     /**
@@ -266,29 +286,13 @@ public class FirestoreUserDocCommunicator{
     public void initMoodEventsList(final RecyclerView moodList, ArrayList<Integer> unwanttedMoodTypes){
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
-        Query moodEventsQuery = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .orderBy("timeStamp", Query.Direction.DESCENDING);
-        moodEventsQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                moodAdapter.clearMoodEvents();
-                for (QueryDocumentSnapshot moodEventDoc : queryDocumentSnapshots){
-                    MoodEvent moodEvent = moodEventDoc.toObject(MoodEvent.class);
-                    if (unwanttedMoodTypes.contains(moodEvent.getMoodType())){
-                        continue;
-                        // do nothing, continue the loop
-                    }else{
-
-                        moodAdapter.addToMoods(moodEvent);
-                    }
-                }
-                moodAdapter.notifyDataSetChanged();
-                moodEvents = moodAdapter.getMoods();
+        moodAdapter.clearMoodEvents();
+        for (MoodEvent moodEvent : this.moodEvents) {
+            if(!(unwanttedMoodTypes.contains(moodEvent.getMoodType()))){
+                moodAdapter.addToMoods(moodEvent);
             }
-        });
+            moodAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
