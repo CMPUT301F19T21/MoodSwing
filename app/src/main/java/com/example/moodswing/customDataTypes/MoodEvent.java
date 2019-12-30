@@ -86,6 +86,10 @@ public class MoodEvent implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        return ((int)(((MoodEvent)o).getTimeStamp() - this.getTimeStamp()));
+        if (((MoodEvent)o).getTimeStamp() > this.getTimeStamp()){
+            return 1;
+        }else{
+            return -1;
+        }
     }
 }

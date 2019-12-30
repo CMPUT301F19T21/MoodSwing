@@ -22,6 +22,7 @@ import com.example.moodswing.Fragments.MoodHistoryFragment;
 import com.example.moodswing.Fragments.ProfileFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
+import com.example.moodswing.customDataTypes.ObservableUserJarArray;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -35,13 +36,14 @@ import com.google.firebase.firestore.QuerySnapshot;
  * This class is the main Activity, it handles the fragments navigation
  *
  */
-public class MainActivity extends AppCompatActivity implements ObservableMoodEventArray.ObservableMoodEventArrayClient {
+public class MainActivity extends AppCompatActivity implements ObservableMoodEventArray.ObservableMoodEventArrayClient, ObservableUserJarArray.ObservableUserJarArrayClient {
 
     private FirestoreUserDocCommunicator communicator;
 
     private static final int MOOD_HISTORY_SCREEN = 1;
     private static final int FOLLOWING_SCREEN = 2;
     private static final int MOOD_HISTORY_EMPTY = 3;
+    private static final int FOLLOWING_SCREEN_EMPTY = 4;
 
     private int currentScreenPointer;
 
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
     // fragments
     controllableFragment currentFragment;
 
+
+
     public interface controllableFragment {
         void closeFrag();
     }
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        communicator.removeMoodListObserverClient(this);
+        communicator.getMoodEventArrayObs().removeClient(this);
     }
 
     /**
@@ -82,8 +86,11 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
         profileBtn = findViewById(R.id.nav_profile);
 
         // testing
-        if (!(communicator.containMoodListObserverClient(this))){
-            communicator.addMoodListObserverClient(this);
+        if (!(communicator.getMoodEventArrayObs().containClient(this))){
+            communicator.getMoodEventArrayObs().addClient(this);
+        }
+        if (!(communicator.getUserJarArrayObs().containClient(this))){
+            communicator.getUserJarArrayObs().addClient(this);
         }
 
         profileOpeningOnClickListener = new View.OnClickListener() {
@@ -126,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
         centerButtonToProfile();
         // other action that need to be init
         toMoodHistory();
+    }
+
+    public FloatingActionButton getCenterBtn(){
+        return this.profileBtn;
     }
 
     public void centerButtonToProfile(){
@@ -262,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
     }
 
     public void toFollowingEmptyFragment(){
+        currentScreenPointer = FOLLOWING_SCREEN_EMPTY;
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -284,11 +296,25 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
             if (communicator.getMoodEvents().isEmpty()) {
                 toMoodHistoryEmptyFragment();
             }
-        }else {
+        }else if (currentScreenPointer == MOOD_HISTORY_EMPTY){
             if (!(communicator.getMoodEvents().isEmpty())){
                 toMoodHistory();
             }
         }
+    }
+
+    @Override
+    public void userJarArrayChanged() {
+        if (currentScreenPointer == FOLLOWING_SCREEN) {
+            if (communicator.getUserJars().isEmpty()) {
+                toFollowingEmptyFragment();
+            }
+        }else if (currentScreenPointer == FOLLOWING_SCREEN_EMPTY){
+            if (!(communicator.getUserJars().isEmpty())){
+                toFollowing();
+            }
+        }
+
     }
 }
 

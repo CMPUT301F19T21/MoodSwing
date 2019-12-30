@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +70,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, MainAct
         View root = inflater.inflate(R.layout.fragment_maps, container, false);
 
         // set up map
-
         mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
@@ -188,17 +188,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, MainAct
             markerIDInSelect = ID;
             switch (mode){
                 case MOODHISTORY_MODE:
+                    MoodEvent moodEvent = communicator.getMoodEvent(communicator.getMoodPosition(ID));
                     getFragmentManager()
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .replace(R.id.detailedMoodDisplayBoard, new MoodDetailMapFragment(communicator.getMoodPosition(ID)), "detailMapBoardFrag")
+                            .replace(R.id.detailedMoodDisplayBoard, new MoodDetailMapFragment(moodEvent), "detailMapBoardFrag")
                             .commitAllowingStateLoss();
                     break;
                 case FOLLOWING_MODE:
+                    UserJar userJar = communicator.getUserJar(communicator.getUserJarPosition(ID));
                     getFragmentManager()
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .replace(R.id.detailedMoodDisplayBoard, new MoodDetailFollowingFragment(communicator.getUserJarPosition(ID),this))
+                            .replace(R.id.detailedMoodDisplayBoard, new MoodDetailMapFragment(userJar), "detailMapBoardFrag")
                             .commitAllowingStateLoss();
                     break;
             }
@@ -237,7 +239,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, MainAct
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
-                    closeFrag();
+                    ((MainActivity) getActivity()).getCenterBtn().performClick();
                     return true;
                 }
                 return false;

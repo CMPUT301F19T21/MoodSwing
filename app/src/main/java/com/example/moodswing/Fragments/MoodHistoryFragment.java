@@ -51,7 +51,7 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
     @Override
     public void onDestroy() {
         super.onDestroy();
-        communicator.removeMoodListObserverClient(this);
+        communicator.getMoodEventArrayObs().removeClient(this);
     }
 
     /**
@@ -81,8 +81,8 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
         moodList.setAdapter(moodListAdapter);
         // testing
         this.refreshMoodList();
-        if (!(communicator.containMoodListObserverClient(this))){
-            communicator.addMoodListObserverClient(this);
+        if (!(communicator.getMoodEventArrayObs().containClient(this))){
+            communicator.getMoodEventArrayObs().addClient(this);
         }
         // setup button state
         if (communicator.getMoodHistoryFilterList().isEmpty()){

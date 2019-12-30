@@ -15,9 +15,9 @@ import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.UserJar;
 
 public class MoodDetailMapFragment extends Fragment {
-    private FirestoreUserDocCommunicator communicator;
     private MoodEvent moodEvent;
 
     private ImageView moodImage;
@@ -26,9 +26,12 @@ public class MoodDetailMapFragment extends Fragment {
 
     public MoodDetailMapFragment(){}
     
-    public MoodDetailMapFragment(int moodPosition){
-        this.communicator = FirestoreUserDocCommunicator.getInstance();
-        this.moodEvent = communicator.getMoodEvent(moodPosition);
+    public MoodDetailMapFragment(MoodEvent moodEvent){
+        this.moodEvent = moodEvent;
+    }
+
+    public MoodDetailMapFragment(UserJar userJar){
+        this.moodEvent = userJar.getMoodEvent();
     }
 
     @Nullable
