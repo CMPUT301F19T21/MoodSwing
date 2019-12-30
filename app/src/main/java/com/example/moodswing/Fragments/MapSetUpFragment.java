@@ -27,7 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
- * This class is for the google API to set up the map
+ * This class is for displaying a map when user creating a MoodEvent
  */
 public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
 
@@ -49,14 +49,14 @@ public class MapSetUpFragment extends Fragment implements OnMapReadyCallback{
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View root = inflater.inflate(R.layout.fragment_maps, container, false);
+            View root = inflater.inflate(R.layout.fragment_map_setup, container, false);
 
             // find views
-            backBtn = root.findViewById(R.id.map_backBtn);
+            backBtn = root.findViewById(R.id.map_backBtn_setup);
 //        mapFragHolder = root.findViewById(R.id.map_placeHolder)
             // set up map
 
-            mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+            mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_setup);
             mapFrag.getMapAsync(this);
 
             // set listeners

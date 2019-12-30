@@ -1,6 +1,7 @@
 package com.example.moodswing;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -48,6 +49,17 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
     private ImageButton followingBtn;
     private FloatingActionButton profileBtn;
 
+    // listeners
+    View.OnClickListener profileOpeningOnClickListener;
+    View.OnClickListener closeFragmentOnClickListener;
+
+    // fragments
+    controllableFragment currentFragment;
+
+    public interface controllableFragment {
+        void closeFrag();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -74,6 +86,22 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
             communicator.addMoodListObserverClient(this);
         }
 
+        profileOpeningOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfileFragment();
+            }
+        };
+
+        closeFragmentOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentFragment.closeFrag();
+                centerButtonToProfile();
+                currentFragment = null;     // reset current fragment to null for now.
+            }
+        };
+
         // listeners
         moodHistoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,15 +123,34 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
             }
         });
 
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openProfileFragment();
-            }
-        });
-
+        centerButtonToProfile();
         // other action that need to be init
         toMoodHistory();
+    }
+
+    public void centerButtonToProfile(){
+        profileBtn.setOnClickListener(profileOpeningOnClickListener);
+        profileBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_white_24dp));
+
+        // animation
+
+        moodHistoryBtn.animate().alpha(1.0f);
+        followingBtn.animate().alpha(1.0f);
+        moodHistoryBtn.setClickable(true);
+        followingBtn.setClickable(true);
+
+    }
+
+    public void centerButtonToBack() {
+        profileBtn.setOnClickListener(closeFragmentOnClickListener);
+        profileBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+
+        // animation
+        moodHistoryBtn.animate().alpha(0.0f);
+        followingBtn.animate().alpha(0.0f);
+        moodHistoryBtn.setClickable(false);
+        followingBtn.setClickable(false);
+
     }
 
     @Override
@@ -184,11 +231,18 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
     }
 
     public void openMapFragment(int mode) {
+        MapFragment mapFragment = new MapFragment(mode);
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .add(R.id.fragment_placeHolder, new MapFragment(mode),"mapFrag")
+                .add(R.id.fragment_placeHolder, mapFragment,"mapFrag")
                 .commitAllowingStateLoss();
+
+        // change the button
+        currentFragment = mapFragment;
+        centerButtonToBack();
+
+
     }
 
     /**
