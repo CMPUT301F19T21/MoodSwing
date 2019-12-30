@@ -47,6 +47,13 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
 
     // other
     private boolean deleteEnabled;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        communicator.removeMoodListObserverClient(this);
+    }
+
     /**
      * initializes the UI buttons and navigation on the Home screen(the one right after logging in),
      * the mood history and adapters,and swipe-delete functionality
@@ -65,8 +72,6 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
         filterButton = root.findViewById(R.id.home_filterBtn);
         moodList = root.findViewById(R.id.mood_list);
         deleteEnabled = false;
-        // testing
-        communicator.setUpMoodListObserverClient(this);
 
         // construct recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
@@ -74,10 +79,11 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
         moodListAdapter = new MoodAdapter(moodDataList);
         moodList.setLayoutManager(recyclerViewLayoutManager);
         moodList.setAdapter(moodListAdapter);
-
-        // setup realTime listener
-        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
-
+        // testing
+        this.refreshMoodList();
+        if (!(communicator.containMoodListObserverClient(this))){
+            communicator.addMoodListObserverClient(this);
+        }
         // setup button state
         if (communicator.getMoodHistoryFilterList().isEmpty()){
             filterButtonPopped();
@@ -159,7 +165,6 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
     public void filterButtonPressed(){
         filterButton.setCompatElevation(0f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
-
     }
 
     /**

@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.Fragments.EmptyNotificationFollowingFragment;
@@ -19,6 +20,7 @@ import com.example.moodswing.Fragments.MoodDetailFragment;
 import com.example.moodswing.Fragments.MoodHistoryFragment;
 import com.example.moodswing.Fragments.ProfileFragment;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
+import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -32,12 +34,13 @@ import com.google.firebase.firestore.QuerySnapshot;
  * This class is the main Activity, it handles the fragments navigation
  *
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ObservableMoodEventArray.ObservableMoodEventArrayClient {
 
     private FirestoreUserDocCommunicator communicator;
 
     private static final int MOOD_HISTORY_SCREEN = 1;
     private static final int FOLLOWING_SCREEN = 2;
+    private static final int MOOD_HISTORY_EMPTY = 3;
 
     private int currentScreenPointer;
 
@@ -45,9 +48,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton followingBtn;
     private FloatingActionButton profileBtn;
 
-    private Boolean moodHistoryIsEmpty;
-    private Boolean moodFollowingIsEmpty;
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        communicator.removeMoodListObserverClient(this);
+    }
 
     /**
      * Creates the buttons and handles redirects to different fragments
@@ -58,14 +63,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         communicator = FirestoreUserDocCommunicator.getInstance();
-        moodHistoryIsEmpty = null;      // init to default value - true
-        moodFollowingIsEmpty = null;    //
-
 
         // link all elements
         moodHistoryBtn = findViewById(R.id.nav_homeBtn);
         followingBtn = findViewById(R.id.nav_followingBtn);
         profileBtn = findViewById(R.id.nav_profile);
+
+        // testing
+        if (!(communicator.containMoodListObserverClient(this))){
+            communicator.addMoodListObserverClient(this);
+        }
 
         // listeners
         moodHistoryBtn.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
         // other action that need to be init
         toMoodHistory();
-        initEmptyListener();
     }
 
     @Override
@@ -116,10 +122,9 @@ public class MainActivity extends AppCompatActivity {
         moodHistoryBtn.setScaleX(1.4f);
         moodHistoryBtn.setScaleY(1.4f);
         currentScreenPointer = MOOD_HISTORY_SCREEN;
-        if ((moodHistoryIsEmpty != null) && (moodHistoryIsEmpty)){
+        if (communicator.getMoodEvents().isEmpty()){
             toMoodHistoryEmptyFragment();
-        }else {
-
+        }else{
             getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -139,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
         moodHistoryBtn.setScaleX(1.0f);
         moodHistoryBtn.setScaleY(1.0f);
         currentScreenPointer = FOLLOWING_SCREEN;
-        if ((moodFollowingIsEmpty != null) && (moodFollowingIsEmpty)){
+        if (communicator.getFollowingMoodEvents().isEmpty()){
             toFollowingEmptyFragment();
-        }else {
+        }else{
             getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -194,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toMoodHistoryEmptyFragment(){
+        currentScreenPointer = MOOD_HISTORY_EMPTY;
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -218,59 +224,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    private void initEmptyListener(){
-        // fun feature, just for fun, need better implementation
-        DocumentReference userDocRef = communicator.getUserDocRef();
-        userDocRef.collection("MoodEvents")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (queryDocumentSnapshots != null){
-                            if (queryDocumentSnapshots.isEmpty()){
-                                if ((moodHistoryIsEmpty == null)||(!moodHistoryIsEmpty)){
-                                    moodHistoryIsEmpty = true;
-                                    if (currentScreenPointer == MOOD_HISTORY_SCREEN){
-                                        // trigger a instant lock
-                                        toMoodHistoryEmptyFragment();
-                                    }
-                                }
-                            }else{
-                                if ((moodHistoryIsEmpty == null)||(moodHistoryIsEmpty)){
-                                    moodHistoryIsEmpty = false;
-                                    if (currentScreenPointer == MOOD_HISTORY_SCREEN) {
-                                        // trigger un lock
-                                        toMoodHistory();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-        userDocRef.collection("followingMoodList")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (queryDocumentSnapshots != null){
-                            if (queryDocumentSnapshots.isEmpty()){
-                                if ((moodFollowingIsEmpty == null)||(!moodFollowingIsEmpty)){
-                                    moodFollowingIsEmpty = true;
-                                    if (currentScreenPointer == FOLLOWING_SCREEN){
-                                        // trigger a instant lock
-                                        toFollowingEmptyFragment();
-                                    }
-                                }
-                            }else{
-                                if ((moodFollowingIsEmpty == null)||(moodFollowingIsEmpty)){
-                                    moodFollowingIsEmpty = false;
-                                    if (currentScreenPointer == FOLLOWING_SCREEN) {
-                                        // trigger un lock
-                                        toFollowing();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
+    @Override
+    public void MoodEventArrayChanged() {
+        if (currentScreenPointer == MOOD_HISTORY_SCREEN){
+            if (communicator.getMoodEvents().isEmpty()) {
+                toMoodHistoryEmptyFragment();
+            }
+        }else {
+            if (!(communicator.getMoodEvents().isEmpty())){
+                toMoodHistory();
+            }
+        }
     }
 }
 

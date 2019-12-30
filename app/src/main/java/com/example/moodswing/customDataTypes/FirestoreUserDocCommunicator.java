@@ -29,8 +29,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class Handles all the functionality related to firestore, a go-between for the app and firestore
@@ -275,8 +273,16 @@ public class FirestoreUserDocCommunicator{
                 });
     }
 
-    public void setUpMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
-        this.moodEvents.setCurrentClient(client);
+    public void addMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
+        this.moodEvents.addClient(client);
+    }
+
+    public void removeMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
+        this.moodEvents.removeClient(client);
+    }
+
+    public boolean containMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
+        return this.moodEvents.containClient(client);
     }
 
     /**

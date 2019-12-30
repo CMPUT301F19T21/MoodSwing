@@ -1,25 +1,34 @@
 package com.example.moodswing.customDataTypes;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ObservableMoodEventArray extends ArrayList<MoodEvent> {
-    private ObservableMoodEventArrayClient currentClient;   // can be changed to an array later
+    private ArrayList<ObservableMoodEventArrayClient> clients;
 
     public interface ObservableMoodEventArrayClient {
         void MoodEventArrayChanged();
     }
 
     public ObservableMoodEventArray(){
-        currentClient = null;
+        clients = new ArrayList<>();
     }
 
-    public void setCurrentClient(ObservableMoodEventArrayClient client){
-        this.currentClient = client;
+    public void addClient(ObservableMoodEventArrayClient client){
+        this.clients.add(client);
+    }
+
+    public void removeClient(ObservableMoodEventArrayClient client) {
+        this.clients.remove(client);
+    }
+
+    public boolean containClient(ObservableMoodEventArrayClient client) {
+        return this.clients.contains(client);
     }
 
     public void notifyChange(){
-        if (currentClient != null) {
-            currentClient.MoodEventArrayChanged();
+        for (ObservableMoodEventArrayClient client : clients) {
+            client.MoodEventArrayChanged();
         }
     }
 }
