@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class FilterFragment extends Fragment {
     private FloatingActionButton backBtn;
     private FloatingActionButton resetBtn;
+    private ConstraintLayout backgroundLayout;
 
     // filter recyclerView
     private RecyclerView moodSelectList;
@@ -37,8 +39,6 @@ public class FilterFragment extends Fragment {
 
     // Fragment itself
     private FilterFragment filterFragment; // a reference to itself
-
-
 
     public FilterFragment(){}
 
@@ -74,6 +74,7 @@ public class FilterFragment extends Fragment {
         // link elements
         backBtn = view.findViewById(R.id.filter_back);
         resetBtn = view.findViewById(R.id.filter_reset);
+        backgroundLayout = view.findViewById(R.id.filter_backgroundlayout);
 
         moodSelectList = view.findViewById(R.id.recylerView_filterFrag);
         // recyclerView
@@ -105,6 +106,13 @@ public class FilterFragment extends Fragment {
             public void onClick(View v) {
                 refreshMoodList();
                 changeFilterButtonState();
+            }
+        });
+
+        backgroundLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeFragment();
             }
         });
 
