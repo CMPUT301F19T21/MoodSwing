@@ -92,7 +92,7 @@ public class MoodDetailFollowingFragment extends Fragment{
                 closeFrag();
             }
         });
-        
+
         return root;
     }
 
