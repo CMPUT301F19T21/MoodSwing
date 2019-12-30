@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class Handles all the functionality related to firestore, a go-between for the app and firestore
@@ -70,8 +72,6 @@ public class FirestoreUserDocCommunicator{
         this.moodEvents = new ObservableMoodEventArray();
         this.userJars = new ArrayList<>();
 
-        this.getUserSnapShot();
-
         // init filter
         moodTypeFilterList_moodHistory = new ArrayList<>();
         moodTypeFilterList_following = new ArrayList<>();
@@ -81,9 +81,9 @@ public class FirestoreUserDocCommunicator{
         recentImagesBox = new RecentImagesBox();
 
         // init moodEvents, testing
-        this.getMoodEventListInstance(this.moodEvents);
-        this.appInstanceID = generateUniqueID();
         this.setUpAppLock();
+        this.getUserSnapShot();
+        this.updateAppLock();
     }
 
     private boolean ifLogin(){
@@ -97,25 +97,27 @@ public class FirestoreUserDocCommunicator{
         // throw exception here if not login
         db.collection("users")
                 .document(user.getUid())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            userDocSnapshot = task.getResult();
-                            Log.d(TAG, "get userDocSnap success");
-                        }else{
-                            Log.d(TAG, "get userDocSnap failed with", task.getException());
-                }
-            }
-        });
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        userDocSnapshot = documentSnapshot;
+                        if (documentSnapshot.get("mostRecentAppID") != appInstanceID) {
+                            // this code is to make sure sync between devices (when user has too device log in one account)
+                            getMoodEventListInstance(moodEvents);
+                        }
+                    }
+                });
     }
 
     private void setUpAppLock(){
         this.appInstanceID = this.generateUniqueID();
+    }
 
-        db.collection("users")
-                .document(user.getUid())
-                .update("mostRecentAppID",this.generateUniqueID());
+    private void updateAppLock(){
+        this.setUpAppLock();
+        DocumentReference userDocRef = db.collection("users")
+                .document(user.getUid());
+        userDocRef.update("mostRecentAppID", appInstanceID);
     }
 
     /**
@@ -208,6 +210,7 @@ public class FirestoreUserDocCommunicator{
 
         this.moodEvents.add(moodEvent);
         this.moodEvents.notifyChange();
+        updateAppLock();
     }
 
     /**
@@ -217,11 +220,9 @@ public class FirestoreUserDocCommunicator{
     public void removeMoodEvent(MoodEvent moodEvent){
 
         // remove from moodEvents
-        Integer moodPosition = getMoodPosition(moodEvent.getUniqueID());
-        if (moodPosition != null){
-            moodEvents.remove((int)moodPosition);
-            this.moodEvents.notifyChange();
-        }
+        this.moodEvents.remove(moodEvent);
+        this.moodEvents.notifyChange();
+        this.updateAppLock();
 
         // remove image if exist
         if (moodEvent.getImageId() != null){
@@ -248,10 +249,64 @@ public class FirestoreUserDocCommunicator{
                     }
                 });
         updateRecentMoodToFollowers();
+    }
 
+    /**
+     * Updates/edits an existing moodEvent
+     * @param moodEvent The moodEvent to edit
+     */
+    /* user management related methods */
+    public void updateMoodEvent(MoodEvent moodEvent){
+        // local update
+        // remember roll back if firestore failed (implement later)
+        this.moodEvents.remove(moodEvent);
+        this.moodEvents.add(moodEvent);
+        this.moodEvents.notifyChange();
+        this.updateAppLock();
+
+        // firestore update
+        DocumentReference moodEventRef = db
+                .collection("users")
+                .document(user.getUid())
+                .collection("MoodEvents")
+                .document(moodEvent.getUniqueID());
+        moodEventRef.set(moodEvent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "moodEvent upload successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "moodEvent upload fail");
+                    }
+                });
+        updateRecentMoodToFollowers();
+    }
+
+    /**
+     * Initializes the mood events for the user into the local RecyclerView
+     * @param moodList the view the moods are being appended to
+     */
+    public void initMoodEventsList(final RecyclerView moodList, ArrayList<Integer> unwanttedMoodTypes){
+        @NonNull
+        MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
+        moodAdapter.clearMoodEvents();
+        for (MoodEvent moodEvent : this.moodEvents.getMoodEvents()) {
+            if(!(unwanttedMoodTypes.contains(moodEvent.getMoodType()))){
+                moodAdapter.addToMoods(moodEvent);
+            }
+            moodAdapter.notifyDataSetChanged();
+        }
     }
 
     private void getMoodEventListInstance(ObservableMoodEventArray moodEvents) {
+
+        System.out.println("aghnu mark; instance get");
+
+
         Query moodEventsQuery = db
                 .collection("users")
                 .document(user.getUid())
@@ -262,6 +317,7 @@ public class FirestoreUserDocCommunicator{
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        moodEvents.clear();
                         QuerySnapshot querySnapshot= task.getResult();
                         if (!(querySnapshot.isEmpty())){
                             for (DocumentSnapshot moodEventDoc : querySnapshot.getDocuments()){
@@ -286,52 +342,8 @@ public class FirestoreUserDocCommunicator{
         return this.moodEvents.containClient(client);
     }
 
-    /**
-     * Initializes the mood events for the user into the local RecyclerView
-     * @param moodList the view the moods are being appended to
-     */
-    public void initMoodEventsList(final RecyclerView moodList, ArrayList<Integer> unwanttedMoodTypes){
-        @NonNull
-        MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
-        moodAdapter.clearMoodEvents();
-        Collections.sort(this.moodEvents);
-        for (MoodEvent moodEvent : this.moodEvents) {
-            if(!(unwanttedMoodTypes.contains(moodEvent.getMoodType()))){
-                moodAdapter.addToMoods(moodEvent);
-            }
-            moodAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Updates/edits an existing moodEvent
-     * @param moodEvent The moodEvent to edit
-     */
-    /* user management related methods */
-    public void updateMoodEvent(MoodEvent moodEvent){
-        DocumentReference moodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(moodEvent.getUniqueID());
-        moodEventRef.set(moodEvent)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "moodEvent upload successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "moodEvent upload fail");
-                    }
-                });
-        updateRecentMoodToFollowers();
-    }
-
     public MoodEvent getMoodEvent(int position) {
-        return moodEvents.get(position);
+        return moodEvents.getMoodEvents().get(position);
     }
 
     public UserJar getUserJar(int position) {
@@ -340,7 +352,7 @@ public class FirestoreUserDocCommunicator{
 
     public Integer getMoodPosition(String moodID){
         int position = 0;
-        for (MoodEvent moodEvent : moodEvents) {
+        for (MoodEvent moodEvent : moodEvents.getMoodEvents()) {
             if(moodEvent.getUniqueID() == moodID) {
                 return position;
             }
@@ -855,7 +867,7 @@ public class FirestoreUserDocCommunicator{
      * @return moodevents
      */
     public ArrayList<MoodEvent> getMoodEvents() {
-        return moodEvents;
+        return moodEvents.getMoodEvents();
     }
 
     /**

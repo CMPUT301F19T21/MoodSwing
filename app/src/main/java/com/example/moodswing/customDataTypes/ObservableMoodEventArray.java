@@ -2,9 +2,11 @@ package com.example.moodswing.customDataTypes;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ObservableMoodEventArray extends ArrayList<MoodEvent> {
+public class ObservableMoodEventArray {
     private ArrayList<ObservableMoodEventArrayClient> clients;
+    private ArrayList<MoodEvent> moodEvents;
 
     public interface ObservableMoodEventArrayClient {
         void MoodEventArrayChanged();
@@ -12,6 +14,33 @@ public class ObservableMoodEventArray extends ArrayList<MoodEvent> {
 
     public ObservableMoodEventArray(){
         clients = new ArrayList<>();
+        moodEvents = new ArrayList<>();
+    }
+
+    public ArrayList<MoodEvent> getMoodEvents(){
+        return moodEvents;
+    }
+
+    public void sortList() {
+        Collections.sort(moodEvents);
+    }
+
+    public void add(MoodEvent moodEvent) {
+        moodEvents.add(moodEvent);
+        sortList();
+    }
+
+    public void remove(MoodEvent moodEvent) {
+        moodEvents.remove(moodEvent);
+        sortList();
+    }
+
+    public boolean isEmpty() {
+        return moodEvents.isEmpty();
+    }
+
+    public void clear() {
+        moodEvents = new ArrayList<>();
     }
 
     public void addClient(ObservableMoodEventArrayClient client){
