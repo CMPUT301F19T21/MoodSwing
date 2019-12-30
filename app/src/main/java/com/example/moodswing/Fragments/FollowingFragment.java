@@ -3,6 +3,7 @@ package com.example.moodswing.Fragments;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.example.moodswing.ManagementActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.ObservableUserJarArray;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.example.moodswing.customDataTypes.UserJarAdaptor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 /**
  * This class is the following fragment screen, accessed from mainactivity. redirects to following management
  */
-public class FollowingFragment extends Fragment {
+public class FollowingFragment extends Fragment implements ObservableUserJarArray.ObservableUserJarArrayClient {
     // communicator
     private FirestoreUserDocCommunicator communicator;
 
@@ -41,6 +43,12 @@ public class FollowingFragment extends Fragment {
     private ArrayList<UserJar> userJars;
     private RecyclerView userJarList;
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        communicator.getUserJarArrayObs().removeClient(this);
+    }
 
     /**
      * Initializes the UI buttons, the following/follower lists, the redirect to management fragment
@@ -61,6 +69,11 @@ public class FollowingFragment extends Fragment {
         userJarAdaptor = new UserJarAdaptor(userJars);
         userJarList.setLayoutManager(recyclerViewLayoutManager);
         userJarList.setAdapter(userJarAdaptor);
+
+        // testing
+        if (!(communicator.getUserJarArrayObs().containClient(this))){
+            communicator.getUserJarArrayObs().addClient(this);
+        }
 
         // setup button state
         if (communicator.getFollowingFilterList().isEmpty()){
@@ -119,4 +132,10 @@ public class FollowingFragment extends Fragment {
         filterButton.setCompatElevation(12f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
     }
+
+    @Override
+    public void userJarArrayChanged() {
+        refreshMoodList();
+    }
+
 }

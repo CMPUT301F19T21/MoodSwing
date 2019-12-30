@@ -21,6 +21,7 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
+import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 /**
  * The first screen after logging in, part of mainActivity. User will see their own moodlist here
  */
-public class MoodHistoryFragment extends Fragment {
+public class MoodHistoryFragment extends Fragment implements ObservableMoodEventArray.ObservableMoodEventArrayClient {
     // communicator
     private FirestoreUserDocCommunicator communicator;
 
@@ -46,6 +47,13 @@ public class MoodHistoryFragment extends Fragment {
 
     // other
     private boolean deleteEnabled;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        communicator.getMoodEventArrayObs().removeClient(this);
+    }
+
     /**
      * initializes the UI buttons and navigation on the Home screen(the one right after logging in),
      * the mood history and adapters,and swipe-delete functionality
@@ -71,10 +79,11 @@ public class MoodHistoryFragment extends Fragment {
         moodListAdapter = new MoodAdapter(moodDataList);
         moodList.setLayoutManager(recyclerViewLayoutManager);
         moodList.setAdapter(moodListAdapter);
-
-        // setup realTime listener
-        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
-
+        // testing
+        this.refreshMoodList();
+        if (!(communicator.getMoodEventArrayObs().containClient(this))){
+            communicator.getMoodEventArrayObs().addClient(this);
+        }
         // setup button state
         if (communicator.getMoodHistoryFilterList().isEmpty()){
             filterButtonPopped();
@@ -156,7 +165,6 @@ public class MoodHistoryFragment extends Fragment {
     public void filterButtonPressed(){
         filterButton.setCompatElevation(0f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey_pressed)));
-
     }
 
     /**
@@ -165,5 +173,10 @@ public class MoodHistoryFragment extends Fragment {
     public void filterButtonPopped(){
         filterButton.setCompatElevation(12f);
         filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_button_lightGrey)));
+    }
+
+    @Override
+    public void MoodEventArrayChanged() {
+        refreshMoodList();
     }
 }

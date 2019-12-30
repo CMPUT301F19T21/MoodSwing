@@ -133,7 +133,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void createFirestoreUserDoc(String username){
         Map<String, Object> newUser = new HashMap<>();
-        newUser.put("username",username);
+        newUser.put("username", username);
+        newUser.put("mostRecentAppID", null);
         db.collection("users").document(mAuth.getCurrentUser().getUid())
                 .set(newUser);
     }

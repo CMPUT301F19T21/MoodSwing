@@ -13,9 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.moodswing.MainActivity;
 import com.example.moodswing.R;
 import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
+import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,20 +41,17 @@ import static com.example.moodswing.customDataTypes.MoodEventUtility.MOODHISTORY
  * This class handles the map and setting the marker
  */
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, MainActivity.controllableFragment {
     private FirestoreUserDocCommunicator communicator;
     private Integer mode;
 
     // views
-    private FloatingActionButton backBtn;
     private SupportMapFragment mapFrag;
     private GoogleMap map;
-    private String selectedMarker;
 
-    private String id;
+    // marker
     private HashMap<Marker, String> markerIdMapping ;
-
-    private Boolean isMapReady;
+    private String markerIDInSelect;
 
     public MapFragment(){}
 
@@ -60,30 +60,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // the ArrayList<Integer> is passed by reference, so any change to it inside this fragment will also be changed inside Activity
         this.mode = mode;
         this.communicator = FirestoreUserDocCommunicator.getInstance();
-        this.isMapReady = false;
         this.markerIdMapping = new HashMap<>();
-
+        this.markerIDInSelect = null;
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        // find views
-        backBtn = root.findViewById(R.id.map_backBtn);
-//        mapFragHolder = root.findViewById(R.id.map_placeHolder)
         // set up map
-
         mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
-        // set listeners
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeFrag();
-            }
-        });
         return root;
     }
 
@@ -93,13 +82,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.map = googleMap;
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style_json));
         initElements();
-        this.isMapReady = true;
     }
 
     public void initElements() {
         // clear map
         map.clear();
-        selectedMarker = null;
         // update most recent mood LatLng
         MoodEvent mostRecentMoodEvent = null;
         switch (mode){
@@ -132,14 +119,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             LatLng centerFocus = new LatLng(mostRecentMoodEvent.getLatitude(), mostRecentMoodEvent.getLongitude());
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(centerFocus, 11));
         }
-        // detail of the mood show up on the screen upon info window click
-        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
-                String markerID = markerIdMapping.get(marker);
-                toDetailedView(markerIdMapping.get(marker));
-                marker.hideInfoWindow();
-                }
+            public boolean onMarkerClick(Marker marker) {
+                String markerId = markerIdMapping.get(marker);
+                toDetailedView(markerId);
+                return true;        // disable info window
+            }
+        });
+
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                closeDetailedBoard();
+            }
         });
     }
 
@@ -156,86 +151,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Bitmap mapMarker = null;
         int MARKER_SIZE = 250;
 
-        // Displays customized markers on the map depending on the mood
-        switch (moodEvent.getMoodType()){
-            case 1:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm1);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                        latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("HAPPY")
-                        .snippet(username));
-                break;
-            case 2:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm2);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("SAD")
-                        .snippet(username));
-                break;
-            case 3:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm3);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("ANGRY")
-                        .snippet(username));
-                break;
-            case 4:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm4);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("EMOTIONAL")
-                        .snippet(username));
-                break;
-            case 5:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm5);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("HEART BROKEN")
-                        .snippet(username));
-                break;
-            case 6:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm6);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("IN LOVE")
-                        .snippet(username));
-                break;
-            case 7:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm7);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("SCARED")
-                        .snippet(username));
-                break;
-            case 8:
-                mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.moodm8);
-                mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
-                latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
-                marker = map.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
-                        .title("SURPRISED")
-                        .snippet(username));
-                break;
-        }
+        int moodType = moodEvent.getMoodType();
+
+        mapMarkerDrawable = (BitmapDrawable)getResources().getDrawable(MoodEventUtility.getMoodDrawableMapInt(moodType));
+        mapMarker = Bitmap.createScaledBitmap(mapMarkerDrawable.getBitmap(),MARKER_SIZE,MARKER_SIZE,false);
+        latLng = new LatLng(moodEvent.getLatitude(), moodEvent.getLongitude());
+        marker = map.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(mapMarker))
+                .title(MoodEventUtility.getMoodType(moodType))
+                .snippet(username));
+
         markerIdMapping.put(marker, moodEvent.getUniqueID());
+    }
+
+    public void closeDetailedBoard() {
+        if (markerIDInSelect != null) {
+            markerIDInSelect = null;
+            getFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                    .remove(getFragmentManager().findFragmentByTag("detailMapBoardFrag"))
+                    .commitAllowingStateLoss();
+        }
     }
 
     /**
@@ -244,28 +182,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      */
     public void toDetailedView(String ID) {
 
-        switch (mode){
-            case MOODHISTORY_MODE:
-                getFragmentManager()
-                        .beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .add(R.id.fragment_placeHolder, new MoodDetailFragment(communicator.getMoodPosition(ID),this))
-                        .commitAllowingStateLoss();
-                break;
-            case FOLLOWING_MODE:
-                getFragmentManager()
-                        .beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .replace(R.id.fragment_placeHolder, new MoodDetailFollowingFragment(communicator.getUserJarPosition(ID),this))
-                        .commitAllowingStateLoss();
-                break;
+        if (markerIDInSelect == ID) {
+            closeDetailedBoard();
+        }else{
+            markerIDInSelect = ID;
+            switch (mode){
+                case MOODHISTORY_MODE:
+                    MoodEvent moodEvent = communicator.getMoodEvent(communicator.getMoodPosition(ID));
+                    getFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.detailedMoodDisplayBoard, new MoodDetailMapFragment(moodEvent), "detailMapBoardFrag")
+                            .commitAllowingStateLoss();
+                    break;
+                case FOLLOWING_MODE:
+                    UserJar userJar = communicator.getUserJar(communicator.getUserJarPosition(ID));
+                    getFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.detailedMoodDisplayBoard, new MoodDetailMapFragment(userJar), "detailMapBoardFrag")
+                            .commitAllowingStateLoss();
+                    break;
+            }
         }
+
+
     }
 
     /**
      * method to close the map fragment
      */
-    private void closeFrag() {
+    public void closeFrag() {
         getChildFragmentManager()
                 .beginTransaction()
                 .remove(mapFrag)
@@ -292,7 +239,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
-                    closeFrag();
+                    ((MainActivity) getActivity()).getCenterBtn().performClick();
                     return true;
                 }
                 return false;

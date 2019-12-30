@@ -51,7 +51,22 @@ public final class MoodEventUtility {
             R.color.mood7_color,
             R.color.mood8_color,
     };
+    private static final Integer moodDrawableMapInt[] = {
+            R.drawable.moodm1,
+            R.drawable.moodm2,
+            R.drawable.moodm3,
+            R.drawable.moodm4,
+            R.drawable.moodm5,
+            R.drawable.moodm6,
+            R.drawable.moodm7,
+            R.drawable.moodm8,
+    };
 
+
+    // constance for Command Object
+    public static final int COMMAND_ACTION_ADD = 1;
+    public static final int COMMAND_ACTION_DELETE = 2;
+    public static final int COMMAND_ACTION_UPDATE = 3;
 
     public MoodEventUtility(){
         // nothing
@@ -91,6 +106,11 @@ public final class MoodEventUtility {
     public static Integer getMoodDrawableInt (int moodTypeInt) {
         return moodDrawableInt[moodTypeInt-1];
     }
+
+    public static Integer getMoodDrawableMapInt (int moodTypeInt) {
+        return moodDrawableMapInt[moodTypeInt-1];
+    }
+
     public static Integer getMoodColorResInt (int moodTypeInt) {
         return moodColorResInt[moodTypeInt-1];
     }
