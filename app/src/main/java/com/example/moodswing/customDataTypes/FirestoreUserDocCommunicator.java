@@ -29,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class Handles all the functionality related to firestore, a go-between for the app and firestore
@@ -293,6 +294,7 @@ public class FirestoreUserDocCommunicator{
         @NonNull
         MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
         moodAdapter.clearMoodEvents();
+        Collections.sort(this.moodEvents);
         for (MoodEvent moodEvent : this.moodEvents) {
             if(!(unwanttedMoodTypes.contains(moodEvent.getMoodType()))){
                 moodAdapter.addToMoods(moodEvent);
