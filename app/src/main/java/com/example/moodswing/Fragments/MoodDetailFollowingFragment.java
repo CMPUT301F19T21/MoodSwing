@@ -53,21 +53,10 @@ public class MoodDetailFollowingFragment extends Fragment{
     private ImageView locationImg;
     private ImageView socialIcon;
     private ImageView photoImage;
-    private Fragment outerFragment;
-    private String imagePath;
 
     public MoodDetailFollowingFragment(){}
 
-    public MoodDetailFollowingFragment(int userJarPosition, Fragment outerFragment) {
-        this.outerFragment = outerFragment;
-        this.communicator = FirestoreUserDocCommunicator.getInstance();
-        this.userJar = communicator.getUserJar(userJarPosition);
-        this.moodEvent = userJar.getMoodEvent();
-        // moodEvent
-    }
-
     public MoodDetailFollowingFragment(int userJarPosition) {
-        this.outerFragment = null;
         this.communicator = FirestoreUserDocCommunicator.getInstance();
         this.userJar = communicator.getUserJar(userJarPosition);
         this.moodEvent = userJar.getMoodEvent();
@@ -103,9 +92,7 @@ public class MoodDetailFollowingFragment extends Fragment{
                 closeFrag();
             }
         });
-
-
-
+        
         return root;
     }
 
@@ -113,20 +100,11 @@ public class MoodDetailFollowingFragment extends Fragment{
      * closes the fragment
      */
     private void closeFrag(){
-        if (outerFragment== null){
-            getFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .remove(this)
-                    .commit();
-        }else{
-            ((MapFragment) outerFragment).initElements();
-            getFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .remove(this)
-                    .commit();
-        }
+        getFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .remove(this)
+                .commit();
     }
 
     @Override
