@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.moodswing.Fragments.FilterFragment;
-import com.example.moodswing.R;
 
 import java.util.ArrayList;
 

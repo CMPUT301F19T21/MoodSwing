@@ -22,7 +22,6 @@ import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
-import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

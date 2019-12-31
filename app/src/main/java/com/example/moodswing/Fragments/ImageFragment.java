@@ -71,7 +71,7 @@ public class ImageFragment extends DialogFragment {
                     }
                     if (activity.equals("New")) {
                         NewMoodActivity callingActivity = (NewMoodActivity) getActivity();
-                        callingActivity.takeimage();
+                        callingActivity.takeImage();
                     }
                 }
                 dismiss();
