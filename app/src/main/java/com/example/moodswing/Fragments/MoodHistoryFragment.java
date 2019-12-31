@@ -22,6 +22,7 @@ import com.example.moodswing.customDataTypes.MoodAdapter;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
+import com.example.moodswing.customDataTypes.UserJar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
 
         // construct recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        moodDataList = communicator.getMoodEvents();
+        moodDataList = new ArrayList<>();
         moodListAdapter = new MoodAdapter(moodDataList);
         moodList.setLayoutManager(recyclerViewLayoutManager);
         moodList.setAdapter(moodListAdapter);
@@ -156,6 +157,12 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
      * refreshes the moodlist to display the updated recyclerview
      */
     public void refreshMoodList(){
+        moodDataList.clear();
+        for (MoodEvent moodEvent : communicator.getMoodEvents()){
+            if (!(communicator.getMoodHistoryFilterList().contains(moodEvent.getMoodType()))){
+                moodDataList.add(moodEvent);
+            }
+        }
         moodListAdapter.notifyDataSetChanged();
     }
 
