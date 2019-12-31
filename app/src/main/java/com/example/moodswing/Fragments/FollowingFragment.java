@@ -23,6 +23,7 @@ import com.example.moodswing.customDataTypes.UserJar;
 import com.example.moodswing.customDataTypes.UserJarAdaptor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -65,7 +66,7 @@ public class FollowingFragment extends Fragment implements ObservableUserJarArra
         userJarList = root.findViewById(R.id.following_list);
 
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        userJars = communicator.getUserJars();
+        userJars = new ArrayList<>();
         userJarAdaptor = new UserJarAdaptor(userJars);
         userJarList.setLayoutManager(recyclerViewLayoutManager);
         userJarList.setAdapter(userJarAdaptor);
@@ -74,6 +75,7 @@ public class FollowingFragment extends Fragment implements ObservableUserJarArra
         if (!(communicator.getUserJarArrayObs().containClient(this))){
             communicator.getUserJarArrayObs().addClient(this);
         }
+        this.refreshMoodList();
 
         // setup button state
         if (communicator.getFollowingFilterList().isEmpty()){
@@ -112,6 +114,12 @@ public class FollowingFragment extends Fragment implements ObservableUserJarArra
      * Refreshes the moodlist
      */
     public void refreshMoodList(){
+        userJars.clear();
+        for (UserJar userJar : communicator.getUserJars()){
+            if (!(communicator.getFollowingFilterList().contains(userJar.getMoodEvent().getMoodType()))){
+                userJars.add(userJar);
+            }
+        }
         userJarAdaptor.notifyDataSetChanged();
     }
 
