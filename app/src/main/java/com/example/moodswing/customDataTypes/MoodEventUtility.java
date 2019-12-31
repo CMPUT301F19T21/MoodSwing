@@ -1,16 +1,8 @@
 package com.example.moodswing.customDataTypes;
 
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-
 import com.example.moodswing.R;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
  * This is a utility class to handle functionality for mood objects and their arguments

@@ -1,14 +1,11 @@
 package com.example.moodswing;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.moodswing.Fragments.EmptyNotificationFollowingFragment;
@@ -24,10 +21,6 @@ import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.ObservableMoodEventArray;
 import com.example.moodswing.customDataTypes.ObservableUserJarArray;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 //This activity holds the following, profile, and Home fragments, and holds the functionality for
 // redirecting the user to other fragments

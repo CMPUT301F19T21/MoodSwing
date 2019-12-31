@@ -3,7 +3,6 @@ package com.example.moodswing.Fragments;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.example.moodswing.customDataTypes.UserJar;
 import com.example.moodswing.customDataTypes.UserJarAdaptor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

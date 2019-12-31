@@ -1,6 +1,5 @@
 package com.example.moodswing.customDataTypes;
 
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.util.ArrayList;

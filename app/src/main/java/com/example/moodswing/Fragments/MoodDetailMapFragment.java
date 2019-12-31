@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.moodswing.R;
-import com.example.moodswing.customDataTypes.FirestoreUserDocCommunicator;
 import com.example.moodswing.customDataTypes.MoodEvent;
 import com.example.moodswing.customDataTypes.MoodEventUtility;
 import com.example.moodswing.customDataTypes.UserJar;

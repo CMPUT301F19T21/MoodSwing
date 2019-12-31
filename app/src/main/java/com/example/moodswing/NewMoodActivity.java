@@ -290,7 +290,7 @@ public class NewMoodActivity extends AppCompatActivity {
     /**
      * taking a photo from the camera
      */
-    public void takeimage() {
+    public void takeImage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -563,7 +563,7 @@ public class NewMoodActivity extends AppCompatActivity {
                     Log.d(TAG,"onRequestPermissionsResult: user grant request permission(s)");
                     if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)){
                         if ((ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
-                            takeimage();
+                            takeImage();
                         }
                     }
                 }else{
