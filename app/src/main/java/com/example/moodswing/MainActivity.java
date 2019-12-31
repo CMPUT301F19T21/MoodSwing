@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements ObservableMoodEve
         moodHistoryBtn.setScaleX(1.0f);
         moodHistoryBtn.setScaleY(1.0f);
         currentScreenPointer = FOLLOWING_SCREEN;
-        if (communicator.getFollowingMoodEvents().isEmpty()){
+        if (communicator.getUserJars().isEmpty()){
             toFollowingEmptyFragment();
         }else{
             getSupportFragmentManager()

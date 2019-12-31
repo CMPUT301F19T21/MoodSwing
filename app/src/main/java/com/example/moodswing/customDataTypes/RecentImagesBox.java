@@ -97,8 +97,6 @@ public class RecentImagesBox {
      * @return the position of the image
      */
     private Integer findPosition(String imageID){
-        Log.d(TAG, "this is imageID");
-        Log.d(TAG, imageID);
         // get position
         int position = 0;
         for (String id : imageIDs){

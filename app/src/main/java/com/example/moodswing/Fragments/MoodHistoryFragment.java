@@ -75,7 +75,7 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
 
         // construct recyclerView
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        moodDataList = new ArrayList<>();
+        moodDataList = communicator.getMoodEvents();
         moodListAdapter = new MoodAdapter(moodDataList);
         moodList.setLayoutManager(recyclerViewLayoutManager);
         moodList.setAdapter(moodListAdapter);
@@ -156,7 +156,7 @@ public class MoodHistoryFragment extends Fragment implements ObservableMoodEvent
      * refreshes the moodlist to display the updated recyclerview
      */
     public void refreshMoodList(){
-        communicator.initMoodEventsList(moodList, communicator.getMoodHistoryFilterList());
+        moodListAdapter.notifyDataSetChanged();
     }
 
     /**

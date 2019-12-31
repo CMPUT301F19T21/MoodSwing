@@ -65,7 +65,7 @@ public class FollowingFragment extends Fragment implements ObservableUserJarArra
         userJarList = root.findViewById(R.id.following_list);
 
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        userJars = new ArrayList<>();
+        userJars = communicator.getUserJars();
         userJarAdaptor = new UserJarAdaptor(userJars);
         userJarList.setLayoutManager(recyclerViewLayoutManager);
         userJarList.setAdapter(userJarAdaptor);
@@ -81,9 +81,6 @@ public class FollowingFragment extends Fragment implements ObservableUserJarArra
         }else{
             filterButtonPressed();
         }
-
-        // setup realtime listener
-        communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());
 
         //setup listeners
         managementButton.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +112,7 @@ public class FollowingFragment extends Fragment implements ObservableUserJarArra
      * Refreshes the moodlist
      */
     public void refreshMoodList(){
-        communicator.initFollowingList(userJarList, communicator.getFollowingFilterList());
+        userJarAdaptor.notifyDataSetChanged();
     }
 
     /**

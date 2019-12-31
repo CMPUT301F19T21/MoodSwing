@@ -8,137 +8,107 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class Handles all the functionality related to firestore, a go-between for the app and firestore
  *
  */
 public class FirestoreUserDocCommunicator{
+    // TAG
+    private static final String TAG = "FirestoreUserDocCommuni";
 
+    // singleton instance
     private static FirestoreUserDocCommunicator instance = null;
 
-    private static final String TAG = "FirestoreUserDocCommuni";
+    // FireStore related
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
     private DocumentSnapshot userDocSnapshot;
-
-    private ObservableMoodEventArray moodEvents;
-    private ObservableUserJarArray userJars;
-    // reference
-
     private FirebaseStorage storage;
+
+    // Communicator Managers (module/helper)
+    private CommunicatorFollowingManager followingManager;
+    private CommunicatorMoodListManager moodListManager;
 
     // for filter
     private ArrayList<Integer> moodTypeFilterList_moodHistory;
     private ArrayList<Integer> moodTypeFilterList_following;
 
-    // for image
+    // for caching system
     private RecentImagesBox recentImagesBox;
 
-    // testing
-    private String appInstanceID;
+    // properties
+    private String communicatorID;
 
+    // constructor
     protected FirestoreUserDocCommunicator(){
-        // init db
+        // firestore related
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
-        this.user = mAuth.getCurrentUser();
+        this.storage = FirebaseStorage.getInstance();
         this.userDocSnapshot = null;
-        this.moodEvents = new ObservableMoodEventArray();
-        this.userJars = new ObservableUserJarArray();
+
+        // communicator managers
+        this.followingManager = new CommunicatorFollowingManager(this);
+        this.moodListManager = new CommunicatorMoodListManager(this);
 
         // init filter
-        moodTypeFilterList_moodHistory = new ArrayList<>();
-        moodTypeFilterList_following = new ArrayList<>();
-        storage = FirebaseStorage.getInstance();
+        this.moodTypeFilterList_moodHistory = new ArrayList<>();
+        this.moodTypeFilterList_following = new ArrayList<>();
 
-        // for image
+        // for caching system
         recentImagesBox = new RecentImagesBox();
 
-        // init moodEvents, testing
-        this.setUpAppLock();
-        this.getUserSnapShot(); // *** for current coding, this method will auto init moodEvents, however, will need to be modified in the future for local storage
-        this.updateAppLock();
-        this.setUpFollowingListListener(this.userJars); // init following list
+        // init
+        this.generateCommunicatorID();
+
+        // listens
+        this.initUserDocListener();
+        this.announceChangeToMoodList();
     }
 
-
-    public ObservableUserJarArray getUserJarArrayObs(){
-        return userJars;
+    // init singleton
+    public static FirestoreUserDocCommunicator getInstance() {
+        if (instance == null) {
+            instance = new FirestoreUserDocCommunicator();
+        }
+        return instance;
     }
 
-    public ObservableMoodEventArray getMoodEventArrayObs(){
-        return moodEvents;
+    // destroy singleton instance when called
+    public static void destroy(){
+        instance.mAuth.signOut();
+        instance = null;
     }
 
-    /**
-     * Accesses the firestore database and gets a specific user
-     */
-    private void getUserSnapShot(){
-        // throw exception here if not login
-        db.collection("users")
-                .document(user.getUid())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        userDocSnapshot = documentSnapshot;
-                        if (documentSnapshot.get("mostRecentAppID") != appInstanceID) {
-                            // this code is to make sure sync between devices (when user has too device log in one account)
-                            getMoodEventListInstance(moodEvents);
-                        }
-                    }
-                });
+    /* ** User Management Related ** */
+
+    public FirebaseUser getUser(){
+        return this.mAuth.getCurrentUser();
     }
 
-    private void setUpAppLock(){
-        this.appInstanceID = this.generateUniqueID();
+    public String getUserUID(){
+        return getUser().getUid();
     }
 
-    private void updateAppLock(){
-        this.setUpAppLock();
-        DocumentReference userDocRef = db.collection("users")
-                .document(user.getUid());
-        userDocRef.update("mostRecentAppID", appInstanceID);
-    }
-
-    /**
-     * Signs out the current user
-     */
-    private void userSignOut(){
-        mAuth.signOut();
-        user = null;
-    }
-
-    /**
-     * Gets the current user's username
-     * @return A string of the username
-     */
     public String getUsername(){
         if (userDocSnapshot != null) {
             return (String) userDocSnapshot.get("username");
@@ -148,23 +118,64 @@ public class FirestoreUserDocCommunicator{
         }
     }
 
-    /**
-     * this method returns the reference to the singleton object
-     * @return FirestoreUserDoccommunicator reference
-     */
-    public static FirestoreUserDocCommunicator getInstance() {
-        if (instance == null) {
-            instance = new FirestoreUserDocCommunicator();
-        }
-        return instance;
+    public FirebaseFirestore getDB(){
+        return this.db;
+    }
+
+    public ObservableUserJarArray getUserJarArrayObs(){
+        return followingManager.getUserJarArray();
+    }
+
+    public ObservableMoodEventArray getMoodEventArrayObs(){
+        return moodListManager.getMoodEvents();
+    }
+
+    public ArrayList<UserJar> getUserJars(){
+        return this.getUserJarArrayObs().getUserJars();
+    }
+
+    public ArrayList<MoodEvent> getMoodEvents() {
+        return this.getMoodEventArrayObs().getMoodEvents();
+    }
+
+    public ArrayList<Integer> getMoodHistoryFilterList(){
+        return this.moodTypeFilterList_moodHistory;
+    }
+
+    public ArrayList<Integer> getFollowingFilterList(){
+        return this.moodTypeFilterList_following;
     }
 
     /**
-     * Signs the user out
+     * set up a realtime listener on user's document
+     * this includes current user's username and dominant communicator ID (used for multi device sync)
+     * this listener will be triggered by two conditions:
+     *      1. there is a change to user doc (e.g. change of username or other info)
+     *      2. two or more device is sharing one account and one device triggered an mood list update
+     * if condition number 2, then this listener will trigger an update to local mood list array by sync all mood events from firestore
+     * this is obvious not ideal, but settled for now
      */
-    public static void destroy(){
-        instance.userSignOut();
-        instance = null;
+    private void initUserDocListener(){
+        // throw exception here if not login
+        db.collection("users")
+                .document(getUserUID())
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    userDocSnapshot = documentSnapshot;
+                    if (documentSnapshot.get("mostRecentAppID") != communicatorID) {
+                        moodListManager.getMoodEventListInstance();
+                    }
+                });
+    }
+
+    private void generateCommunicatorID(){
+        this.communicatorID = this.generateUniqueID();
+    }
+
+    public void announceChangeToMoodList(){
+        this.generateCommunicatorID();
+        db.collection("users")
+                .document(getUserUID())
+                .update("mostRecentAppID", communicatorID);
     }
 
     /* moodEvent related methods*/
@@ -174,50 +185,20 @@ public class FirestoreUserDocCommunicator{
      * @return Returns the ID as a string
      */
     public String generateUniqueID(){
-        String refID = db
+        return getDB()
                 .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
                 .document()
                 .getId();
-
-
-        return refID;
     }
+
+    /* ** MoodEvent List Related Methods ** */
 
     /**
      * Adds a mood event to the user's list of moods in firestore
      * @param moodEvent the moodEvent to be added
      */
     public void addMoodEvent(MoodEvent moodEvent) {
-        // lacking error returning code here
-        //
-        // required fields. no handling here, moodEvent class should handle it
-
-        DocumentReference newMoodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(moodEvent.getUniqueID());
-
-        newMoodEventRef.set(moodEvent)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "moodEvent upload successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "moodEvent upload fail");
-                    }
-                });
-        updateRecentMoodToFollowers();
-
-        this.moodEvents.add(moodEvent);
-        this.moodEvents.notifyChange();
-        updateAppLock();
+        moodListManager.addMoodEvent(moodEvent);
     }
 
     /**
@@ -225,149 +206,39 @@ public class FirestoreUserDocCommunicator{
      * @param moodEvent The mood event to be deleted
      */
     public void removeMoodEvent(MoodEvent moodEvent){
-
-        // remove from moodEvents
-        this.moodEvents.remove(moodEvent);
-        this.moodEvents.notifyChange();
-        this.updateAppLock();
-
-        // remove image if exist
-        if (moodEvent.getImageId() != null){
-            deleteFirestoreImage(moodEvent.getImageId());
-        }
-
-        DocumentReference moodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(moodEvent.getUniqueID());
-
-        moodEventRef
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "moodEvent delete successful");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "moodEvent delete fail");
-                    }
-                });
-        updateRecentMoodToFollowers();
+        moodListManager.removeMoodEvent(moodEvent);
     }
 
     /**
      * Updates/edits an existing moodEvent
      * @param moodEvent The moodEvent to edit
      */
-    /* user management related methods */
     public void updateMoodEvent(MoodEvent moodEvent){
-        // local update
-        // remember roll back if firestore failed (implement later)
-        this.moodEvents.remove(moodEvent);
-        this.moodEvents.add(moodEvent);
-        this.moodEvents.notifyChange();
-        this.updateAppLock();
-
-        // firestore update
-        DocumentReference moodEventRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .document(moodEvent.getUniqueID());
-        moodEventRef.set(moodEvent)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "moodEvent upload successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "moodEvent upload fail");
-                    }
-                });
-        updateRecentMoodToFollowers();
-    }
-
-    /**
-     * Initializes the mood events for the user into the local RecyclerView
-     * @param moodList the view the moods are being appended to
-     */
-    public void initMoodEventsList(final RecyclerView moodList, ArrayList<Integer> unwanttedMoodTypes){
-        @NonNull
-        MoodAdapter moodAdapter = (MoodAdapter) moodList.getAdapter();
-        moodAdapter.clearMoodEvents();
-        for (MoodEvent moodEvent : this.moodEvents.getMoodEvents()) {
-            if(!(unwanttedMoodTypes.contains(moodEvent.getMoodType()))){
-                moodAdapter.addToMoods(moodEvent);
-            }
-        }
-        moodAdapter.notifyDataSetChanged();
-    }
-
-    private void getMoodEventListInstance(ObservableMoodEventArray moodEvents) {
-
-        Query moodEventsQuery = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .orderBy("timeStamp", Query.Direction.DESCENDING);
-        moodEventsQuery
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        moodEvents.clear();
-                        QuerySnapshot querySnapshot= task.getResult();
-                        if (!(querySnapshot.isEmpty())){
-                            for (DocumentSnapshot moodEventDoc : querySnapshot.getDocuments()){
-                                MoodEvent moodEvent = moodEventDoc.toObject(MoodEvent.class);
-                                moodEvents.add(moodEvent);
-                            }
-                        }
-                        moodEvents.notifyChange();
-                    }
-                });
-    }
-
-    public void addMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
-        this.moodEvents.addClient(client);
-    }
-
-    public void removeMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
-        this.moodEvents.removeClient(client);
-    }
-
-    public boolean containMoodListObserverClient(ObservableMoodEventArray.ObservableMoodEventArrayClient client){
-        return this.moodEvents.containClient(client);
+        moodListManager.updateMoodEvent(moodEvent);
     }
 
     public MoodEvent getMoodEvent(int position) {
-        return moodEvents.getMoodEvents().get(position);
-    }
-
-    public UserJar getUserJar(int position) {
-        return userJars.getUserJars().get(position);
+        return this.getMoodEventArrayObs().getMoodEvents().get(position);
     }
 
     public Integer getMoodPosition(String moodID){
         int position = 0;
-        for (MoodEvent moodEvent : moodEvents.getMoodEvents()) {
+        for (MoodEvent moodEvent : getMoodEvents()) {
             if(moodEvent.getUniqueID() == moodID) {
                 return position;
             }
             position ++;
         }
-        return null;    // not found
+        return null;
+    }
+
+    public UserJar getUserJar(int position) {
+        return this.getUserJarArrayObs().getUserJars().get(position);
     }
 
     public Integer getUserJarPosition(String moodID){
         int position = 0;
-        for (UserJar userJar : userJars.getUserJars()) {
+        for (UserJar userJar : getUserJars()) {
             if(userJar.getMoodEvent().getUniqueID() == moodID) {
                 return position;
             }
@@ -382,67 +253,8 @@ public class FirestoreUserDocCommunicator{
      * Sends a following request to another user
      * @param username The username of the user that is going to receive the request
      */
-    // mailBox feature
     public void sendFollowingRequest (String username) {
-        // should first check if uid exist
-        Query findUserColQuery = db
-                .collection("users")
-                .whereEqualTo("username",username)
-                .limit(1);
-
-        findUserColQuery
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().isEmpty()){
-                                // do something
-                            }else{
-                                // not empty, proceed
-                                // should be only one
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    String UID = document.getId();
-                                    addRequestToMailBox(UID);
-                                }
-                            }
-                        }else{
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    /**
-     * given an UID, adds request to the target users mailBox
-     * @param targetUID the receiving user's UID
-     */
-    private void addRequestToMailBox(String targetUID){
-        DocumentReference requestRef = db
-                .collection("users")
-                .document(targetUID) // enter other user's doc
-                .collection("mailBox")
-                .document(user.getUid()); // doc name is your UID
-
-
-        UserJar userJar = new UserJar();
-        userJar.setUsername(getUsername());
-        userJar.setUID(user.getUid());
-
-        requestRef.set(userJar)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "sending request successful");
-                        // maybe do something
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "sending request failed");
-                    }
-                });
+        followingManager.sendFollowingRequest(username);
     }
 
     /**
@@ -450,27 +262,7 @@ public class FirestoreUserDocCommunicator{
      * @param userJar The userJar of the user to be deleted
      */
     public void removeRequest (UserJar userJar) {
-        // error code need to be created
-        DocumentReference requestRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("mailBox")
-                .document(userJar.getUID());
-
-        requestRef
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "request delete successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "request delete fail");
-                    }
-                });
+        followingManager.removeRequest(userJar);
     }
 
     /**
@@ -478,243 +270,23 @@ public class FirestoreUserDocCommunicator{
      * @param userJar The userJar of the user sending the request
      */
     public void acceptRequest(UserJar userJar) {
-        // responding to sender's request
-        // two action to do here,
-        // 1. adding the uid&username (current entry) to user's permitted list
-        // 2. pack uid and RecentMood, send recentMood to sender
-        //    a. send uid/username to sender's following list  b. trigger one recentMood update
-
-        removeRequest(userJar);
-        DocumentReference myPermittedListRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("permittedList")
-                .document(userJar.getUID());
-        myPermittedListRef
-                .set(userJar)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "accept Step 1 Success");
-                        addToSendersFollowing(userJar);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "accept Fail");
-                    }
-                });
-    }
-
-    /**
-     * Adds a user to the senders following collection after an accepted request
-     * @param sendersUserJar The sendering user's userJar
-     */
-    private void addToSendersFollowing(UserJar sendersUserJar) {
-        // at this point UID should be always correct, since it is checked in sendingRequest method
-        String sendersUID = sendersUserJar.getUID();
-        UserJar myUserJar = new UserJar();
-        myUserJar.setUID(user.getUid());
-        myUserJar.setUsername(getUsername());
-
-        DocumentReference followingListReference = db
-                .collection("users")
-                .document(sendersUID)
-                .collection("following")
-                .document(user.getUid());
-
-        followingListReference.set(myUserJar)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "following upload successful");
-                        refreshRecentMoodToUser(sendersUID);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "following upload fail");
-                    }
-                });
+        followingManager.acceptRequest(userJar);
     }
 
     /**
      * This method refreshes the recent mood(ie. when a user deletes, edits, or adds a new mood to
      * their list) and sends the updated status to firestore
      */
-    private void updateRecentMoodToFollowers(){
-
-        CollectionReference permittedList = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("permittedList");
-
-        permittedList.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            if (task.getResult().isEmpty()){
-                                Log.d(TAG, "no followers");
-                            }else{
-                                for (DocumentSnapshot userJarDoc : task.getResult().getDocuments()){
-                                    UserJar userJar = userJarDoc.toObject(UserJar.class);
-                                    refreshRecentMoodToUser(userJar.getUID());
-                                }
-                            }
-                        }else{
-                            Log.d(TAG, "failed finding permittedList");
-                        }
-                    }
-                });
+    public void updateRecentMoodToFollowers(){
+        followingManager.updateRecentMoodToFollowers();
     }
 
     /**
-     * This method gets the updated status of the user from firestore
-     * @param uid UID of the user
+     * unfollows the user given in the userJar
+     * @param userJar the user to unFollow
      */
-    public void refreshRecentMoodToUser (String uid){
-        if (moodEvents.isEmpty()){
-            pullRecentMoodEventToUser(uid);
-        }else{
-            pushRecentMoodEventToUser(uid);
-        }
-    }
-
-
-    /**
-     *  This method handles getting the moodevent locally from the user, and then sending it to the
-     *  receiving user
-     * @param uid UID of the user receiving the status update
-     */
-    private void pushRecentMoodEventToUser(String uid){
-        // grab recentMoodEvent
-        Query mostRecentMoodEventDocQuery = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("MoodEvents")
-                .orderBy("timeStamp", Query.Direction.DESCENDING)
-                .limit(1);
-
-        mostRecentMoodEventDocQuery
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG,"successfully got most recent Mood");
-                            if (task.getResult().isEmpty()) {
-                                Log.d(TAG, "something is wrong in refreshRecentMoodToUser method");
-                                // this line should never be excuted.
-                            } else {
-                                MoodEvent mostRecentMoodEvent = task.getResult().toObjects(MoodEvent.class).get(0);
-                                // construct UserJar
-                                UserJar myUserJarWithMood = new UserJar();
-                                myUserJarWithMood.setUsername(getUsername());
-                                myUserJarWithMood.setUID(user.getUid());
-                                myUserJarWithMood.setMoodEvent(mostRecentMoodEvent);
-
-                                // send it to target
-                                DocumentReference followingMoodListDoc = db
-                                        .collection("users")
-                                        .document(uid)
-                                        .collection("followingMoodList")
-                                        .document(user.getUid());
-
-                                followingMoodListDoc.set(myUserJarWithMood)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.d(TAG, "sending mood to target uid, done");
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d(TAG, "sending mood to target uid, failed");
-                                            }
-                                        });
-                            }
-                        }else{
-                            Log.d(TAG,"get most recent Mood query failed");
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Grabs the moodEvent from firestore from the sending user and receives it to populate the
-     * follower's list
-     * @param uid UID of the user who you want to update the status/current mood of
-     */
-    private void pullRecentMoodEventToUser(String uid) {
-
-        // send it to target
-        DocumentReference followingMoodListDoc = db
-                .collection("users")
-                .document(uid)
-                .collection("followingMoodList")
-                .document(user.getUid());
-
-        followingMoodListDoc.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "pull mood from target uid, done");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "pull mood from target uid, failed");
-                    }
-                });
-    }
-
-
-    public void setUpFollowingListListener (ObservableUserJarArray userJars){
-        Query followingMoodListColQuery = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("followingMoodList")
-                .orderBy("moodEvent.timeStamp",Query.Direction.DESCENDING);
-        followingMoodListColQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                userJars.clear();
-                for (QueryDocumentSnapshot userJarDoc : queryDocumentSnapshots) {
-                    UserJar userJar = userJarDoc.toObject(UserJar.class);
-                    userJars.add(userJar);
-                }
-                userJars.notifyChange();
-            }
-        });
-    }
-
-    /**
-     * Gets all the users from firestore that the current user is following and populates the local user's following list with them
-     * @param userJarList A view of all users the current user is following
-     */
-    public void initFollowingList(final RecyclerView userJarList, ArrayList<Integer> unwanttedMoodTypes){
-        @NonNull
-        UserJarAdaptor userJarAdaptor = (UserJarAdaptor) userJarList.getAdapter();
-        userJarAdaptor.clearUserJars();
-        for (UserJar userJar : this.userJars.getUserJars()){
-            if (!(unwanttedMoodTypes.contains(userJar.getMoodEvent().getMoodType()))){
-                userJarAdaptor.addToUserJars(userJar);
-            }
-        }
-        userJarAdaptor.notifyDataSetChanged();
-    }
-
-    /**
-     * this method returns an instance of all the userJars in followingMoodlist
-     * @return an ArrayList<UserJar> object contains all the userJars
-     */
-    public ArrayList<UserJar> getUserJars(){
-        return this.userJars.getUserJars();
+    public void unFollow(UserJar userJar){
+        followingManager.unfollow(userJar);
     }
 
     /**
@@ -727,7 +299,7 @@ public class FirestoreUserDocCommunicator{
 
         CollectionReference followingListColRef = db
                 .collection("users")
-                .document(user.getUid())
+                .document(mAuth.getCurrentUser().getUid())
                 .collection("following");
 
         followingListColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -753,7 +325,7 @@ public class FirestoreUserDocCommunicator{
 
         CollectionReference requestListColRef = db
                 .collection("users")
-                .document(user.getUid())
+                .document(mAuth.getCurrentUser().getUid())
                 .collection("mailBox");
 
         requestListColRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -769,115 +341,6 @@ public class FirestoreUserDocCommunicator{
         });
     }
 
-
-    /**
-     * unfollows the user given in the userJar
-     * @param userJar the user to unfollow
-     */
-    public void unfollow(UserJar userJar){
-        // 从对方的permittedlist中移除自己
-        // 把对方从自己的followinglist中移除
-        // 把对方从自己的followingMoodList中移除
-
-        DocumentReference followingListUserDocRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("following")
-                .document(userJar.getUID());
-
-        DocumentReference followingMoodListUserDocRef = db
-                .collection("users")
-                .document(user.getUid())
-                .collection("followingMoodList")
-                .document(userJar.getUID());
-
-
-        DocumentReference targetPermittedListUserJarDocRef = db
-                .collection("users")
-                .document(userJar.getUID())
-                .collection("permittedList")
-                .document(user.getUid());
-
-        targetPermittedListUserJarDocRef
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "find user's doc in target's permitted list successful");
-                        followingListUserDocRef
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "remove target from user's followingList successful");
-                                        followingMoodListUserDocRef
-                                                .delete()
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "remove target from user's followingMoodList successful");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.d(TAG, "failed in removing target from user's followingMoodList");
-                                                    }
-                                                });
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "failed in removing target from user's followingList");
-                                    }
-                                });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "failed in finding user's doc in target's permitted list");
-                    }
-                });
-
-    }
-
-    /**
-     * gets the document for the user
-     * @return the user document from firestore to return
-     */
-    public DocumentReference getUserDocRef(){
-        return db
-                .collection("users")
-                .document(user.getUid());
-    }
-
-    /**
-     * simple getter
-     * @return mood history list
-     */
-    public ArrayList<Integer> getMoodHistoryFilterList(){
-        return this.moodTypeFilterList_moodHistory;
-    }
-
-    /**
-     * simple getter
-     * @return followingfilterlist
-     */
-    public ArrayList<Integer> getFollowingFilterList(){
-        return this.moodTypeFilterList_following;
-    }
-
-
-    /**
-     * simple getter
-     * @return moodevents
-     */
-    public ArrayList<MoodEvent> getMoodEvents() {
-        return moodEvents.getMoodEvents();
-    }
-
     /**
      * deletes an image in the firestore storage(not database)
      * @param imageId the ID of the image
@@ -891,7 +354,7 @@ public class FirestoreUserDocCommunicator{
         StorageReference storageRef = storage.getReference();
 
         // Create a reference to the file to delete
-        StorageReference desertRef = storageRef.child("Images/" + user.getUid() + "/" + imageId);
+        StorageReference desertRef = storageRef.child("Images/" + mAuth.getCurrentUser().getUid() + "/" + imageId);
 
         // Delete the file
         desertRef
@@ -919,7 +382,7 @@ public class FirestoreUserDocCommunicator{
     public void uploadPhotoToStorage(String uniqueImageID, Uri filePath, ImageView imageView) {
         recentImagesBox.addImage(uniqueImageID, imageView);
         StorageReference storageRef = storage.getReference();
-        StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + uniqueImageID);
+        StorageReference storageName = storageRef.child("Images/" + mAuth.getCurrentUser().getUid() + "/" + uniqueImageID);
 
         storageName
                 .putFile(filePath)
@@ -952,7 +415,7 @@ public class FirestoreUserDocCommunicator{
         }
 
         StorageReference storageRef = storage.getReference();
-        StorageReference storageName = storageRef.child("Images/" + user.getUid() + "/" + imageId);
+        StorageReference storageName = storageRef.child("Images/" + mAuth.getCurrentUser().getUid() + "/" + imageId);
 
         storageName
                 .getDownloadUrl()
@@ -1018,15 +481,7 @@ public class FirestoreUserDocCommunicator{
     public Task<DocumentSnapshot> getAsynchronousTask(){
         return db
                 .collection("users")
-                .document(user.getUid())
+                .document(mAuth.getCurrentUser().getUid())
                 .get();
     }
-    public ArrayList<UserJar> getFollowingMoodEvents() {
-        return userJars.getUserJars();
-    }
-
-    public RecentImagesBox getRecentImagesBox(){
-        return recentImagesBox;
-    }
-
 }

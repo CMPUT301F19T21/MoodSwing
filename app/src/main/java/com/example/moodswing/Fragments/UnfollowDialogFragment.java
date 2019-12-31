@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Locale;
 
 /**
- * The screen to unfollow a user.
+ * The screen to unFollow a user.
  */
 public class UnfollowDialogFragment extends DialogFragment {
     private FirestoreUserDocCommunicator communicator;
@@ -69,7 +69,7 @@ public class UnfollowDialogFragment extends DialogFragment {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                communicator.unfollow(userJar);
+                communicator.unFollow(userJar);
                 dismiss();
             }
         });

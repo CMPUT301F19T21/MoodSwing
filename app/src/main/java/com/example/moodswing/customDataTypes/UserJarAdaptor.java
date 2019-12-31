@@ -122,40 +122,9 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
      * @param moodImage the image associated with the mood number
      */
     private void printMoodTypeToCard(int moodTypeInt, TextView moodText, ImageView moodImage) {
-        switch(moodTypeInt){
-            case 1:
-                moodText.setText("HAPPY");
-                moodImage.setImageResource(R.drawable.mood1);
-                break;
-            case 2:
-                moodText.setText("SAD");
-                moodImage.setImageResource(R.drawable.mood2);
-                break;
-            case 3:
-                moodText.setText("ANGRY");
-                moodImage.setImageResource(R.drawable.mood3);
-                break;
-            case 4:
-                moodText.setText("EMOTIONAL");
-                moodImage.setImageResource(R.drawable.mood4);
-                break;
-            case 5:
-                moodText.setText("HEART BROKEN");
-                moodImage.setImageResource(R.drawable.mood5);
-                break;
-            case 6:
-                moodText.setText("IN LOVE");
-                moodImage.setImageResource(R.drawable.mood6);
-                break;
-            case 7:
-                moodText.setText("SCARED");
-                moodImage.setImageResource(R.drawable.mood7);
-                break;
-            case 8:
-                moodText.setText("SURPRISED");
-                moodImage.setImageResource(R.drawable.mood8);
-                break;
-        }
+
+        moodText.setText(MoodEventUtility.getMoodType(moodTypeInt));
+        moodImage.setImageResource(MoodEventUtility.getMoodDrawableInt(moodTypeInt));
     }
 
     @Override
@@ -163,22 +132,4 @@ public class UserJarAdaptor extends RecyclerView.Adapter<UserJarAdaptor.MyViewHo
         return userJars.size();
     }
 
-    /**
-     * clears the arraylist of UserJars
-     */
-    public void clearUserJars(){
-        this.userJars.clear();
-    }
-
-    /**
-     * adds a user to the UserJar arraylist
-     * @param userJar the UserJar to add
-     */
-    public void addToUserJars(UserJar userJar){
-        this.userJars.add(userJar);
-    }
-
-    public ArrayList<UserJar> getUserJars() {
-        return userJars;
-    }
 }

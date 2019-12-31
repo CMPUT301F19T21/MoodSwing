@@ -39,7 +39,7 @@ public class ObservableMoodEventArray {
     }
 
     public void clear() {
-        moodEvents = new ArrayList<>();
+        moodEvents.clear();
     }
 
     public void addClient(ObservableMoodEventArrayClient client){
