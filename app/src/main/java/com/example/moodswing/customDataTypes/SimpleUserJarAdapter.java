@@ -78,7 +78,7 @@ public class SimpleUserJarAdapter extends RecyclerView.Adapter<SimpleUserJarAdap
                             .show(((ManagementActivity)v.getContext()).getSupportFragmentManager(), "manage_request");
                 }else if (mode == 2) {
                     new UnfollowDialogFragment(currentUserJar)
-                            .show(((ManagementActivity)v.getContext()).getSupportFragmentManager(), "unfollow");
+                            .show(((ManagementActivity)v.getContext()).getSupportFragmentManager(), "unFollow");
                 }
             }
         });

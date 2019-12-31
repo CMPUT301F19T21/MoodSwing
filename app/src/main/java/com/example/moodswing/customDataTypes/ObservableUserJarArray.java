@@ -40,7 +40,7 @@ public class ObservableUserJarArray {
     }
 
     public void clear() {
-        userJars = new ArrayList<>();
+        userJars.clear();
     }
 
     public void addClient(ObservableUserJarArrayClient client){

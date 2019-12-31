@@ -110,23 +110,4 @@ public class MoodAdapter extends RecyclerView.Adapter<MoodAdapter.MyViewHolder> 
         return moods.size();
     }
 
-    /**
-     * Clears the mood events
-     */
-    public void clearMoodEvents(){
-        this.moods.clear();
-    }
-
-
-    /**
-     * adds a mood to the mood array
-     * @param moodEvent the mood to be added
-     */
-    public void addToMoods(MoodEvent moodEvent){
-        this.moods.add(moodEvent);
-    }
-
-    public ArrayList<MoodEvent> getMoods() {
-        return moods;
-    }
 }
